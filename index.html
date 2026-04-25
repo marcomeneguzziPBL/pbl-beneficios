@@ -538,6 +538,9 @@ window.addEventListener('load', () => {
     const el = document.getElementById(id);
     if(el) el.src = src;
   });
+  // Sync dark mode button
+  const btn = document.getElementById('dark-btn');
+  if(btn && document.body.classList.contains('dark')) btn.textContent = '☀️';
 
   // Preenche select
   const sel = document.getElementById('sel-nome');
@@ -846,20 +849,18 @@ function renderRel() {
 // ── DARK MODE ──────────────────────────────────────────
 function toggleDark() {
   document.body.classList.toggle('dark');
-  document.getElementById('dark-btn').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  const btn = document.getElementById('dark-btn');
+  if(btn) btn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  if(btn && document.body.classList.contains('dark')) btn.textContent = '☀️';
   localStorage.setItem('pbl-dark', document.body.classList.contains('dark'));
 }
 if(localStorage.getItem('pbl-dark') === 'true') {
   document.body.classList.add('dark');
-  document.addEventListener('DOMContentLoaded', () => {
-    const btn = document.getElementById('dark-btn');
-    if(btn) btn.textContent = '☀️';
-  });
 }
 
 // ── PROGRESSO DO FORMULÁRIO ──────────────────────────────────────────
 function updateProgress() {
-  if(!colab) return;
+  if(!colab || !document.getElementById('prog-wrap')) return;
   const tva = vaTot(colab), tvt = vtTot(colab);
   const vr = parseFloat(document.getElementById('inp-vr').value)||0;
   const va = parseFloat(document.getElementById('inp-va').value)||0;
@@ -1055,12 +1056,14 @@ function moveDrag(g, e) {
 }
 
 function updateCustomSlider(g, pct) {
-  const thumb  = document.getElementById('thumb-' + g);
-  const fillA  = document.getElementById('fill-' + g + '-a');
-  const fillB  = document.getElementById('fill-' + g + '-b');
-  if(thumb)  thumb.style.left  = pct + '%';
-  if(fillA)  fillA.style.width = pct + '%';
-  if(fillB)  fillB.style.width = (100-pct) + '%';
+  if(pct === undefined || pct === null) pct = 50;
+  pct = Math.min(100, Math.max(0, pct));
+  const thumb = document.getElementById('thumb-' + g);
+  const fillA = document.getElementById('fill-' + g + '-a');
+  const fillB = document.getElementById('fill-' + g + '-b');
+  if(thumb) thumb.style.left  = pct + '%';
+  if(fillA) fillA.style.width = pct + '%';
+  if(fillB) fillB.style.width = (100-pct) + '%';
 }
 
 // Override setBar to update custom slider instead
@@ -1074,8 +1077,10 @@ setBar = function(g, p) {
 const _origEntrar2 = entrar;
 entrar = function() {
   _origEntrar2();
-  updateCustomSlider('va', 50);
-  updateCustomSlider('vt', 50);
+  setTimeout(() => {
+    updateCustomSlider('va', 50);
+    updateCustomSlider('vt', 50);
+  }, 0);
 };
 
 </script>
