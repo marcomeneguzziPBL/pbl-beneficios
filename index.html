@@ -158,9 +158,9 @@
     .rsub { font-size: 12px; color: #2d4a43; font-weight: 500; }
     .sg3 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
     .sg4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
-    .stt { background: var(--white); border: 1px solid var(--bo); border-radius: 12px; padding: 1rem 1.25rem; }
-    .stl { font-size: 11px; color: #2d4a43; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; font-weight: 600; }
-    .stv { font-size: 20px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--g); letter-spacing: -.02em; }
+    .stt { background: var(--white); border: 1px solid var(--bo); border-radius: 12px; padding: .9rem 1.1rem; }
+    .stl { font-size: 10px; color: var(--mu); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; font-weight: 600; }
+    .stv { font-size: 17px; font-weight: 600; font-family: 'Inter', sans-serif; color: var(--g); letter-spacing: -.01em; }
     .wnote { background: #FEF3E2; border: 1px solid #f0c87a; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #7a5209; margin-bottom: 1.25rem; }
     .recap-box { background: var(--gl); border-radius: 10px; padding: 14px 18px; margin-top: 1rem; }
     .recap-title { font-size: 12px; font-weight: 600; color: var(--g); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
@@ -771,16 +771,38 @@ function renderRel() {
   if(pend.length > 0)
     h += `<div class="wnote">⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não ${pend.length>1?'responderam':'respondeu'}. Os totais abaixo são parciais.</div>`;
 
+  // Calcula municipal vs intermunicipal para VT
+  let vtMunicipal = 0, vtInter = 0;
+  Object.entries(cidades).forEach(([nome, v]) => {
+    if(nome.toLowerCase().includes('municipal (florianópolis)') || nome === 'Municipal (Florianópolis)') vtMunicipal += v.vt;
+    else vtInter += v.vt;
+  });
+
   h += `<div class="sg4">
-    <div class="stt"><div class="stl">Vale Refeição (VR)</div><div class="stv">${fmt(totalVR)}</div></div>
-    <div class="stt"><div class="stl">Vale Alimentação (VA)</div><div class="stv">${fmt(totalVA)}</div></div>
-    <div class="stt"><div class="stl">Vale Transporte (VT)</div><div class="stv">${fmt(totalVT)}</div></div>
-    <div class="stt"><div class="stl">Auxílio Combustível (AC)</div><div class="stv">${fmt(totalAC)}</div></div>
-  </div>
-  <div class="sg3">
-    <div class="stt"><div class="stl">Total VA/VR</div><div class="stv">${fmt(totalVR+totalVA)}</div></div>
-    <div class="stt"><div class="stl">Total VT/AC</div><div class="stv">${fmt(totalVT+totalAC)}</div></div>
-    <div class="stt" style="background:var(--g);border-color:var(--g)"><div class="stl" style="color:rgba(255,255,255,.7)">Total geral</div><div class="stv" style="color:#fff">${fmt(totalVR+totalVA+totalVT+totalAC)}</div></div>
+    <div class="stt">
+      <div class="stl">Vale Refeição (VR)</div>
+      <div class="stv">${fmt(totalVR)}</div>
+    </div>
+    <div class="stt">
+      <div class="stl">Vale Alimentação (VA)</div>
+      <div class="stv">${fmt(totalVA)}</div>
+    </div>
+    <div class="stt">
+      <div class="stl">Vale Transporte (VT)</div>
+      <div class="stv">${fmt(totalVT)}</div>
+      <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--bo)">
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mu);margin-bottom:4px">
+          <span>Municipal</span><span style="font-weight:600;color:var(--g)">${fmt(vtMunicipal)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:11px;color:var(--mu)">
+          <span>Intermunicipal</span><span style="font-weight:600;color:var(--g)">${fmt(vtInter)}</span>
+        </div>
+      </div>
+    </div>
+    <div class="stt">
+      <div class="stl">Auxílio Combustível (AC)</div>
+      <div class="stv">${fmt(totalAC)}</div>
+    </div>
   </div>`;
 
   // VA/VR
