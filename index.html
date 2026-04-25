@@ -157,6 +157,77 @@
     .recap-row:last-child { border-bottom: none; }
     .recap-total { display: flex; justify-content: space-between; font-size: 15px; font-weight: 600; color: var(--g); padding: 8px 0 0; margin-top: 6px; border-top: 2px solid #b4cfc7; }
 
+
+    /* ── ÍCONES DE BENEFÍCIO ── */
+    .benefit-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+    
+    /* ── BARRA DE PROGRESSO ── */
+    .prog-wrap { margin-bottom: 1.5rem; }
+    .prog-label { display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--g); margin-bottom: 8px; }
+    .prog-track { background: var(--bo); border-radius: 99px; height: 10px; overflow: hidden; }
+    .prog-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, var(--g), var(--gold)); transition: width .4s cubic-bezier(.4,0,.2,1); }
+    .prog-steps { display: flex; justify-content: space-between; margin-top: 5px; }
+    .prog-step { font-size: 11px; color: var(--mu); }
+
+    /* ── PROGRESSO CIRCULAR RH ── */
+    .ring-wrap { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    .ring-svg { transform: rotate(-90deg); }
+    .ring-bg { fill: none; stroke: var(--bo); stroke-width: 8; }
+    .ring-fill { fill: none; stroke: var(--gold); stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
+    .ring-label { font-size: 22px; font-weight: 700; color: var(--g); font-family: 'Inter', sans-serif; letter-spacing: -.02em; }
+    .ring-sub { font-size: 11px; color: var(--mu); text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-top: 2px; }
+    .metrics-row { display: grid; grid-template-columns: auto 1fr 1fr 1fr; gap: 16px; align-items: center; margin-bottom: 1.5rem; background: var(--white); border: 1px solid var(--bo); border-radius: 16px; padding: 20px 24px; box-shadow: 0 2px 12px rgba(0,0,0,.05); }
+    .metric-sm { text-align: center; }
+    .metric-sm .mlabel { font-size: 11px; color: #2d4a43; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; margin-bottom: 4px; }
+    .metric-sm .mval { font-size: 24px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--g); letter-spacing: -.02em; }
+
+    /* ── GRÁFICO DISTRIBUIÇÃO ── */
+    .chart-wrap { margin-top: 1rem; }
+    .chart-bar-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+    .chart-label { font-size: 12px; font-weight: 600; color: #2d4a43; width: 120px; flex-shrink: 0; }
+    .chart-track { flex: 1; background: var(--bo); border-radius: 99px; height: 22px; overflow: hidden; position: relative; }
+    .chart-fill { height: 100%; border-radius: 99px; display: flex; align-items: center; justify-content: flex-end; padding-right: 10px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+    .chart-val { font-size: 11px; font-weight: 700; color: var(--white); }
+    .chart-pct { font-size: 12px; font-weight: 600; color: var(--mu); width: 40px; text-align: right; }
+
+    /* ── TIMELINE ── */
+    .timeline { margin-top: .5rem; }
+    .tl-item { display: flex; gap: 14px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid var(--bo); }
+    .tl-item:last-child { border-bottom: none; }
+    .tl-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--gold); flex-shrink: 0; margin-top: 4px; }
+    .tl-dot.pending { background: var(--bo); }
+    .tl-name { font-size: 14px; font-weight: 600; color: #0a2e25; }
+    .tl-time { font-size: 12px; color: var(--mu); margin-top: 2px; }
+
+    /* ── ANIMAÇÃO SUCESSO ── */
+    @keyframes popIn { 0%{transform:scale(0);opacity:0} 60%{transform:scale(1.15)} 100%{transform:scale(1);opacity:1} }
+    @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+    @keyframes drawLine { from{width:0} to{width:56px} }
+    .ok-icon.animate { animation: popIn .5s cubic-bezier(.4,0,.2,1) forwards; }
+    .ok-gold-line.animate { animation: drawLine .4s .3s ease forwards; width: 0; }
+    .ok-card .fadeup { opacity: 0; animation: fadeUp .4s ease forwards; }
+    .ok-card .fadeup:nth-child(1){animation-delay:.4s}
+    .ok-card .fadeup:nth-child(2){animation-delay:.55s}
+    .ok-card .fadeup:nth-child(3){animation-delay:.65s}
+
+    /* ── MICRO-INTERAÇÕES SLIDER ── */
+    .slider-bounce { animation: sliderBounce .2s ease; }
+    @keyframes sliderBounce { 0%,100%{transform:scaleY(1)} 50%{transform:scaleY(1.4)} }
+
+    /* ── TRANSIÇÕES DE TELA ── */
+    .pg { transition: opacity .2s ease; }
+    .pg.active { opacity: 1; }
+
+    /* ── MODO ESCURO ── */
+    .dark-toggle { position: fixed; bottom: 20px; right: 20px; width: 44px; height: 44px; border-radius: 50%; background: var(--g); color: #fff; border: none; font-size: 18px; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,.2); z-index: 100; display: flex; align-items: center; justify-content: center; transition: background .2s; }
+    .dark-toggle:hover { background: var(--gd); }
+    body.dark { --g: #4CAF86; --gd: #3a9470; --gl: #1a2e28; --gold: #E0B060; --goldd: #c49040; --tx: #e8f0ed; --mu: #8ab0a4; --bo: #2a4a40; --bg: #0f1f1a; --white: #162820; }
+    body.dark .hdr { background: #0a1a14; }
+    body.dark .sel-outer { background: linear-gradient(160deg, #060f0b 0%, #0a1a14 60%, #0f2018 100%); }
+    body.dark .sel-card { background: #162820; }
+    body.dark .inp-prefix { background: #1f3830; }
+    body.dark .ibox { background: #1a2e3a; border-color: #2a4a5a; color: #a0c4d8; }
+
     @media (max-width: 600px) {
       .sel-card { padding: 2.5rem 1.5rem; }
       .hdr { padding: 13px 16px; }
@@ -170,6 +241,7 @@
 </head>
 <body>
 
+<button class="dark-toggle" onclick="toggleDark()" id="dark-btn" title="Alternar modo escuro">🌙</button>
 <!-- ══════════════ SELEÇÃO ══════════════ -->
 <div id="pg-sel" class="pg active">
   <div class="sel-outer">
@@ -217,8 +289,22 @@
       <div class="mes-chip">⏰ Prazo: <strong id="f-prazo">—</strong></div>
     </div>
 
+    <div class="prog-wrap" id="prog-wrap" style="display:none">
+      <div class="prog-label">
+        <span>Benefícios configurados</span>
+        <span id="prog-pct">0%</span>
+      </div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-steps">
+        <span class="prog-step">Início</span>
+        <span class="prog-step">VA/VR</span>
+        <span class="prog-step">VT/AC</span>
+        <span class="prog-step">Concluído</span>
+      </div>
+    </div>
+
     <div class="bcard">
-      <div class="bcard-title">Vale Alimentação <span class="bcard-divider">·</span> Vale Refeição</div>
+      <span class="benefit-icon">🍽️</span><div class="bcard-title">Vale Alimentação <span class="bcard-divider">·</span> Vale Refeição</div>
       <div class="total-row">
         <div class="total-label">Total disponível</div>
         <div class="total-value" id="f-tva">—</div>
@@ -250,7 +336,7 @@
     </div>
 
     <div class="bcard">
-      <div class="bcard-title">Vale Transporte <span class="bcard-divider">·</span> Auxílio Combustível</div>
+      <span class="benefit-icon">🚌</span><div class="bcard-title">Vale Transporte <span class="bcard-divider">·</span> Auxílio Combustível</div>
       <div class="total-row">
         <div class="total-label">Total disponível</div>
         <div class="total-value" id="f-tvt">—</div>
@@ -293,10 +379,10 @@
 <div id="pg-ok" class="pg">
   <div class="ok-outer">
     <div class="ok-card">
-      <div class="ok-icon">✓</div>
-      <div class="ok-gold-line"></div>
-      <h2>Escolhas confirmadas!</h2>
-      <p id="ok-msg"></p>
+      <div class="ok-icon" id="ok-icon-el">✓</div>
+      <div class="ok-gold-line" id="ok-line-el"></div>
+      <h2 class="fadeup">Escolhas confirmadas!</h2>
+      <p id="ok-msg" class="fadeup"></p>
       <div style="margin-bottom:2rem">
         <div class="ok-row"><span class="ok-row-key">Vale Refeição (VR)</span><span class="ok-row-val" id="ok-vr">—</span></div>
         <div class="ok-row"><span class="ok-row-key">Vale Alimentação (VA)</span><span class="ok-row-val" id="ok-va">—</span></div>
@@ -333,13 +419,30 @@
       <div class="mes-bar" style="margin-bottom:1.5rem">
         Mês: <strong id="adm-mes">—</strong> &nbsp;·&nbsp; Dias úteis: <strong id="adm-dias">—</strong> &nbsp;·&nbsp; Prazo: <strong id="adm-prazo">—</strong>
       </div>
-      <div class="g4">
-        <div class="metric"><div class="mlabel">Colaboradores</div><div class="mval" id="m-tot">15</div></div>
-        <div class="metric"><div class="mlabel">Responderam</div><div class="mval" id="m-done" style="color:#195c38">0</div></div>
-        <div class="metric"><div class="mlabel">Pendentes</div><div class="mval" id="m-pend" style="color:#7a5209">15</div></div>
-        <div class="metric"><div class="mlabel">Concluído</div><div class="mval" id="m-pct">0%</div></div>
+      <div class="metrics-row">
+        <div class="ring-wrap">
+          <svg class="ring-svg" width="90" height="90" viewBox="0 0 90 90">
+            <circle class="ring-bg" cx="45" cy="45" r="36"/>
+            <circle class="ring-fill" id="ring-fill" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="226"/>
+          </svg>
+          <div style="margin-top:8px;text-align:center">
+            <div class="ring-label" id="m-pct">0%</div>
+            <div class="ring-sub">Concluído</div>
+          </div>
+        </div>
+        <div class="metric-sm"><div class="mlabel">Total</div><div class="mval" id="m-tot">15</div></div>
+        <div class="metric-sm"><div class="mlabel">Responderam</div><div class="mval" id="m-done" style="color:#195c38">0</div></div>
+        <div class="metric-sm"><div class="mlabel">Pendentes</div><div class="mval" id="m-pend" style="color:#c49a45">15</div></div>
       </div>
       <div class="card" style="padding:.5rem 1.25rem"><div id="lista-painel"></div></div>
+      <div class="card" id="chart-section" style="display:none">
+        <div class="rtitle">Distribuição de benefícios</div>
+        <div class="chart-wrap" id="chart-body"></div>
+      </div>
+      <div class="card" id="timeline-section" style="display:none">
+        <div class="rtitle">Linha do tempo de respostas</div>
+        <div class="timeline" id="timeline-body"></div>
+      </div>
     </div>
 
     <!-- CONFIG -->
@@ -688,6 +791,183 @@ function renderRel() {
 
   document.getElementById('rel-body').innerHTML = h;
 }
+
+// ── DARK MODE ──────────────────────────────────────────
+function toggleDark() {
+  document.body.classList.toggle('dark');
+  document.getElementById('dark-btn').textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+  localStorage.setItem('pbl-dark', document.body.classList.contains('dark'));
+}
+if(localStorage.getItem('pbl-dark') === 'true') {
+  document.body.classList.add('dark');
+  document.addEventListener('DOMContentLoaded', () => {
+    const btn = document.getElementById('dark-btn');
+    if(btn) btn.textContent = '☀️';
+  });
+}
+
+// ── PROGRESSO DO FORMULÁRIO ──────────────────────────────────────────
+function updateProgress() {
+  if(!colab) return;
+  const tva = vaTot(colab), tvt = vtTot(colab);
+  const vr = parseFloat(document.getElementById('inp-vr').value)||0;
+  const va = parseFloat(document.getElementById('inp-va').value)||0;
+  const vt = parseFloat(document.getElementById('inp-vt').value)||0;
+  const ac = parseFloat(document.getElementById('inp-ac').value)||0;
+
+  const vaOk = Math.abs(vr+va-tva) < 0.05;
+  const vtOk = Math.abs(vt+ac-tvt) < 0.05;
+  let pct = 0;
+  if(vaOk && vtOk) pct = 100;
+  else if(vaOk || vtOk) pct = 50;
+  else if((vr+va) > 0 || (vt+ac) > 0) pct = 25;
+
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+  document.getElementById('prog-wrap').style.display = 'block';
+}
+
+// Patch syncInput e syncSlider para chamar updateProgress
+const _origSyncInput = syncInput;
+const _origSyncSlider = syncSlider;
+// Override via event delegation instead - add oninput to inputs in entrar()
+
+// ── ANIMAÇÃO SUCESSO ──────────────────────────────────────────
+function animarSucesso() {
+  const icon = document.getElementById('ok-icon-el');
+  const line = document.getElementById('ok-line-el');
+  if(icon) { icon.classList.remove('animate'); void icon.offsetWidth; icon.classList.add('animate'); }
+  if(line) { line.classList.remove('animate'); void line.offsetWidth; line.classList.add('animate'); }
+}
+
+// ── RING PROGRESS ──────────────────────────────────────────
+function updateRing(pct) {
+  const circ = 2 * Math.PI * 36; // 226.19
+  const offset = circ - (pct/100) * circ;
+  const ring = document.getElementById('ring-fill');
+  if(ring) ring.style.strokeDashoffset = offset;
+}
+
+// ── CHART ──────────────────────────────────────────
+function renderChart() {
+  const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
+  if(resp.length === 0) { document.getElementById('chart-section').style.display = 'none'; return; }
+  document.getElementById('chart-section').style.display = 'block';
+
+  let totalVR=0,totalVA=0,totalVT=0,totalAC=0,totalAll=0;
+  resp.forEach(c => {
+    const r = RESPOSTAS[c.nome];
+    totalVR+=r.vr; totalVA+=r.va; totalVT+=r.vt; totalAC+=r.ac;
+    totalAll += r.vr+r.va+r.vt+r.ac;
+  });
+
+  const bars = [
+    { label: 'Vale Refeição (VR)',      val: totalVR, color: 'var(--g)' },
+    { label: 'Vale Alimentação (VA)',   val: totalVA, color: 'var(--gold)' },
+    { label: 'Vale Transporte (VT)',    val: totalVT, color: 'var(--gm)' },
+    { label: 'Auxílio Comb. (AC)',      val: totalAC, color: 'var(--goldd)' },
+  ];
+
+  const max = Math.max(...bars.map(b => b.val));
+  let h = '';
+  bars.forEach(b => {
+    const w = max > 0 ? Math.round((b.val/max)*100) : 0;
+    h += `<div class="chart-bar-row">
+      <div class="chart-label">${b.label}</div>
+      <div class="chart-track">
+        <div class="chart-fill" style="width:${w}%;background:${b.color}">
+          <span class="chart-val">${fmt(b.val)}</span>
+        </div>
+      </div>
+      <div class="chart-pct">${totalAll>0?Math.round(b.val/totalAll*100):0}%</div>
+    </div>`;
+  });
+  document.getElementById('chart-body').innerHTML = h;
+}
+
+// ── TIMELINE ──────────────────────────────────────────
+const TIMESTAMPS = {};
+
+function renderTimeline() {
+  const section = document.getElementById('timeline-section');
+  section.style.display = 'block';
+  let h = '';
+  // Responderam primeiro
+  COLABS.filter(c => RESPOSTAS[c.nome]).forEach(c => {
+    const ts = TIMESTAMPS[c.nome] || 'Hoje';
+    h += `<div class="tl-item">
+      <div class="tl-dot"></div>
+      <div><div class="tl-name">${c.nome}</div><div class="tl-time">${ts}</div></div>
+    </div>`;
+  });
+  // Pendentes
+  COLABS.filter(c => !RESPOSTAS[c.nome]).forEach(c => {
+    h += `<div class="tl-item">
+      <div class="tl-dot pending"></div>
+      <div><div class="tl-name" style="color:var(--mu)">${c.nome}</div><div class="tl-time">Aguardando resposta</div></div>
+    </div>`;
+  });
+  document.getElementById('timeline-body').innerHTML = h;
+}
+
+// ── MICRO-INTERAÇÃO SLIDER EXTREMOS ──────────────────────────────────────────
+function checkSliderExtreme(g, p) {
+  if(p <= 2 || p >= 98) {
+    const bar = document.getElementById('bar-' + (g==='va'?'vr':'vt'));
+    if(bar) { bar.classList.remove('slider-bounce'); void bar.offsetWidth; bar.classList.add('slider-bounce'); }
+  }
+}
+
+// Patch confirmar to add timestamp and animate
+const _origConfirmar = confirmar;
+confirmar = function() {
+  const tva = vaTot(colab), tvt = vtTot(colab);
+  const vr  = parseFloat(document.getElementById('inp-vr').value)||0;
+  const va  = parseFloat(document.getElementById('inp-va').value)||0;
+  const vt  = parseFloat(document.getElementById('inp-vt').value)||0;
+  const ac  = parseFloat(document.getElementById('inp-ac').value)||0;
+  if(Math.abs(vr+va-tva)>0.05 || Math.abs(vt+ac-tvt)>0.05) { _origConfirmar(); return; }
+  _origConfirmar();
+  // Record timestamp
+  const now = new Date();
+  TIMESTAMPS[colab.nome] = now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'}) + ' · ' + now.toLocaleDateString('pt-BR');
+  setTimeout(animarSucesso, 50);
+};
+
+// Patch syncSlider to check extremes and update progress
+const _origSyncSlider2 = syncSlider;
+syncSlider = function(g) {
+  _origSyncSlider2(g);
+  const p = parseInt(document.getElementById('sl-'+g).value);
+  checkSliderExtreme(g, p);
+  updateProgress();
+};
+
+// Patch syncInput to update progress
+const _origSyncInput2 = syncInput;
+syncInput = function(g, w) {
+  _origSyncInput2(g, w);
+  updateProgress();
+};
+
+// Patch renderPainel to also render chart and timeline
+const _origRenderPainel = renderPainel;
+renderPainel = function() {
+  _origRenderPainel();
+  const done = Object.keys(RESPOSTAS).length;
+  updateRing(Math.round(done/COLABS.length*100));
+  renderChart();
+  renderTimeline();
+};
+
+// Show progress bar when form opens
+const _origEntrar = entrar;
+entrar = function() {
+  _origEntrar();
+  document.getElementById('prog-wrap').style.display = 'block';
+  updateProgress();
+};
+
 </script>
 </body>
 </html>
