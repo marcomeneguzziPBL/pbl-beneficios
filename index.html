@@ -643,7 +643,7 @@ function renderRel() {
 
   let h = '';
   if(pend.length > 0)
-    h += `<div class="wnote">⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não respondeu${pend.length>1?'am':''}. Os totais abaixo são parciais.</div>`;
+    h += `<div class="wnote">⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não ${pend.length>1?'responderam':'respondeu'}. Os totais abaixo são parciais.</div>`;
 
   h += `<div class="sg3">
     <div class="stt"><div class="stl">Total VA/VR</div><div class="stv">${fmt(totalVR+totalVA)}</div></div>
