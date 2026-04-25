@@ -93,7 +93,7 @@
     .inp-wrap:focus-within { border-color: var(--g); background: var(--white); }
     .inp-prefix { padding: 0 12px; font-size: 14px; color: var(--mu); font-weight: 500; border-right: 1.5px solid var(--bo); height: 46px; display: flex; align-items: center; background: var(--white); }
     .inp-wrap input { border: none; outline: none; padding: 0 12px; font-size: 16px; font-family: 'Inter', sans-serif; background: transparent; color: var(--tx); width: 100%; height: 46px; font-weight: 500; }
-    .inp-edit { width: 80px; padding: 6px 10px; border: 1.5px solid var(--bo); border-radius: 8px; font-size: 14px; font-family: 'Inter', sans-serif; color: var(--tx); background: var(--bg); text-align: right; }
+    .inp-edit { width: 80px; padding: 6px 10px; border: 1.5px solid var(--bo); border-radius: 8px; font-size: 15px; font-family: 'Inter', sans-serif; color: #0a2e25; background: var(--white); text-align: right; font-weight: 600; }
     .inp-edit:focus { outline: none; border-color: var(--g); }
     input[type=range] { width: 100%; accent-color: var(--gold); height: 6px; cursor: pointer; margin: 4px 0; }
     .bar-vis { display: flex; height: 8px; border-radius: 99px; overflow: hidden; margin-bottom: 10px; }
@@ -126,8 +126,8 @@
     .g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
     .g4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
     .metric { background: var(--white); border: 1px solid var(--bo); border-radius: 12px; padding: 1rem 1.25rem; }
-    .mlabel { font-size: 11px; color: var(--mu); margin-bottom: 4px; text-transform: uppercase; letter-spacing: .05em; }
-    .mval { font-size: 26px; font-weight: 600; font-family: 'Playfair Display', serif; color: var(--g); }
+    .mlabel { font-size: 11px; color: #2d4a43; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .06em; font-weight: 600; }
+    .mval { font-size: 26px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--g); letter-spacing: -.02em; }
     .badge { display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 99px; font-weight: 600; }
     .bp { background: #FEF3E2; color: #7a5209; } .bd { background: #E4F2EB; color: #195c38; }
     .crow { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--bo); }
@@ -144,12 +144,12 @@
     .rtitle { font-size: 11px; font-weight: 600; color: var(--g); text-transform: uppercase; letter-spacing: .08em; padding-bottom: 8px; border-bottom: 2px solid var(--gold); margin-bottom: 1rem; }
     .rline { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--bo); font-size: 14px; }
     .rline:last-child { border-bottom: none; }
-    .rtot { display: flex; justify-content: space-between; padding: 10px 0 2px; font-size: 15px; font-weight: 600; color: var(--g); border-top: 2px solid var(--bo); margin-top: 4px; }
-    .rsub { font-size: 12px; color: var(--mu); }
+    .rtot { display: flex; justify-content: space-between; padding: 10px 0 2px; font-size: 15px; font-weight: 700; color: var(--g); border-top: 2px solid var(--bo); margin-top: 4px; }
+    .rsub { font-size: 12px; color: #2d4a43; font-weight: 500; }
     .sg3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 1.5rem; }
     .stt { background: var(--white); border: 1px solid var(--bo); border-radius: 12px; padding: 1rem 1.25rem; }
-    .stl { font-size: 11px; color: var(--mu); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; }
-    .stv { font-size: 20px; font-weight: 600; font-family: 'Playfair Display', serif; color: var(--g); }
+    .stl { font-size: 11px; color: #2d4a43; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; font-weight: 600; }
+    .stv { font-size: 20px; font-weight: 700; font-family: 'Inter', sans-serif; color: var(--g); letter-spacing: -.02em; }
     .wnote { background: #FEF3E2; border: 1px solid #f0c87a; border-radius: 10px; padding: 12px 16px; font-size: 13px; color: #7a5209; margin-bottom: 1.25rem; }
     .recap-box { background: var(--gl); border-radius: 10px; padding: 14px 18px; margin-top: 1rem; }
     .recap-title { font-size: 12px; font-weight: 600; color: var(--g); margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
@@ -587,8 +587,8 @@ function renderPainel() {
       <div style="display:flex;align-items:center;gap:10px">
         <div class="av">${ini(c.nome)}</div>
         <div>
-          <div style="font-size:14px;font-weight:500">${c.nome}</div>
-          <div style="font-size:12px;color:var(--mu)">${sub}</div>
+          <div style="font-size:14px;font-weight:600;color:#0a2e25">${c.nome}</div>
+          <div style="font-size:12px;color:#3d6058;font-weight:500">${sub}</div>
         </div>
       </div>
       ${badge}
@@ -604,22 +604,22 @@ function renderColab() {
       <div style="display:flex;align-items:center;gap:10px">
         <div class="av">${ini(c.nome)}</div>
         <div>
-          <div style="font-size:14px;font-weight:500">${c.nome}</div>
+          <div style="font-size:14px;font-weight:600;color:#0a2e25">${c.nome}</div>
           <div class="ctag">${c.cidade}</div>
         </div>
       </div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em">VA/VR R$/dia</span>
+          <span style="font-size:11px;color:#2d4a43;text-transform:uppercase;letter-spacing:.05em;font-weight:600">VA/VR R$/dia</span>
           <input class="inp-edit" type="number" value="${c.vapd}" step="0.50"
             onchange="COLABS[${i}].vapd=parseFloat(this.value)||0;this.nextElementSibling.textContent='= ${fmt(vaTot(c))}'.replace('${fmt(vaTot(c))}', fmt(COLABS[${i}].vapd*MES.dias))">
-          <span style="font-size:11px;color:var(--mu)">${fmt(vaTot(c))}</span>
+          <span style="font-size:13px;color:var(--g);font-weight:600">${fmt(vaTot(c))}</span>
         </div>
         <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em">Passagem R$</span>
+          <span style="font-size:11px;color:#2d4a43;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Passagem R$</span>
           <input class="inp-edit" type="number" value="${c.passagem}" step="0.01"
             onchange="COLABS[${i}].passagem=parseFloat(this.value)||0">
-          <span style="font-size:11px;color:var(--mu)">${fmt(vtTot(c))}</span>
+          <span style="font-size:13px;color:var(--g);font-weight:600">${fmt(vtTot(c))}</span>
         </div>
       </div>
     </div>`;
