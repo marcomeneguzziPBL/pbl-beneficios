@@ -692,23 +692,25 @@ function salvarConfig() {
 async function renderPainel() {
   // Carrega respostas via JSONP (contorna CORS)
   await new Promise(resolve => {
-    const cbName = 'pblCb_' + Date.now();
+    const cbName = 'pblCb' + Date.now();
     window[cbName] = data => {
-      if(Array.isArray(data)) {
-        data.forEach(r => {
-          RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
-          TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
-        });
-      }
-      document.head.removeChild(script);
+      try {
+        if(Array.isArray(data)) {
+          data.forEach(r => {
+            RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+            TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
+          });
+        }
+      } catch(e) { console.warn('Erro ao processar dados:', e); }
+      try { document.head.removeChild(script); } catch(e) {}
       delete window[cbName];
       resolve();
     };
     const script = document.createElement('script');
-    script.src = API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + MES.ano + '&callback=' + cbName;
-    script.onerror = () => { resolve(); };
+    script.src = API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano)) + '&callback=' + cbName;
+    script.onerror = e => { console.warn('JSONP erro:', e); resolve(); };
     document.head.appendChild(script);
-    setTimeout(resolve, 5000);
+    setTimeout(() => { delete window[cbName]; resolve(); }, 8000);
   });
 
   const done=Object.keys(RESPOSTAS).length, tot=COLABS.length;
