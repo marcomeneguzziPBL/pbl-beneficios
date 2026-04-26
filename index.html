@@ -648,8 +648,9 @@ async function confirmar() {
       method: 'POST',
       headers: {'Content-Type':'text/plain'},
       body: JSON.stringify({
+        action: 'save',
         nome: colabAtual.nome,
-        email: colabAtual.nome.toLowerCase().replace(/ /g,'.')+'-simulacao',
+        email: colabAtual.nome.toLowerCase().replace(/ /g,'.'),
         cidade: colabAtual.cidade,
         mes: MES.mes, ano: MES.ano,
         vr, va, vt, ac,
@@ -687,9 +688,13 @@ function salvarConfig() {
 }
 
 async function renderPainel() {
-  // Carrega respostas da planilha
+  // Carrega respostas da planilha via POST
   try {
-    const res  = await fetch(`${API}?action=list&mes=${MES.mes}&ano=${MES.ano}`);
+    const res  = await fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify({ action:'list', mes: MES.mes, ano: MES.ano })
+    });
     const data = await res.json();
     if(Array.isArray(data)) {
       data.forEach(r => {
