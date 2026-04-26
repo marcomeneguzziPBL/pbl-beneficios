@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PBL — Benefícios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://accounts.google.com/gsi/client"></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -214,7 +214,7 @@
       .ring-wrap { display:none; }
     }
   </style>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <script src="https://accounts.google.com/gsi/client"></script>
 </head>
 <body>
 
@@ -506,23 +506,23 @@ window.addEventListener('load', () => {
     irPara('pg-admin'); atualizarAdmin();
   }
 
-  // Renderiza botão Google quando a lib carregar
-  function renderGoogleBtn() {
-    if(typeof google === 'undefined' || !google.accounts) {
-      setTimeout(renderGoogleBtn, 200); return;
-    }
+});
+
+// Inicializa Google após script carregar
+window.onload = function() {
+  if(typeof google !== 'undefined' && google.accounts) {
     google.accounts.id.initialize({
       client_id: '1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com',
       callback: handleLogin,
-      auto_select: false
+      auto_select: false,
+      cancel_on_tap_outside: true
     });
     google.accounts.id.renderButton(
       document.getElementById('google-btn-wrap'),
       { theme: 'outline', size: 'large', width: 300, text: 'signin_with', logo_alignment: 'left' }
     );
   }
-  renderGoogleBtn();
-});
+};
 
 function handleLogin(response) {
   try {
