@@ -416,7 +416,7 @@
         <div class="metric-sm"><div class="mlabel">Responderam</div><div class="mval" id="m-done" style="color:#195c38">0</div></div>
         <div class="metric-sm"><div class="mlabel">Pendentes</div><div class="mval" id="m-pend" style="color:#c49a45">15</div></div>
       </div>
-      <div class="card" style="padding:.5rem 1.25rem"><div id="lista-painel"></div></div>
+      <div class="card" style="padding:.5rem 1.25rem"><div id="lista-painel"><p style="font-size:13px;color:var(--mu);padding:1rem 0">Carregando...</p></div></div>
       <div class="card" id="chart-card" style="display:none">
         <div class="rtitle">Distribuição por benefício</div>
         <div id="chart-body"></div>
@@ -620,7 +620,7 @@ function updateProgress() {
   el('prog-pct').textContent  = pct+'%';
 }
 
-function confirmar() {
+async function confirmar() {
   if(!colabAtual) return;
   const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
   const vr  = parseFloat(el('inp-vr').value)||0;
@@ -629,13 +629,37 @@ function confirmar() {
   const ac  = parseFloat(el('inp-ac').value)||0;
   if(Math.abs(vr+va-tva)>0.05){ el('err-va').textContent='Os valores não somam o total disponível.'; return; }
   if(Math.abs(vt+ac-tvt)>0.05){ el('err-vt').textContent='Os valores não somam o total disponível.'; return; }
+
+  // Salva localmente
   RESPOSTAS[colabAtual.nome] = {vr,va,vt,ac,tipo:colabAtual.tipo,cidade:colabAtual.cidade};
   const now = new Date();
-  TIMESTAMPS[colabAtual.nome] = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR');
+  const ts  = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR');
+  TIMESTAMPS[colabAtual.nome] = ts;
+
+  // Mostra tela de sucesso imediatamente
   el('ok-vr').textContent = fmt(vr); el('ok-va').textContent = fmt(va);
   el('ok-vt').textContent = fmt(vt); el('ok-ac').textContent = fmt(ac);
   el('ok-msg').textContent = colabAtual.nome+', suas escolhas para '+MES.mes+' '+MES.ano+' foram registradas.';
   irPara('pg-ok');
+
+  // Salva na planilha em background
+  try {
+    await fetch(API, {
+      method: 'POST',
+      headers: {'Content-Type':'text/plain'},
+      body: JSON.stringify({
+        nome: colabAtual.nome,
+        email: colabAtual.nome.toLowerCase().replace(/ /g,'.')+'-simulacao',
+        cidade: colabAtual.cidade,
+        mes: MES.mes, ano: MES.ano,
+        vr, va, vt, ac,
+        tipo: colabAtual.tipo,
+        timestamp: ts
+      })
+    });
+  } catch(e) {
+    console.warn('Erro ao salvar na planilha:', e);
+  }
 }
 
 // ══ ADMIN ════════════════════════════════════════════════
@@ -662,7 +686,19 @@ function salvarConfig() {
   const ok=el('cfg-ok'); ok.style.display='block'; setTimeout(()=>ok.style.display='none',3000);
 }
 
-function renderPainel() {
+async function renderPainel() {
+  // Carrega respostas da planilha
+  try {
+    const res  = await fetch(`${API}?action=list&mes=${MES.mes}&ano=${MES.ano}`);
+    const data = await res.json();
+    if(Array.isArray(data)) {
+      data.forEach(r => {
+        RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+        TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
+      });
+    }
+  } catch(e) { console.warn('Sem conexão com planilha, usando dados locais'); }
+
   const done=Object.keys(RESPOSTAS).length, tot=COLABS.length;
   el('m-tot').textContent  = tot;
   el('m-done').textContent = done;
