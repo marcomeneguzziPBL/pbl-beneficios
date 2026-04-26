@@ -213,13 +213,14 @@
       .ring-wrap { display:none; }
     }
   </style>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 
 <button class="dark-toggle" id="dark-btn" onclick="toggleDark()">🌙</button>
 
-<!-- ══ SELEÇÃO ══ -->
-<div id="pg-sel" class="pg active">
+<!-- ══ LOGIN ══ -->
+<div id="pg-login" class="pg active">
   <div class="sel-outer">
     <div class="sel-card">
       <div class="brand-row">
@@ -231,13 +232,31 @@
       </div>
       <div class="sel-divider"></div>
       <h1>Escolha de Benefícios</h1>
-      <p>Selecione seu nome para acessar e registrar suas preferências de benefícios do mês.</p>
-      <select class="sel-select" id="sel-nome" onchange="document.getElementById('btn-entrar').disabled=this.value===''">
-        <option value="">— Selecione seu nome —</option>
-      </select>
-      <button class="btn-gold" id="btn-entrar" onclick="entrar()" disabled>Acessar meu formulário</button>
+      <p>Entre com sua conta Google da empresa para acessar seus benefícios.</p>
+      <div id="g_id_onload"
+        data-client_id="1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com"
+        data-callback="handleLogin"
+        data-auto_prompt="false">
+      </div>
+      <div class="g_id_signin"
+        data-type="standard"
+        data-size="large"
+        data-theme="outline"
+        data-text="sign_in_with"
+        data-shape="rectangular"
+        data-logo_alignment="left"
+        data-width="320">
+      </div>
+      <p id="login-erro" style="color:#c0392b;font-size:13px;margin-top:1rem;display:none"></p>
     </div>
   </div>
+</div>
+
+<!-- ══ SELEÇÃO (mantida internamente, não exibida) ══ -->
+<div id="pg-sel" class="pg" style="display:none">
+  <select id="sel-nome" style="display:none">
+    <option value="">—</option>
+  </select>
 </div>
 
 <!-- ══ FORMULÁRIO ══ -->
@@ -248,7 +267,7 @@
       <div class="hdr-name">PBL</div>
       <div class="hdr-sub">Compra de Créditos Judiciais</div>
     </div>
-    <div class="hdr-right" id="hdr-mes">—</div>
+    <div class="hdr-right" style="display:flex;align-items:center;gap:12px"><span id="hdr-mes">—</span><button onclick="logout()" style="background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.3);border-radius:6px;color:#fff;font-size:12px;padding:4px 10px;cursor:pointer;font-family:Inter,sans-serif">Sair</button></div>
   </div>
   <div class="wrap">
     <button class="btn-back" onclick="irPara('pg-sel')">← Trocar colaborador</button>
@@ -491,15 +510,63 @@ window.addEventListener('load', () => {
   const src = 'data:image/png;base64,' + SYMBOL_B64;
   ['logo-sel','logo-hdr','logo-adm'].forEach(id => { const e=el(id); if(e) e.src=src; });
   if(localStorage.getItem('pbl-dark')==='true') { document.body.classList.add('dark'); el('dark-btn').textContent='☀️'; }
-  const sel = el('sel-nome');
-  COLABS.forEach((c,i) => { const o=document.createElement('option'); o.value=i; o.textContent=c.nome; sel.appendChild(o); });
-  if(window.location.search.includes('admin') || window.location.href.includes('?admin')) irPara('pg-admin'), atualizarAdmin();
+  if(window.location.search.includes('admin') || window.location.href.includes('?admin')) {
+    irPara('pg-admin'); atualizarAdmin();
+  }
 });
+
+function handleLogin(response) {
+  try {
+    const payload = JSON.parse(atob(response.credential.split('.')[1]));
+    const email   = payload.email || '';
+    const dominio = email.split('@')[1] || '';
+
+    if(dominio !== 'pblcompra.com.br') {
+      const erro = el('login-erro');
+      erro.textContent = 'Acesso restrito a contas @pblcompra.com.br.';
+      erro.style.display = 'block';
+      return;
+    }
+
+    // Encontra o colaborador pelo e-mail
+    // Como não temos e-mails cadastrados ainda, busca pelo primeiro nome
+    const primeiroNome = (payload.given_name || '').toLowerCase();
+    const idx = COLABS.findIndex(c => 
+      c.nome.toLowerCase().startsWith(primeiroNome) ||
+      c.nome.toLowerCase().includes(primeiroNome)
+    );
+
+    if(idx === -1) {
+      const erro = el('login-erro');
+      erro.textContent = 'Seu e-mail não foi encontrado na lista de colaboradores. Entre em contato com o RH.';
+      erro.style.display = 'block';
+      return;
+    }
+
+    // Guarda sessão
+    sessionStorage.setItem('pbl_email', email);
+    sessionStorage.setItem('pbl_nome', payload.name);
+
+    // Vai direto para o formulário
+    el('sel-nome').value = idx;
+    entrar();
+  } catch(e) {
+    console.error('Erro no login:', e);
+  }
+}
+
+function logout() {
+  sessionStorage.removeItem('pbl_email');
+  sessionStorage.removeItem('pbl_nome');
+  colabAtual = null;
+  irPara('pg-login');
+}
 
 // ══ NAVEGAÇÃO ═══════════════════════════════════════════
 function irPara(id) {
   document.querySelectorAll('.pg').forEach(x=>x.classList.remove('active'));
-  el(id).classList.add('active');
+  const target = el(id);
+  if(target) { target.classList.add('active'); target.style.display=''; }
   window.scrollTo(0,0);
 }
 
@@ -544,7 +611,8 @@ function initDrag(g) {
 // ══ FORMULÁRIO ══════════════════════════════════════════
 function entrar() {
   const idx   = parseInt(el('sel-nome').value);
-  colabAtual  = COLABS[idx];
+  if(!isNaN(idx) && idx >= 0) colabAtual = COLABS[idx];
+  if(!colabAtual) return;
   const tva   = vaTot(colabAtual), tvt = vtTot(colabAtual);
 
   el('f-av').textContent    = ini(colabAtual.nome);
