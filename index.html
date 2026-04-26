@@ -520,6 +520,10 @@ window.addEventListener('load', () => {
   }
 });
 
+function loginGoogle() {
+  google.accounts.id.prompt();
+}
+
 function handleLogin(response) {
   try {
     const payload = JSON.parse(atob(response.credential.split('.')[1]));
@@ -528,7 +532,7 @@ function handleLogin(response) {
 
     if(dominio !== 'pblcompra.com.br') {
       const erro = el('login-erro');
-      erro.textContent = 'Acesso restrito a contas @pblcompra.com.br.';
+      erro.textContent = 'Acesso restrito a contas @pblcompra.com.';
       erro.style.display = 'block';
       return;
     }
