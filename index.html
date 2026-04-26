@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PBL — Benefícios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -475,22 +476,26 @@ const SYMBOL_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAKAAAABlCAYAAADK6ugqAAABCGlDQ1BJQ0Mg
 let MES = { mes:'Maio', ano:2026, dias:22, prazo:'10/05/2026' };
 
 const COLABS = [
-  {nome:'Andressa Rodrigues',        passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Arídio Manuel F. Vasquez',  passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Bárbara Paladino Motta',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Daniel Felipe L. Fontana',  passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Débora de Lacerda Alves',   passagem:9.45, vapd:24, cidade:'Intermunicipal (Palhoça)',   tipo:'intermunicipal'},
-  {nome:'Eduardo M. L. Zattar',      passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Fernanda Martins Mello',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Gabriella S. P. Althoff',  passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Hilary Barbosa Coutinho',   passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Luiz Fernando D. Lentz',   passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Luiz Henrique D. da Silva',passagem:8.67, vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
-  {nome:'Marco Antônio R. Meneguzzi',passagem:7.20,vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Nicolli da Silva',         passagem:6.91, vapd:24, cidade:'Intermunicipal (Biguaçu)',   tipo:'intermunicipal'},
-  {nome:'Tarciane Isabel Zomer',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
-  {nome:'Tatiana Dias de Paiva',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Andressa Rodrigues',         email:'andressa.rodrigues@pblcompra.com',       passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Arídio Manuel F. Vasquez',   email:'aridio.vasquez@pblcompra.com',           passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Bárbara Paladino Motta',     email:'barbara.motta@pblcompra.com',            passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Daniel Felipe L. Fontana',   email:'daniel.fontana@pblcompra.com',           passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Débora de Lacerda Alves',    email:'debora.alves@pblcompra.com',             passagem:9.45, vapd:24, cidade:'Intermunicipal (Palhoça)',    tipo:'intermunicipal'},
+  {nome:'Eduardo M. L. Zattar',       email:'eduardo.zattar@pblcompra.com',           passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Fernanda Martins Mello',     email:'fernanda.mello@pblcompra.com',           passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Gabriella S. P. Althoff',   email:'gabriella.althoff@pblcompra.com',        passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Hilary Barbosa Coutinho',    email:'hilary.coutinho@pblcompra.com',          passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Luiz Fernando D. Lentz',    email:'luiz.lentz@pblcompra.com',               passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Luiz Henrique D. da Silva', email:'luiz.silva@pblcompra.com',               passagem:8.67, vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
+  {nome:'Marco Antônio R. Meneguzzi',email:'marco.meneguzzi@pblcompra.com',          passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Nicolli da Silva',          email:'nicolli.silva@pblcompra.com',            passagem:6.91, vapd:24, cidade:'Intermunicipal (Biguaçu)',   tipo:'intermunicipal'},
+  {nome:'Tarciane Isabel Zomer',     email:'tarciane.zomer@pblcompra.com',           passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
+  {nome:'Tatiana Dias de Paiva',     email:'tatiana.paiva@pblcompra.com',            passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',   tipo:'municipal'},
 ];
+
+// Admins com acesso ao painel RH
+const ADMINS = ['marco.meneguzzi@pblcompra.com'];
+const DOMINIO = 'pblcompra.com';
 
 const RESPOSTAS  = {};
 const TIMESTAMPS = {};
@@ -609,8 +614,8 @@ function initDrag(g) {
 }
 
 // ══ FORMULÁRIO ══════════════════════════════════════════
-function entrar() {
-  const idx   = parseInt(el('sel-nome').value);
+function entrar(idxDireto) {
+  const idx   = idxDireto !== undefined ? idxDireto : parseInt(el('sel-nome').value);
   if(!isNaN(idx) && idx >= 0) colabAtual = COLABS[idx];
   if(!colabAtual) return;
   const tva   = vaTot(colabAtual), tvt = vtTot(colabAtual);
