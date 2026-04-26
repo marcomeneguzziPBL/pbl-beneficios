@@ -493,7 +493,7 @@ window.addEventListener('load', () => {
   if(localStorage.getItem('pbl-dark')==='true') { document.body.classList.add('dark'); el('dark-btn').textContent='☀️'; }
   const sel = el('sel-nome');
   COLABS.forEach((c,i) => { const o=document.createElement('option'); o.value=i; o.textContent=c.nome; sel.appendChild(o); });
-  if(window.location.search.includes('admin')) irPara('pg-admin'), atualizarAdmin();
+  if(window.location.search.includes('admin') || window.location.href.includes('?admin')) irPara('pg-admin'), atualizarAdmin();
 });
 
 // ══ NAVEGAÇÃO ═══════════════════════════════════════════
@@ -643,10 +643,11 @@ async function confirmar() {
   el('ok-msg').textContent = colabAtual.nome+', suas escolhas para '+MES.mes+' '+MES.ano+' foram registradas.';
   irPara('pg-ok');
 
-  // Salva na planilha em background
+  // Salva na planilha via no-cors (sem leitura de resposta)
   try {
-    await fetch(API, {
+    fetch(API, {
       method: 'POST',
+      mode: 'no-cors',
       headers: {'Content-Type':'text/plain'},
       body: JSON.stringify({
         action: 'save',
@@ -689,21 +690,26 @@ function salvarConfig() {
 }
 
 async function renderPainel() {
-  // Carrega respostas da planilha via POST
-  try {
-    const res  = await fetch(API, {
-      method: 'POST',
-      headers: {'Content-Type':'text/plain'},
-      body: JSON.stringify({ action:'list', mes: MES.mes, ano: MES.ano })
-    });
-    const data = await res.json();
-    if(Array.isArray(data)) {
-      data.forEach(r => {
-        RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
-        TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
-      });
-    }
-  } catch(e) { console.warn('Sem conexão com planilha, usando dados locais'); }
+  // Carrega respostas via JSONP (contorna CORS)
+  await new Promise(resolve => {
+    const cbName = 'pblCb_' + Date.now();
+    window[cbName] = data => {
+      if(Array.isArray(data)) {
+        data.forEach(r => {
+          RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+          TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
+        });
+      }
+      document.head.removeChild(script);
+      delete window[cbName];
+      resolve();
+    };
+    const script = document.createElement('script');
+    script.src = API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + MES.ano + '&callback=' + cbName;
+    script.onerror = () => { resolve(); };
+    document.head.appendChild(script);
+    setTimeout(resolve, 5000);
+  });
 
   const done=Object.keys(RESPOSTAS).length, tot=COLABS.length;
   el('m-tot').textContent  = tot;
@@ -829,7 +835,7 @@ function renderRel() {
 }
 
 // Init admin if on admin page
-if(window.location.search.includes('admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
+if(window.location.search.includes('admin') || window.location.href.includes('?admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
 </script>
 </body>
 </html>
