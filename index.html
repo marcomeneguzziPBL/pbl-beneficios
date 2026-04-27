@@ -526,10 +526,10 @@ function loginGoogle() {
 }
 
 function processarRedirect() {
-  const hash = window.location.hash.substring(1);
-  if(!hash) return;
-  const params = new URLSearchParams(hash);
-  const idToken = params.get('id_token');
+  const hash = window.location.hash;
+  if(!hash || !hash.includes('id_token')) return;
+  // Parse manual pois o hash pode começar com #iss= e não #id_token=
+  const idToken = hash.split('id_token=')[1]?.split('&')[0];
   if(!idToken) return;
 
   try {
