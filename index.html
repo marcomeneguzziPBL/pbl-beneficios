@@ -729,23 +729,46 @@ async function confirmar() {
   el('ok-msg').textContent = colabAtual.nome+', suas escolhas para '+MES.mes+' '+MES.ano+' foram registradas.';
   irPara('pg-ok');
 
-  // Salva na planilha via no-cors (sem leitura de resposta)
+  // Salva na planilha via iframe (contorna no-cors)
   try {
-    fetch(API, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {'Content-Type':'text/plain'},
-      body: JSON.stringify({
-        action: 'save',
-        nome: colabAtual.nome,
-        email: colabAtual.email,
-        cidade: colabAtual.cidade,
-        mes: MES.mes, ano: MES.ano,
-        vr, va, vt, ac,
-        tipo: colabAtual.tipo,
-        timestamp: ts
-      })
+    const payload = JSON.stringify({
+      action: 'save',
+      nome: colabAtual.nome,
+      email: colabAtual.email,
+      cidade: colabAtual.cidade,
+      mes: MES.mes, ano: MES.ano,
+      vr, va, vt, ac,
+      tipo: colabAtual.tipo,
+      timestamp: ts
     });
+
+    // Cria iframe oculto
+    const iframe = document.createElement('iframe');
+    iframe.name = 'pbl_submit_' + Date.now();
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    // Cria form apontando para o iframe
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = API;
+    form.target = iframe.name;
+    form.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = payload;
+    form.appendChild(input);
+
+    document.body.appendChild(form);
+    form.submit();
+
+    // Limpa após 5s
+    setTimeout(() => {
+      document.body.removeChild(form);
+      document.body.removeChild(iframe);
+    }, 5000);
   } catch(e) {
     console.warn('Erro ao salvar na planilha:', e);
   }
