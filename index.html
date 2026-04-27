@@ -202,7 +202,7 @@
     .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .dark-toggle:hover { background:var(--gd); }
 
-    @media (max-width:600px) {
+@media (max-width:600px) {
       .sel-card { padding:2.5rem 1.5rem; }
       .hdr { padding:13px 16px; }
       .bcard { padding:20px 16px; }
@@ -314,8 +314,8 @@
           <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
         </div>
         <div class="custom-slider-labels">
-          <span class="custom-slider-label left">← Vale Refeição (VR)</span>
-          <span class="custom-slider-label right">Vale Alimentação (VA) →</span>
+          <span class="custom-slider-label left">Vale Refeição (VR)</span>
+          <span class="custom-slider-label right">Vale Alimentação (VA)</span>
         </div>
       </div>
       <div class="err-msg" id="err-va"></div>
@@ -354,8 +354,8 @@
           <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
         </div>
         <div class="custom-slider-labels">
-          <span class="custom-slider-label left">← Vale Transporte (VT)</span>
-          <span class="custom-slider-label right">Auxílio Combustível (AC) →</span>
+          <span class="custom-slider-label left">Vale Transporte (VT)</span>
+          <span class="custom-slider-label right">Auxílio Combustível (AC)</span>
         </div>
       </div>
       <div class="err-msg" id="err-vt"></div>
@@ -601,8 +601,9 @@ function setSliderPct(g, pct) {
   const thumb = el('thumb-'+g), left = el('left-'+g), right = el('right-'+g);
   if(!thumb || !left || !right) return;
   thumb.style.left = pct+'%';
-  left.style.width  = pct+'%';
-  right.style.width = (100-pct)+'%';
+  // Esquerda (VR/VT, verde) = 100-pct, Direita (VA/AC, dourado) = pct
+  left.style.width  = (100-pct)+'%';
+  right.style.width = pct+'%';
 }
 
 function initDrag(g) {
@@ -614,10 +615,10 @@ function initDrag(g) {
     const pct  = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
     setSliderPct(g, pct);
     const tot  = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
-    const vA   = parseFloat((tot*pct/100).toFixed(2));
-    const vB   = parseFloat((tot-vA).toFixed(2));
-    el(g==='va'?'inp-vr':'inp-vt').value = vA.toFixed(2);
-    el(g==='va'?'inp-va':'inp-ac').value = vB.toFixed(2);
+    const vDireita = parseFloat((tot*pct/100).toFixed(2));   // VA ou AC (direita, dourado)
+    const vEsquerda = parseFloat((tot-vDireita).toFixed(2)); // VR ou VT (esquerda, verde)
+    el(g==='va'?'inp-vr':'inp-vt').value = vEsquerda.toFixed(2);
+    el(g==='va'?'inp-va':'inp-ac').value = vDireita.toFixed(2);
     el('err-'+g).textContent = '';
     updateProgress();
   };
@@ -653,8 +654,8 @@ function entrar(idxDireto) {
     el('inp-va').value = parseFloat(r.va).toFixed(2);
     el('inp-vt').value = parseFloat(r.vt).toFixed(2);
     el('inp-ac').value = parseFloat(r.ac).toFixed(2);
-    setSliderPct('va', tva>0 ? Math.round(r.vr/tva*100) : 50);
-    setSliderPct('vt', tvt>0 ? Math.round(r.vt/tvt*100) : 50);
+    setSliderPct('va', tva>0 ? Math.round(r.va/tva*100) : 50);
+    setSliderPct('vt', tvt>0 ? Math.round(r.ac/tvt*100) : 50);
   } else {
     const hva = parseFloat((tva/2).toFixed(2)), hvt = parseFloat((tvt/2).toFixed(2));
     el('inp-vr').value = hva.toFixed(2);
@@ -685,7 +686,8 @@ function onInput(g, w) {
   err.textContent='';
   if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
   else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
-  const pA = tot>0?(w==='vr'||w==='vt'?v/tot:o/tot)*100:50;
+  // pct representa a proporção do lado DIREITO (VA/AC)
+  const pA = tot>0?(w==='vr'||w==='vt'?(1-v/tot):(o/tot))*100:50;
   setSliderPct(g, Math.round(pA));
   updateProgress();
 }
@@ -944,6 +946,8 @@ function renderRel() {
   h+=`</div>`;
   el('rel-body').innerHTML=h;
 }
+
+
 
 // Init admin if on admin page
 if(window.location.search.includes('admin') || window.location.href.includes('?admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
