@@ -259,7 +259,7 @@
     <div class="hdr-right" style="display:flex;align-items:center;gap:12px"><span id="hdr-mes">—</span><button onclick="logout()" style="background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.3);border-radius:6px;color:#fff;font-size:12px;padding:4px 10px;cursor:pointer;font-family:Inter,sans-serif">Sair</button></div>
   </div>
   <div class="wrap">
-    <button class="btn-back" onclick="irPara('pg-sel')">← Trocar colaborador</button>
+    
     <div class="emp-card">
       <div class="emp-av" id="f-av">?</div>
       <div><div class="emp-name" id="f-nome">—</div><div class="emp-meta" id="f-meta">—</div></div>
@@ -396,7 +396,7 @@
       <div class="hdr-sub">Gestão de Benefícios · RH</div>
     </div>
     <div class="hdr-right">
-      <button class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:12px;padding:5px 12px" onclick="irPara('pg-sel')">← Início</button>
+      <button class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:12px;padding:5px 12px" onclick="irPara('pg-login')">← Início</button>
     </div>
   </div>
   <div class="wrap-admin">
@@ -572,45 +572,6 @@ function processarRedirect() {
   }
 }
 
-function handleLogin(response) {
-  try {
-    const payload = JSON.parse(atob(response.credential.split('.')[1]));
-    const email   = payload.email || '';
-    const dominio = email.split('@')[1] || '';
-
-    if(dominio !== 'pblcompra.com') {
-      const erro = el('login-erro');
-      erro.textContent = 'Acesso restrito a contas @pblcompra.com.';
-      erro.style.display = 'block';
-      return;
-    }
-
-    // Encontra o colaborador pelo e-mail
-    // Como não temos e-mails cadastrados ainda, busca pelo primeiro nome
-    const primeiroNome = (payload.given_name || '').toLowerCase();
-    const idx = COLABS.findIndex(c => 
-      c.nome.toLowerCase().startsWith(primeiroNome) ||
-      c.nome.toLowerCase().includes(primeiroNome)
-    );
-
-    if(idx === -1) {
-      const erro = el('login-erro');
-      erro.textContent = 'Seu e-mail não foi encontrado na lista de colaboradores. Entre em contato com o RH.';
-      erro.style.display = 'block';
-      return;
-    }
-
-    // Guarda sessão
-    sessionStorage.setItem('pbl_email', email);
-    sessionStorage.setItem('pbl_nome', payload.name);
-
-    // Vai direto para o formulário
-    el('sel-nome').value = idx;
-    entrar();
-  } catch(e) {
-    console.error('Erro no login:', e);
-  }
-}
 
 function logout() {
   sessionStorage.removeItem('pbl_email');
