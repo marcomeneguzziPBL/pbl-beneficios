@@ -565,6 +565,7 @@ function processarRedirect() {
       err.style.display = 'block';
       return;
     }
+    COLABS[idx].email = email; // garante email real do Google
     entrar(idx);
   } catch(e) {
     console.error('Erro ao processar login:', e);
@@ -776,7 +777,7 @@ async function confirmar() {
       body: JSON.stringify({
         action: 'save',
         nome: colabAtual.nome,
-        email: colabAtual.nome.toLowerCase().replace(/ /g,'.'),
+        email: colabAtual.email,
         cidade: colabAtual.cidade,
         mes: MES.mes, ano: MES.ano,
         vr, va, vt, ac,
