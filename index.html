@@ -102,8 +102,8 @@
     /* ── CUSTOM SLIDER ── */
     .custom-slider-wrap { margin:16px 0 8px; }
     .custom-slider-track { position:relative; height:10px; background:var(--bo); border-radius:99px; cursor:pointer; user-select:none; touch-action:none; }
-    .custom-slider-left { position:absolute; left:0; top:0; height:100%; background:var(--g); border-radius:99px 0 0 99px; pointer-events:none; }
-    .custom-slider-right { position:absolute; right:0; top:0; height:100%; background:var(--gold); border-radius:0 99px 99px 0; pointer-events:none; }
+    .custom-slider-left { position:absolute; left:0; top:0; height:100%; background:linear-gradient(90deg, var(--g), var(--gold)); border-radius:99px 0 0 99px; pointer-events:none; }
+    .custom-slider-right { position:absolute; right:0; top:0; height:100%; background:var(--bo); border-radius:0 99px 99px 0; pointer-events:none; }
     .custom-slider-thumb { position:absolute; top:50%; width:24px; height:24px; background:#fff; border:3px solid var(--g); border-radius:50%; transform:translate(-50%,-50%); cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.15); z-index:2; transition:border-color .15s, box-shadow .15s; }
     .custom-slider-thumb:active { cursor:grabbing; border-color:var(--gold); box-shadow:0 0 0 4px rgba(196,154,69,.2); }
     .custom-slider-labels { display:flex; justify-content:space-between; margin-top:7px; }
@@ -111,13 +111,7 @@
     .custom-slider-label.left { color:var(--g); }
     .custom-slider-label.right { color:var(--goldd); }
 
-    /* ── PROGRESSO ── */
-    .prog-wrap { margin-bottom:1.5rem; }
-    .prog-header { display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:var(--g); margin-bottom:8px; }
-    .prog-track { background:var(--bo); border-radius:99px; height:10px; overflow:hidden; }
-    .prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--g),var(--gold)); transition:width .4s cubic-bezier(.4,0,.2,1); }
-    .prog-steps { display:flex; justify-content:space-between; margin-top:5px; }
-    .prog-step { font-size:11px; color:var(--mu); }
+
 
     /* ── CONFIRM ── */
     .confirm-box { background:var(--gl); border:1px solid #a8d5c0; border-radius:16px; padding:24px; margin-bottom:2rem; }
@@ -268,18 +262,6 @@
       <span>📅 Mês: <strong id="f-mes">—</strong></span>
       <span>📆 Dias úteis: <strong id="f-dias">—</strong></span>
       <span>⏰ Prazo: <strong id="f-prazo">—</strong></span>
-    </div>
-
-    <!-- PROGRESSO -->
-    <div class="prog-wrap">
-      <div class="prog-header"><span>Benefícios configurados</span><span id="prog-pct">0%</span></div>
-      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-      <div class="prog-steps">
-        <span class="prog-step">Início</span>
-        <span class="prog-step">VA/VR</span>
-        <span class="prog-step">VT/AC</span>
-        <span class="prog-step">Concluído</span>
-      </div>
     </div>
 
     <!-- VA/VR -->
@@ -602,8 +584,8 @@ function setSliderPct(g, pct) {
   if(!thumb || !left || !right) return;
   thumb.style.left = pct+'%';
   // Esquerda (VR/VT, verde) = 100-pct, Direita (VA/AC, dourado) = pct
-  left.style.width  = (100-pct)+'%';
-  right.style.width = pct+'%';
+  left.style.width  = pct+'%';
+  right.style.width = (100-pct)+'%';
 }
 
 function initDrag(g) {
@@ -620,8 +602,7 @@ function initDrag(g) {
     el(g==='va'?'inp-vr':'inp-vt').value = vEsquerda.toFixed(2);
     el(g==='va'?'inp-va':'inp-ac').value = vDireita.toFixed(2);
     el('err-'+g).textContent = '';
-    updateProgress();
-  };
+    };
   const stop = () => { document.removeEventListener('mousemove',doMove); document.removeEventListener('touchmove',doMove); document.removeEventListener('mouseup',stop); document.removeEventListener('touchend',stop); };
   track.addEventListener('mousedown', e => { e.preventDefault(); doMove(e); document.addEventListener('mousemove',doMove); document.addEventListener('mouseup',stop); });
   track.addEventListener('touchstart', e => { e.preventDefault(); doMove(e); document.addEventListener('touchmove',doMove,{passive:false}); document.addEventListener('touchend',stop); }, {passive:false});
@@ -669,7 +650,6 @@ function entrar(idxDireto) {
   irPara('pg-form');
   initDrag('va');
   initDrag('vt');
-  updateProgress();
 }
 
 function onInput(g, w) {
@@ -689,25 +669,9 @@ function onInput(g, w) {
   // pct representa a proporção do lado DIREITO (VA/AC)
   const pA = tot>0?(w==='vr'||w==='vt'?(1-v/tot):(o/tot))*100:50;
   setSliderPct(g, Math.round(pA));
-  updateProgress();
 }
 
-function updateProgress() {
-  if(!colabAtual) return;
-  const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
-  const vr  = parseFloat(el('inp-vr').value)||0;
-  const va  = parseFloat(el('inp-va').value)||0;
-  const vt  = parseFloat(el('inp-vt').value)||0;
-  const ac  = parseFloat(el('inp-ac').value)||0;
-  const vaOk = Math.abs(vr+va-tva)<0.05;
-  const vtOk = Math.abs(vt+ac-tvt)<0.05;
-  let pct = 0;
-  if(vaOk&&vtOk) pct=100;
-  else if(vaOk||vtOk) pct=50;
-  else if((vr+va)>0||(vt+ac)>0) pct=25;
-  el('prog-fill').style.width = pct+'%';
-  el('prog-pct').textContent  = pct+'%';
-}
+
 
 async function confirmar() {
   if(!colabAtual) return;
