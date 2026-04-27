@@ -500,6 +500,7 @@ const el    = id => document.getElementById(id);
 
 // ══ INIT ════════════════════════════════════════════════
 window.addEventListener('load', () => {
+  processarRedirect();
   const src = 'data:image/png;base64,' + SYMBOL_B64;
   ['logo-sel','logo-hdr','logo-adm'].forEach(id => { const e=el(id); if(e) e.src=src; });
   if(localStorage.getItem('pbl-dark')==='true') { document.body.classList.add('dark'); el('dark-btn').textContent='☀️'; }
