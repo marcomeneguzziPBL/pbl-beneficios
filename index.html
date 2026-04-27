@@ -111,7 +111,13 @@
     .custom-slider-label.left { color:var(--g); }
     .custom-slider-label.right { color:var(--goldd); }
 
-
+    /* ── PROGRESSO ── */
+    .prog-wrap { margin-bottom:1.5rem; }
+    .prog-header { display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:var(--g); margin-bottom:8px; }
+    .prog-track { background:var(--bo); border-radius:99px; height:10px; overflow:hidden; }
+    .prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--g),var(--gold)); transition:width .4s cubic-bezier(.4,0,.2,1); }
+    .prog-steps { display:flex; justify-content:space-between; margin-top:5px; }
+    .prog-step { font-size:11px; color:var(--mu); }
 
     /* ── CONFIRM ── */
     .confirm-box { background:var(--gl); border:1px solid #a8d5c0; border-radius:16px; padding:24px; margin-bottom:2rem; }
@@ -196,7 +202,7 @@
     .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .dark-toggle:hover { background:var(--gd); }
 
-@media (max-width:600px) {
+    @media (max-width:600px) {
       .sel-card { padding:2.5rem 1.5rem; }
       .hdr { padding:13px 16px; }
       .bcard { padding:20px 16px; }
@@ -264,6 +270,18 @@
       <span>⏰ Prazo: <strong id="f-prazo">—</strong></span>
     </div>
 
+    <!-- PROGRESSO -->
+    <div class="prog-wrap">
+      <div class="prog-header"><span>Benefícios configurados</span><span id="prog-pct">0%</span></div>
+      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-steps">
+        <span class="prog-step">Início</span>
+        <span class="prog-step">VA/VR</span>
+        <span class="prog-step">VT/AC</span>
+        <span class="prog-step">Concluído</span>
+      </div>
+    </div>
+
     <!-- VA/VR -->
     <div class="bcard">
       <span class="benefit-icon">🍽️</span>
@@ -296,8 +314,8 @@
           <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
         </div>
         <div class="custom-slider-labels">
-          <span class="custom-slider-label left">Vale Refeição (VR)</span>
-          <span class="custom-slider-label right">Vale Alimentação (VA)</span>
+          <span class="custom-slider-label left">← Vale Refeição (VR)</span>
+          <span class="custom-slider-label right">Vale Alimentação (VA) →</span>
         </div>
       </div>
       <div class="err-msg" id="err-va"></div>
@@ -336,8 +354,8 @@
           <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
         </div>
         <div class="custom-slider-labels">
-          <span class="custom-slider-label left">Vale Transporte (VT)</span>
-          <span class="custom-slider-label right">Auxílio Combustível (AC)</span>
+          <span class="custom-slider-label left">← Vale Transporte (VT)</span>
+          <span class="custom-slider-label right">Auxílio Combustível (AC) →</span>
         </div>
       </div>
       <div class="err-msg" id="err-vt"></div>
@@ -583,7 +601,6 @@ function setSliderPct(g, pct) {
   const thumb = el('thumb-'+g), left = el('left-'+g), right = el('right-'+g);
   if(!thumb || !left || !right) return;
   thumb.style.left = pct+'%';
-  // Esquerda (VR/VT, verde) = 100-pct, Direita (VA/AC, dourado) = pct
   left.style.width  = pct+'%';
   right.style.width = (100-pct)+'%';
 }
@@ -597,12 +614,13 @@ function initDrag(g) {
     const pct  = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
     setSliderPct(g, pct);
     const tot  = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
-    const vDireita = parseFloat((tot*pct/100).toFixed(2));   // VA ou AC (direita, dourado)
-    const vEsquerda = parseFloat((tot-vDireita).toFixed(2)); // VR ou VT (esquerda, verde)
-    el(g==='va'?'inp-vr':'inp-vt').value = vEsquerda.toFixed(2);
-    el(g==='va'?'inp-va':'inp-ac').value = vDireita.toFixed(2);
+    const vA   = parseFloat((tot*pct/100).toFixed(2));
+    const vB   = parseFloat((tot-vA).toFixed(2));
+    el(g==='va'?'inp-vr':'inp-vt').value = vA.toFixed(2);
+    el(g==='va'?'inp-va':'inp-ac').value = vB.toFixed(2);
     el('err-'+g).textContent = '';
-    };
+    updateProgress();
+  };
   const stop = () => { document.removeEventListener('mousemove',doMove); document.removeEventListener('touchmove',doMove); document.removeEventListener('mouseup',stop); document.removeEventListener('touchend',stop); };
   track.addEventListener('mousedown', e => { e.preventDefault(); doMove(e); document.addEventListener('mousemove',doMove); document.addEventListener('mouseup',stop); });
   track.addEventListener('touchstart', e => { e.preventDefault(); doMove(e); document.addEventListener('touchmove',doMove,{passive:false}); document.addEventListener('touchend',stop); }, {passive:false});
@@ -635,8 +653,8 @@ function entrar(idxDireto) {
     el('inp-va').value = parseFloat(r.va).toFixed(2);
     el('inp-vt').value = parseFloat(r.vt).toFixed(2);
     el('inp-ac').value = parseFloat(r.ac).toFixed(2);
-    setSliderPct('va', tva>0 ? Math.round(r.va/tva*100) : 50);
-    setSliderPct('vt', tvt>0 ? Math.round(r.ac/tvt*100) : 50);
+    setSliderPct('va', tva>0 ? Math.round(r.vr/tva*100) : 50);
+    setSliderPct('vt', tvt>0 ? Math.round(r.vt/tvt*100) : 50);
   } else {
     const hva = parseFloat((tva/2).toFixed(2)), hvt = parseFloat((tvt/2).toFixed(2));
     el('inp-vr').value = hva.toFixed(2);
@@ -650,6 +668,7 @@ function entrar(idxDireto) {
   irPara('pg-form');
   initDrag('va');
   initDrag('vt');
+  updateProgress();
 }
 
 function onInput(g, w) {
@@ -666,12 +685,27 @@ function onInput(g, w) {
   err.textContent='';
   if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
   else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
-  // pct representa a proporção do lado DIREITO (VA/AC)
-  const pA = tot>0?(w==='vr'||w==='vt'?(1-v/tot):(o/tot))*100:50;
+  const pA = tot>0?(w==='vr'||w==='vt'?v/tot:o/tot)*100:50;
   setSliderPct(g, Math.round(pA));
+  updateProgress();
 }
 
-
+function updateProgress() {
+  if(!colabAtual) return;
+  const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
+  const vr  = parseFloat(el('inp-vr').value)||0;
+  const va  = parseFloat(el('inp-va').value)||0;
+  const vt  = parseFloat(el('inp-vt').value)||0;
+  const ac  = parseFloat(el('inp-ac').value)||0;
+  const vaOk = Math.abs(vr+va-tva)<0.05;
+  const vtOk = Math.abs(vt+ac-tvt)<0.05;
+  let pct = 0;
+  if(vaOk&&vtOk) pct=100;
+  else if(vaOk||vtOk) pct=50;
+  else if((vr+va)>0||(vt+ac)>0) pct=25;
+  el('prog-fill').style.width = pct+'%';
+  el('prog-pct').textContent  = pct+'%';
+}
 
 async function confirmar() {
   if(!colabAtual) return;
@@ -910,8 +944,6 @@ function renderRel() {
   h+=`</div>`;
   el('rel-body').innerHTML=h;
 }
-
-
 
 // Init admin if on admin page
 if(window.location.search.includes('admin') || window.location.href.includes('?admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
