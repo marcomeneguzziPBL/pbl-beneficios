@@ -511,6 +511,65 @@ window.addEventListener('load', () => {
 
 
 
+function loginGoogle() {
+  const clientId    = '1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com';
+  const redirectUri = 'https://marcomeneguzzipbl.github.io/pbl-beneficios/';
+  const nonce       = Math.random().toString(36).substring(2);
+  const url = 'https://accounts.google.com/o/oauth2/v2/auth'
+    + '?client_id='    + encodeURIComponent(clientId)
+    + '&redirect_uri=' + encodeURIComponent(redirectUri)
+    + '&response_type=id_token'
+    + '&scope='        + encodeURIComponent('openid email profile')
+    + '&nonce='        + nonce
+    + '&prompt=select_account';
+  window.location.href = url;
+}
+
+function processarRedirect() {
+  const hash = window.location.hash.substring(1);
+  if(!hash) return;
+  const params = new URLSearchParams(hash);
+  const idToken = params.get('id_token');
+  if(!idToken) return;
+
+  try {
+    const b64 = idToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
+    const payload = JSON.parse(atob(b64));
+    const email   = payload.email || '';
+    const dominio = email.split('@')[1] || '';
+
+    history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    if(dominio !== DOMINIO) {
+      const err = el('login-erro');
+      err.textContent = 'Acesso restrito a contas @' + DOMINIO + '.';
+      err.style.display = 'block';
+      return;
+    }
+
+    if(ADMINS.includes(email)) {
+      const escolha = confirm('O que deseja acessar?\n\nOK → Painel RH\nCancelar → Meu formulário de benefícios');
+      if(escolha) { irPara('pg-admin'); atualizarAdmin(); }
+      else {
+        const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
+        if(idx !== -1) entrar(idx); else { irPara('pg-admin'); atualizarAdmin(); }
+      }
+      return;
+    }
+
+    const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
+    if(idx === -1) {
+      const err = el('login-erro');
+      err.textContent = 'E-mail não encontrado na lista. Contate o RH.';
+      err.style.display = 'block';
+      return;
+    }
+    entrar(idx);
+  } catch(e) {
+    console.error('Erro ao processar login:', e);
+  }
+}
+
 function handleLogin(response) {
   try {
     const payload = JSON.parse(atob(response.credential.split('.')[1]));
