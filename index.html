@@ -101,16 +101,13 @@
     .err-msg { font-size:13px; color:#c0392b; margin-top:6px; min-height:18px; font-weight:500; }
 
     /* ── CUSTOM SLIDER ── */
-    .custom-slider-wrap { margin:16px 0 8px; }
-    .custom-slider-track { position:relative; height:10px; background:var(--bo); border-radius:99px; cursor:pointer; user-select:none; touch-action:none; }
-    .custom-slider-left { position:absolute; left:0; top:0; height:100%; background:var(--g); border-radius:99px 0 0 99px; pointer-events:none; }
-    .custom-slider-right { position:absolute; right:0; top:0; height:100%; background:var(--gold); border-radius:0 99px 99px 0; pointer-events:none; }
-    .custom-slider-thumb { position:absolute; top:50%; width:24px; height:24px; background:#fff; border:3px solid var(--g); border-radius:50%; transform:translate(-50%,-50%); cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.15); z-index:2; transition:border-color .15s, box-shadow .15s; }
-    .custom-slider-thumb:active { cursor:grabbing; border-color:var(--gold); box-shadow:0 0 0 4px rgba(196,154,69,.2); }
-    .custom-slider-labels { display:flex; justify-content:space-between; margin-top:7px; }
-    .custom-slider-label { font-size:11px; font-weight:600; }
-    .custom-slider-label.left { color:var(--g); }
-    .custom-slider-label.right { color:var(--goldd); }
+    .custom-slider-wrap { margin:18px 0 6px; }
+    .custom-slider-dir-labels { display:flex; justify-content:space-between; margin-bottom:7px; }
+    .custom-slider-dir-label { font-size:11px; font-weight:600; color:var(--mu); }
+    .custom-slider-track { position:relative; height:10px; border-radius:99px; cursor:pointer; user-select:none; touch-action:none; background:linear-gradient(90deg, #0D4A3A 0%, #5a8a6a 35%, #b09040 65%, #C49A45 100%); }
+    .custom-slider-thumb { position:absolute; top:50%; width:22px; height:22px; background:#fff; border:3px solid #0D4A3A; border-radius:50%; transform:translate(-50%,-50%); cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.18); z-index:2; transition:border-color .2s; }
+    .custom-slider-thumb:active { cursor:grabbing; box-shadow:0 0 0 4px rgba(196,154,69,.25); }
+    .pct-hint { font-size:11px; color:var(--mu); margin-top:5px; min-height:15px; font-weight:500; }
 
     /* ── PROGRESSO ── */
     .prog-wrap { margin-bottom:1.5rem; }
@@ -477,12 +474,10 @@
       </div>
       <div class="custom-slider-wrap">
         <div class="custom-slider-dir-labels">
-          <span class="custom-slider-dir-label">← 100% VR</span>
-          <span class="custom-slider-dir-label">100% VA →</span>
+          <span class="custom-slider-dir-label" style="color:var(--g)">← 100% VR</span>
+          <span class="custom-slider-dir-label" style="color:var(--goldd)">100% VA →</span>
         </div>
         <div class="custom-slider-track" id="track-va">
-          <div class="custom-slider-gradient"></div>
-          <div class="custom-slider-fill" id="fill-va"></div>
           <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
         </div>
       </div>
@@ -526,12 +521,10 @@
       </div>
       <div class="custom-slider-wrap">
         <div class="custom-slider-dir-labels">
-          <span class="custom-slider-dir-label">← 100% VT</span>
-          <span class="custom-slider-dir-label">100% AC →</span>
+          <span class="custom-slider-dir-label" style="color:var(--g)">← 100% VT</span>
+          <span class="custom-slider-dir-label" style="color:var(--goldd)">100% AC →</span>
         </div>
         <div class="custom-slider-track" id="track-vt">
-          <div class="custom-slider-gradient"></div>
-          <div class="custom-slider-fill" id="fill-vt"></div>
           <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
         </div>
       </div>
@@ -891,22 +884,12 @@ function toggleDark() {
 
 // ══ SLIDER CUSTOMIZADO ══════════════════════════════════
 function setSliderPct(g, pctDir) {
-  // pctDir = % do lado direito (VA ou AC), posição da bolinha
   pctDir = clamp(pctDir, 0, 100);
   const pctEsq = 100 - pctDir;
   const thumb = el('thumb-'+g);
-  const fill  = el('fill-'+g);
   if(!thumb) return;
-  // bolinha na posição pctDir
   thumb.style.left = pctDir + '%';
-  // borda da bolinha: verde quando VR domina, dourado quando VA domina
-  thumb.style.borderColor = pctDir > 50 ? 'var(--gold)' : 'var(--g)';
-  // fill: máscara que cobre parte do degradê para mostrar lado "ativo"
-  // cobre o lado direito deixando o esquerdo visível
-  if(fill) {
-    fill.style.background = 'transparent';
-  }
-  // atualiza hints de %
+  thumb.style.borderColor = pctDir > 60 ? 'var(--gold)' : pctDir < 40 ? 'var(--g)' : '#7a9a70';
   if(g === 'va') {
     const hVR = el('hint-vr'); if(hVR) hVR.textContent = Math.round(pctEsq) + '% do total';
     const hVA = el('hint-va'); if(hVA) hVA.textContent = Math.round(pctDir) + '% do total';
