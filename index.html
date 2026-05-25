@@ -5,8 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PBL — Benefícios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -205,41 +204,14 @@
     .btn-split-quick:hover { background:var(--gl); border-color:var(--g); }
 
     /* ── PDF ── */
-    .pdf-page { width:794px; background:#fff; font-family:'Inter',sans-serif; color:#111; padding:48px 52px; box-sizing:border-box; }
-    .pdf-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
-    .pdf-brand { display:flex; flex-direction:column; }
-    .pdf-brand-name { font-size:24px; font-weight:700; color:#0D4A3A; font-family:'Playfair Display',serif; }
-    .pdf-brand-sub { font-size:9px; color:#546860; letter-spacing:.12em; text-transform:uppercase; margin-top:3px; }
-    .pdf-gold-line { height:3px; background:#C49A45; border-radius:99px; margin:14px 0 28px; }
-    .pdf-title { font-size:18px; font-weight:700; color:#0D4A3A; font-family:'Playfair Display',serif; margin-bottom:4px; }
-    .pdf-subtitle { font-size:12px; color:#546860; margin-bottom:28px; }
-    .pdf-meta { font-size:11px; color:#546860; }
-    .pdf-table { width:100%; border-collapse:collapse; margin-bottom:24px; }
-    .pdf-table th { background:#0D4A3A; color:#fff; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; padding:10px 14px; text-align:left; }
-    .pdf-table th.right { text-align:right; }
-    .pdf-table td { padding:11px 14px; font-size:13px; border-bottom:1px solid #c2d9d1; }
-    .pdf-table td.right { text-align:right; font-weight:700; color:#0D4A3A; }
-    .pdf-table tr:nth-child(even) td { background:#f4f9f7; }
-    .pdf-table tr.pend td { color:#9c7a34; font-style:italic; }
-    .pdf-table tr.total-row td { background:#0D4A3A; color:#fff; font-weight:700; font-size:14px; }
-    .pdf-table tr.total-row td.right { color:#C49A45; font-size:15px; }
-    .pdf-section-title { font-size:11px; font-weight:700; color:#0D4A3A; text-transform:uppercase; letter-spacing:.08em; padding-bottom:8px; border-bottom:2px solid #C49A45; margin:28px 0 14px; }
-    .pdf-summary-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
-    .pdf-summary-card { background:#f4f9f7; border:1px solid #c2d9d1; border-radius:10px; padding:14px 18px; }
-    .pdf-summary-label { font-size:10px; color:#546860; text-transform:uppercase; letter-spacing:.06em; margin-bottom:6px; font-weight:600; }
-    .pdf-summary-value { font-size:20px; font-weight:700; color:#0D4A3A; }
-    .pdf-footer { margin-top:32px; padding-top:16px; border-top:1px solid #c2d9d1; display:flex; justify-content:space-between; align-items:flex-end; }
-    .pdf-footer-left { font-size:11px; color:#546860; line-height:1.7; }
-    .pdf-footer-right { font-size:10px; color:#9abaaf; }
-    .pdf-badge-pend { display:inline-block; background:#FEF3E2; color:#7a5209; font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; }
-    .pdf-badge-done { display:inline-block; background:#E4F2EB; color:#195c38; font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px; }
+    /* estilos usados apenas nas janelas de impressão — não afetam o app */
 
     /* botão baixar */
     .btn-download-pdf { display:inline-flex; align-items:center; gap:8px; background:#0D4A3A; color:#fff; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:background .15s; }
     .btn-download-pdf:hover { background:#082e25; }
     .btn-download-pdf:disabled { opacity:.5; cursor:not-allowed; }
 
-    /* ── DARK TOGGLE ── */
+        /* ── DARK TOGGLE ── */
     .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .dark-toggle:hover { background:var(--gd); }
 
@@ -542,8 +514,6 @@
         </button>
       </div>
       <div id="rel-body"></div>
-      <!-- containers ocultos para gerar PDFs -->
-      <div id="pdf-containers" style="position:fixed;left:-9999px;top:0;z-index:-1"></div>
     </div>
   </div>
 </div>
@@ -1164,183 +1134,194 @@ function renderRel() {
 }
 
 // ══ PDF DOWNLOAD ════════════════════════════════════════════
-async function baixarRelatorios() {
+function baixarRelatorios() {
   const btn = el('btn-pdf');
   btn.disabled = true;
-  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Gerando PDFs...';
+  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> Gerando...';
 
   const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
   const pend = COLABS.filter(c => !RESPOSTAS[c.nome]);
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  const cidades = {};
+  const cidadesMap = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
-    tVR+=r.vr; tVA+=r.va; tVT+=r.vt; tAC+=r.ac;
+    tVR+=+r.vr; tVA+=+r.va; tVT+=+r.vt; tAC+=+r.ac;
     const key = c.tipo==='municipal' ? 'Municipal (Florianópolis)' : c.cidade;
-    if(!cidades[key]) cidades[key] = {vt:0, ac:0, cols:[]};
-    cidades[key].vt += r.vt; cidades[key].ac += r.ac;
-    cidades[key].cols.push(c);
+    if(!cidadesMap[key]) cidadesMap[key] = {vt:0, ac:0, cols:[]};
+    cidadesMap[key].vt += +r.vt;
+    cidadesMap[key].ac += +r.ac;
+    cidadesMap[key].cols.push(c);
   });
 
-  const agora = new Date().toLocaleDateString('pt-BR');
+  const agora  = new Date().toLocaleDateString('pt-BR');
   const mesAno = MES.mes + ' ' + MES.ano;
-  const pendMsg = pend.length > 0
-    ? `<div style="background:#FEF3E2;border:1px solid #f0c87a;border-radius:8px;padding:10px 14px;font-size:12px;color:#7a5209;margin-bottom:20px">⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não respondeu${pend.length>1?'ram':''}. Os valores abaixo são parciais.</div>`
-    : '';
+  const pendWarn = pend.length > 0
+    ? `<div style="background:#FEF3E2;border-left:3px solid #C49A45;border-radius:0 6px 6px 0;padding:9px 14px;font-size:11px;color:#7a5209;margin-bottom:20px">
+        ⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não respondeu${pend.length>1?'ram':''}. Os valores abaixo são parciais.
+       </div>` : '';
 
-  const pendRows = pend.map(c => `<tr class="pend"><td>${c.nome}</td><td class="right">—</td><td class="right">—</td><td class="right"><span class="pdf-badge-pend">Aguardando</span></td></tr>`).join('');
+  const CSS = `
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Segoe UI',Arial,sans-serif;font-size:12px;color:#111;background:#fff;padding:52px 56px 80px}
+    .brand-name{font-size:26px;font-weight:700;color:#0D4A3A;letter-spacing:-.5px}
+    .brand-sub{font-size:9px;color:#7aaa9a;letter-spacing:.16em;text-transform:uppercase;margin-top:4px}
+    .hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
+    .hdr-meta{text-align:right;font-size:10px;color:#9abaaf;line-height:1.8}
+    .gold-line{height:3px;background:#C49A45;border-radius:99px;margin:14px 0 26px}
+    .rep-title{font-size:19px;font-weight:700;color:#0D4A3A;margin-bottom:3px}
+    .rep-sub{font-size:11px;color:#546860;margin-bottom:24px}
+    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px}
+    .summary.two{grid-template-columns:1fr 1fr}
+    .sum-card{background:#f4f9f7;border:1px solid #c2d9d1;border-radius:8px;padding:14px 16px}
+    .sum-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7aaa9a;margin-bottom:6px}
+    .sum-value{font-size:20px;font-weight:700;color:#0D4A3A;letter-spacing:-.5px}
+    .sum-value span{font-size:12px;color:#7aaa9a;font-weight:500}
+    .section-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0D4A3A;border-bottom:2px solid #C49A45;padding-bottom:7px;margin:24px 0 14px}
+    table{width:100%;border-collapse:collapse;margin-bottom:28px;font-size:12px}
+    thead tr{background:#0D4A3A}
+    thead th{padding:10px 14px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;text-align:left}
+    thead th.r{text-align:right}
+    tbody tr:nth-child(even) td{background:#f4f9f7}
+    tbody tr.sec td{background:#dff0e9;font-weight:700;font-size:11px;color:#0D4A3A;padding:7px 14px}
+    tbody tr.ind td:first-child{padding-left:26px}
+    tbody tr.sub td{background:#eaf4f0;font-weight:600;color:#546860;font-size:11px}
+    tbody tr.sub td:first-child{padding-left:26px}
+    tbody td{padding:10px 14px;border-bottom:1px solid #e4eeeb;color:#1a2e28}
+    tbody td.r{text-align:right;font-weight:700;color:#0D4A3A}
+    tbody tr.pend td{color:#9abaaf;font-style:italic}
+    tbody tr.pend td.r{font-weight:400}
+    tfoot td{padding:11px 14px;background:#0D4A3A;color:#fff;font-weight:700;font-size:13px}
+    tfoot td.r{text-align:right;color:#C49A45;font-size:14px}
+    .badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 7px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
+    .bp{background:#FEF3E2;color:#9c7a34}
+    .bd{background:#E4F2EB;color:#195c38}
+    @media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  `;
+
+  function cabecalho(titulo, subtitulo) {
+    return `
+      <div class="hdr">
+        <div><div class="brand-name">PBL</div><div class="brand-sub">Compra de Créditos Judiciais</div></div>
+        <div class="hdr-meta">Gerado em ${agora}<br>Referência: ${mesAno}</div>
+      </div>
+      <div class="gold-line"></div>
+      <div class="rep-title">${titulo}</div>
+      <div class="rep-sub">${subtitulo}</div>
+      ${pendWarn}`;
+  }
+
+  const sub = `${mesAno} · ${MES.dias} dias úteis · Prazo: ${MES.prazo}`;
+  const pendRows = pend.map(c =>
+    `<tr class="pend"><td>${c.nome}</td><td class="r">—</td><td class="r">—</td><td class="r"><span class="badge bp">Aguardando</span></td></tr>`
+  ).join('');
 
   // ── PDF 1: VA/VR ──────────────────────────────────────────────────────────
   const vavrRows = resp.map(c => {
     const r = RESPOSTAS[c.nome];
-    return `<tr>
-      <td>${c.nome}</td>
-      <td class="right">${fmt(r.vr)}</td>
-      <td class="right">${fmt(r.va)}</td>
-      <td class="right">${fmt(r.vr+r.va)}</td>
-    </tr>`;
-  }).join('') + pendRows +
-  `<tr class="total-row"><td>TOTAL</td><td class="right">${fmt(tVR)}</td><td class="right">${fmt(tVA)}</td><td class="right">${fmt(tVR+tVA)}</td></tr>`;
+    return `<tr><td>${c.nome}</td><td class="r">${fmt(+r.vr)}</td><td class="r">${fmt(+r.va)}</td><td class="r">${fmt(+r.vr+ +r.va)}</td></tr>`;
+  }).join('') + pendRows;
 
-  const htmlVAVR = `<div class="pdf-page">
-    <div class="pdf-header">
-      <div class="pdf-brand"><div class="pdf-brand-name">PBL</div><div class="pdf-brand-sub">Compra de Créditos Judiciais</div></div>
-      <div class="pdf-meta">Gerado em ${agora}</div>
-    </div>
-    <div class="pdf-gold-line"></div>
-    <div class="pdf-title">Relatório de Recarga — Vale Alimentação / Refeição</div>
-    <div class="pdf-subtitle">Referência: ${mesAno} · ${MES.dias} dias úteis · Prazo: ${MES.prazo}</div>
-    ${pendMsg}
-    <table class="pdf-table">
-      <thead><tr><th>Colaborador</th><th class="right">VR</th><th class="right">VA</th><th class="right">Total</th></tr></thead>
+  const htmlVAVR = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Benefícios VA/VR — ${mesAno}</title><style>${CSS}</style></head><body>
+    ${cabecalho('Relatório de Recarga — Vale Alimentação / Refeição', sub)}
+    <table>
+      <thead><tr><th>Colaborador</th><th class="r">Vale Refeição (VR)</th><th class="r">Vale Alimentação (VA)</th><th class="r">Total</th></tr></thead>
       <tbody>${vavrRows}</tbody>
+      <tfoot><tr><td>TOTAL (${resp.length} responderam)</td><td class="r">${fmt(tVR)}</td><td class="r">${fmt(tVA)}</td><td class="r">${fmt(tVR+tVA)}</td></tr></tfoot>
     </table>
-    <div class="pdf-summary-grid">
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total Vale Refeição</div><div class="pdf-summary-value">${fmt(tVR)}</div></div>
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total Vale Alimentação</div><div class="pdf-summary-value">${fmt(tVA)}</div></div>
+    <div class="summary two">
+      <div class="sum-card"><div class="sum-label">Total Vale Refeição</div><div class="sum-value">${fmt(tVR)}</div></div>
+      <div class="sum-card"><div class="sum-label">Total Vale Alimentação</div><div class="sum-value">${fmt(tVA)}</div></div>
     </div>
-    <div class="pdf-footer">
-      <div class="pdf-footer-left"><strong>Marco A. R. Meneguzzi</strong><br>Analista Administrativo e Financeiro<br>PBL — Compra de Créditos Judiciais</div>
-      <div class="pdf-footer-right">PBL Benefícios · ${mesAno}</div>
-    </div>
-  </div>`;
+  </body></html>`;
 
   // ── PDF 2: VT/AC ──────────────────────────────────────────────────────────
   let vtacRows = '';
-  Object.entries(cidades).forEach(([cidade, data]) => {
-    vtacRows += `<tr><td colspan="4" style="background:#dff0e9;font-weight:700;font-size:12px;color:#0D4A3A;padding:8px 14px">${cidade}</td></tr>`;
+  Object.entries(cidadesMap).forEach(([cidade, data]) => {
+    vtacRows += `<tr class="sec"><td colspan="4">${cidade}</td></tr>`;
     data.cols.forEach(c => {
       const r = RESPOSTAS[c.nome];
-      vtacRows += `<tr><td style="padding-left:24px">${c.nome}</td><td class="right">${fmt(r.vt)}</td><td class="right">${fmt(r.ac)}</td><td class="right">${fmt(r.vt+r.ac)}</td></tr>`;
+      vtacRows += `<tr class="ind"><td>${c.nome}</td><td class="r">${fmt(+r.vt)}</td><td class="r">${fmt(+r.ac)}</td><td class="r">${fmt(+r.vt+ +r.ac)}</td></tr>`;
     });
-    vtacRows += `<tr style="background:#f4f9f7"><td style="padding-left:24px;font-weight:600;color:#546860">Subtotal ${cidade}</td><td class="right" style="font-weight:600">${fmt(data.vt)}</td><td class="right" style="font-weight:600">${fmt(data.ac)}</td><td class="right" style="font-weight:600">${fmt(data.vt+data.ac)}</td></tr>`;
+    vtacRows += `<tr class="sub"><td>Subtotal ${cidade}</td><td class="r">${fmt(data.vt)}</td><td class="r">${fmt(data.ac)}</td><td class="r">${fmt(data.vt+data.ac)}</td></tr>`;
   });
-  vtacRows += pendRows;
-  vtacRows += `<tr class="total-row"><td>TOTAL</td><td class="right">${fmt(tVT)}</td><td class="right">${fmt(tAC)}</td><td class="right">${fmt(tVT+tAC)}</td></tr>`;
+  vtacRows += pend.map(c =>
+    `<tr class="pend"><td>${c.nome}</td><td class="r">—</td><td class="r">—</td><td class="r"><span class="badge bp">Aguardando</span></td></tr>`
+  ).join('');
 
-  const htmlVTAC = `<div class="pdf-page">
-    <div class="pdf-header">
-      <div class="pdf-brand"><div class="pdf-brand-name">PBL</div><div class="pdf-brand-sub">Compra de Créditos Judiciais</div></div>
-      <div class="pdf-meta">Gerado em ${agora}</div>
-    </div>
-    <div class="pdf-gold-line"></div>
-    <div class="pdf-title">Relatório de Recarga — Vale Transporte / Auxílio Combustível</div>
-    <div class="pdf-subtitle">Referência: ${mesAno} · ${MES.dias} dias úteis · Prazo: ${MES.prazo}</div>
-    ${pendMsg}
-    <table class="pdf-table">
-      <thead><tr><th>Colaborador</th><th class="right">VT</th><th class="right">AC</th><th class="right">Total</th></tr></thead>
+  const htmlVTAC = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Benefícios VT/AC — ${mesAno}</title><style>${CSS}</style></head><body>
+    ${cabecalho('Relatório de Recarga — Vale Transporte / Auxílio Combustível', sub)}
+    <table>
+      <thead><tr><th>Colaborador</th><th class="r">Vale Transporte (VT)</th><th class="r">Auxílio Combustível (AC)</th><th class="r">Total</th></tr></thead>
       <tbody>${vtacRows}</tbody>
+      <tfoot><tr><td>TOTAL (${resp.length} responderam)</td><td class="r">${fmt(tVT)}</td><td class="r">${fmt(tAC)}</td><td class="r">${fmt(tVT+tAC)}</td></tr></tfoot>
     </table>
-    <div class="pdf-summary-grid">
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total Vale Transporte</div><div class="pdf-summary-value">${fmt(tVT)}</div></div>
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total Auxílio Combustível</div><div class="pdf-summary-value">${fmt(tAC)}</div></div>
+    <div class="summary two">
+      <div class="sum-card"><div class="sum-label">Total Vale Transporte</div><div class="sum-value">${fmt(tVT)}</div></div>
+      <div class="sum-card"><div class="sum-label">Total Auxílio Combustível</div><div class="sum-value">${fmt(tAC)}</div></div>
     </div>
-    <div class="pdf-footer">
-      <div class="pdf-footer-left"><strong>Marco A. R. Meneguzzi</strong><br>Analista Administrativo e Financeiro<br>PBL — Compra de Créditos Judiciais</div>
-      <div class="pdf-footer-right">PBL Benefícios · ${mesAno}</div>
-    </div>
-  </div>`;
+  </body></html>`;
 
   // ── PDF 3: Executivo ──────────────────────────────────────────────────────
   const tot = COLABS.length;
   const done = resp.length;
   const pct = Math.round(done/tot*100);
   const totalGeral = tVR+tVA+tVT+tAC;
-  const mediaPorColab = done > 0 ? totalGeral/done : 0;
+  const media = done > 0 ? totalGeral/done : 0;
 
   const execRows = COLABS.map(c => {
     const r = RESPOSTAS[c.nome];
-    if(r) {
-      return `<tr>
-        <td>${c.nome}</td>
-        <td class="right">${fmt(r.vr+r.va)}</td>
-        <td class="right">${fmt(r.vt+r.ac)}</td>
-        <td class="right">${fmt(r.vr+r.va+r.vt+r.ac)}</td>
-        <td style="text-align:center"><span class="pdf-badge-done">Respondeu</span></td>
-      </tr>`;
-    } else {
-      return `<tr class="pend">
-        <td>${c.nome}</td>
-        <td class="right">—</td><td class="right">—</td><td class="right">—</td>
-        <td style="text-align:center"><span class="pdf-badge-pend">Aguardando</span></td>
-      </tr>`;
-    }
+    if(r) return `<tr>
+      <td>${c.nome}</td>
+      <td class="r">${fmt(+r.vr+ +r.va)}</td>
+      <td class="r">${fmt(+r.vt+ +r.ac)}</td>
+      <td class="r">${fmt(+r.vr+ +r.va+ +r.vt+ +r.ac)}</td>
+      <td style="text-align:center"><span class="badge bd">Respondeu</span></td>
+    </tr>`;
+    return `<tr class="pend">
+      <td>${c.nome}</td><td class="r">—</td><td class="r">—</td><td class="r">—</td>
+      <td style="text-align:center"><span class="badge bp">Aguardando</span></td>
+    </tr>`;
   }).join('');
 
-  const htmlExec = `<div class="pdf-page">
-    <div class="pdf-header">
-      <div class="pdf-brand"><div class="pdf-brand-name">PBL</div><div class="pdf-brand-sub">Compra de Créditos Judiciais</div></div>
-      <div class="pdf-meta">Gerado em ${agora}</div>
+  const htmlExec = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+    <title>Benefícios Executivo — ${mesAno}</title><style>${CSS}</style></head><body>
+    ${cabecalho('Relatório Executivo de Benefícios', sub)}
+    <div class="summary">
+      <div class="sum-card"><div class="sum-label">Total Desembolso</div><div class="sum-value">${fmt(totalGeral)}</div></div>
+      <div class="sum-card"><div class="sum-label">Média por Colaborador</div><div class="sum-value">${fmt(media)}</div></div>
+      <div class="sum-card"><div class="sum-label">Adesão</div><div class="sum-value">${pct}% <span>(${done}/${tot})</span></div></div>
+      <div class="sum-card"><div class="sum-label">Total VA/VR</div><div class="sum-value">${fmt(tVR+tVA)}</div></div>
     </div>
-    <div class="pdf-gold-line"></div>
-    <div class="pdf-title">Relatório Executivo de Benefícios</div>
-    <div class="pdf-subtitle">Referência: ${mesAno} · ${MES.dias} dias úteis · Prazo: ${MES.prazo}</div>
-    ${pendMsg}
-    <div class="pdf-summary-grid">
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total Desembolso</div><div class="pdf-summary-value">${fmt(totalGeral)}</div></div>
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Média por Colaborador</div><div class="pdf-summary-value">${fmt(mediaPorColab)}</div></div>
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Adesão</div><div class="pdf-summary-value">${pct}% <span style="font-size:13px;color:#546860">(${done}/${tot})</span></div></div>
-      <div class="pdf-summary-card"><div class="pdf-summary-label">Total VA/VR</div><div class="pdf-summary-value">${fmt(tVR+tVA)}</div></div>
-    </div>
-    <div class="pdf-section-title">Detalhamento por Colaborador</div>
-    <table class="pdf-table">
-      <thead><tr><th>Colaborador</th><th class="right">VA/VR</th><th class="right">VT/AC</th><th class="right">Total</th><th style="text-align:center">Status</th></tr></thead>
+    <div class="section-label">Detalhamento por Colaborador</div>
+    <table>
+      <thead><tr><th>Colaborador</th><th class="r">VA/VR</th><th class="r">VT/AC</th><th class="r">Total</th><th style="text-align:center">Status</th></tr></thead>
       <tbody>${execRows}</tbody>
+      <tfoot><tr><td>TOTAL (${done} responderam)</td><td class="r">${fmt(tVR+tVA)}</td><td class="r">${fmt(tVT+tAC)}</td><td class="r">${fmt(totalGeral)}</td><td></td></tr></tfoot>
     </table>
-    <div class="pdf-footer">
-      <div class="pdf-footer-left"><strong>Marco A. R. Meneguzzi</strong><br>Analista Administrativo e Financeiro<br>PBL — Compra de Créditos Judiciais</div>
-      <div class="pdf-footer-right">PBL Benefícios · ${mesAno}</div>
-    </div>
-  </div>`;
+  </body></html>`;
 
-  // ── Renderizar e baixar ───────────────────────────────────────────────────
-  const container = el('pdf-containers');
-  const pdfs = [
-    { html: htmlVAVR, nome: `PBL_Beneficios_VAVR_${MES.mes}${MES.ano}.pdf` },
-    { html: htmlVTAC, nome: `PBL_Beneficios_VTAC_${MES.mes}${MES.ano}.pdf` },
-    { html: htmlExec, nome: `PBL_Beneficios_Executivo_${MES.mes}${MES.ano}.pdf` },
-  ];
+  // ── Abrir janelas e imprimir ──────────────────────────────────────────────
+  [
+    { html: htmlVAVR, titulo: 'VA/VR' },
+    { html: htmlVTAC, titulo: 'VT/AC' },
+    { html: htmlExec, titulo: 'Executivo' },
+  ].forEach((pdf, i) => {
+    setTimeout(() => {
+      const win = window.open('', '_blank');
+      win.document.write(pdf.html);
+      win.document.close();
+      setTimeout(() => win.print(), 600);
+    }, i * 300);
+  });
 
-  const { jsPDF } = window.jspdf;
-
-  for(const pdf of pdfs) {
-    container.innerHTML = pdf.html;
-    const node = container.firstElementChild;
-    await new Promise(r => setTimeout(r, 200));
-    const canvas = await html2canvas(node, { scale:2, useCORS:true, backgroundColor:'#ffffff' });
-    const imgData = canvas.toDataURL('image/png');
-    const doc = new jsPDF({ orientation:'portrait', unit:'mm', format:'a4' });
-    const w = doc.internal.pageSize.getWidth();
-    const h = (canvas.height * w) / canvas.width;
-    doc.addImage(imgData, 'PNG', 0, 0, w, h);
-    doc.save(pdf.nome);
-    await new Promise(r => setTimeout(r, 400));
-  }
-
-  container.innerHTML = '';
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar Relatórios (PDF)';
+  setTimeout(() => {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar Relatórios (PDF)';
+  }, 1500);
 }
+
 
 // Init admin if on admin page
 if(window.location.search.includes('admin') || window.location.href.includes('?admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
