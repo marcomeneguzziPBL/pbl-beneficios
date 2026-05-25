@@ -540,6 +540,8 @@ async function carregarConfig() {
           MES.dias   = parseInt(data.dias) || MES.dias;
           MES.prazo  = data.prazo  || MES.prazo;
           MES.status = data.status || 'aberto';
+          // Atualiza badge se admin já estiver aberto
+          if(typeof atualizarStatusBadge === 'function') atualizarStatusBadge();
         }
       } catch(e) { console.warn('Erro config:', e); }
       delete window[cbName];
@@ -713,7 +715,7 @@ function entrar(idxDireto) {
     setSliderPct('vt', 50);
   }
 
-  if(MES.status === 'encerrado') {
+  if(MES.status === 'encerrado' && !ADMINS.includes(colabAtual?.email || '')) {
     irPara('pg-encerrado');
     return;
   }
@@ -898,6 +900,7 @@ function salvarConfig() {
 }
 
 async function renderPainel() {
+  atualizarStatusBadge();
   // Carrega respostas via JSONP (contorna CORS)
   await new Promise(resolve => {
     const cbName = 'pblCb' + Date.now();
