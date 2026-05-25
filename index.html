@@ -264,6 +264,40 @@
     .colab-list-name { font-size:14px; font-weight:600; color:var(--g); }
     .colab-list-meta { font-size:12px; color:var(--mu); margin-top:2px; }
 
+    /* ── CALENDÁRIO ── */
+    .cal-wrap { margin-bottom:1.5rem; }
+    .cal-card-inner { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
+    .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .cal-head-title { font-size:14px; font-weight:600; color:var(--g); display:flex; align-items:center; gap:7px; }
+    .cal-legend { display:flex; gap:12px; flex-wrap:wrap; }
+    .cal-leg { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--mu); }
+    .cal-leg-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:14px; }
+    .cal-dow { text-align:center; font-size:10px; font-weight:600; color:var(--mu); padding:3px 0 6px; text-transform:uppercase; letter-spacing:.05em; }
+    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; font-size:12px; font-weight:400; color:var(--tx); position:relative; }
+    .cal-day.util { background:#dff0e9; color:#082e25; }
+    .cal-day.fds { background:var(--bo); color:var(--mu); }
+    .cal-day.feriado { background:#FEF3E2; color:#7a5209; cursor:pointer; }
+    .cal-day.feriado .fpt { width:5px; height:5px; border-radius:50%; background:#C49A45; position:absolute; bottom:4px; }
+    .cal-day.empty { background:transparent; }
+    .cal-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#412402; color:#FAEEDA; font-size:10px; font-weight:500; padding:4px 8px; border-radius:5px; white-space:nowrap; pointer-events:none; z-index:20; display:none; }
+    .cal-day.feriado:hover .cal-tip { display:block; }
+    .cal-summary { display:flex; gap:16px; flex-wrap:wrap; padding-top:12px; border-top:1px solid var(--bo); }
+    .cal-sum-item { display:flex; flex-direction:column; gap:2px; }
+    .cal-sum-val { font-size:17px; font-weight:700; color:var(--g); }
+    .cal-sum-val.muted { color:var(--mu); }
+    .cal-sum-val.gold { color:var(--goldd); }
+    .cal-sum-label { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+
+    /* campo feriados admin */
+    .fer-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
+    .fer-row input { flex:1; padding:8px 10px; border:1.5px solid var(--bo); border-radius:8px; font-size:13px; font-family:'Inter',sans-serif; background:var(--white); color:var(--tx); }
+    .fer-row input:focus { outline:none; border-color:var(--g); }
+    .fer-row .btn-rm { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 10px; font-size:13px; color:#c0392b; cursor:pointer; font-family:'Inter',sans-serif; }
+    .fer-row .btn-rm:hover { background:#fdf0ee; }
+    .btn-add-fer { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 14px; font-size:12px; font-weight:600; color:var(--g); cursor:pointer; font-family:'Inter',sans-serif; margin-top:4px; }
+    .btn-add-fer:hover { background:var(--gl); }
+
     /* ── DARK TOGGLE ── */
     .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .dark-toggle:hover { background:var(--gd); }
@@ -388,6 +422,27 @@
       <span>📅 Mês: <strong id="f-mes">—</strong></span>
       <span>📆 Dias úteis: <strong id="f-dias">—</strong></span>
       <span>⏰ Prazo: <strong id="f-prazo">—</strong></span>
+    </div>
+
+    <!-- CALENDÁRIO -->
+    <div class="cal-wrap">
+      <div class="cal-card-inner">
+        <div class="cal-head">
+          <div class="cal-head-title">📅 <span id="cal-titulo">—</span></div>
+          <div class="cal-legend">
+            <div class="cal-leg"><div class="cal-leg-dot" style="background:#1D9E75"></div>Dia útil</div>
+            <div class="cal-leg"><div class="cal-leg-dot" style="background:#c2d9d1"></div>Fim de semana</div>
+            <div class="cal-leg"><div class="cal-leg-dot" style="background:#C49A45"></div>Feriado</div>
+          </div>
+        </div>
+        <div class="cal-grid" id="cal-grid"></div>
+        <div class="cal-summary">
+          <div class="cal-sum-item"><div class="cal-sum-val" id="cal-uteis">—</div><div class="cal-sum-label">Dias úteis</div></div>
+          <div class="cal-sum-item"><div class="cal-sum-val muted" id="cal-sab">—</div><div class="cal-sum-label">Sábados</div></div>
+          <div class="cal-sum-item"><div class="cal-sum-val muted" id="cal-dom">—</div><div class="cal-sum-label">Domingos</div></div>
+          <div class="cal-sum-item"><div class="cal-sum-val gold" id="cal-fer">—</div><div class="cal-sum-label">Feriados</div></div>
+        </div>
+      </div>
     </div>
 
     <!-- PROGRESSO -->
@@ -603,6 +658,12 @@
         <div class="fr"><label>Ano</label><input type="number" id="cfg-ano" value="2026" min="2024" max="2030"></div>
         <div class="fr"><label>Dias úteis</label><input type="number" id="cfg-dias" value="22" min="1" max="31"></div>
         <div class="fr"><label>Prazo final</label><input type="date" id="cfg-prazo" value="2026-05-10"></div>
+        <div class="fr">
+          <label>Feriados do mês</label>
+          <div id="fer-lista"></div>
+          <button class="btn-add-fer" onclick="addFeriado()">+ Adicionar feriado</button>
+          <p style="font-size:11px;color:var(--mu);margin-top:6px">Formato: dia e nome. Ex: 04 / Corpus Christi</p>
+        </div>
         <button class="btn-green" style="width:auto;padding:12px 28px" onclick="salvarConfig()">Salvar e aplicar</button>
         <div class="success-msg" id="cfg-ok">✓ Configuração salva.</div>
       </div>
@@ -691,7 +752,7 @@ async function carregarConfig() {
           MES.dias   = parseInt(data.dias) || MES.dias;
           MES.prazo  = data.prazo  || MES.prazo;
           MES.status = data.status || 'aberto';
-          // Atualiza badge se admin já estiver aberto
+          try { MES.feriados = data.feriados ? JSON.parse(data.feriados) : []; } catch(e) { MES.feriados = []; }
           if(typeof atualizarStatusBadge === 'function') atualizarStatusBadge();
         }
       } catch(e) { console.warn('Erro config:', e); }
@@ -879,6 +940,99 @@ function atualizarResumo() {
   }
 }
 
+// ── CALENDÁRIO ─────────────────────────────────────────────
+function renderCalendario() {
+  const grid = el('cal-grid');
+  if(!grid) return;
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const idxMes = meses.indexOf(MES.mes);
+  if(idxMes === -1) return;
+  const ano = parseInt(MES.ano);
+
+  // Título
+  const titulo = el('cal-titulo');
+  if(titulo) titulo.textContent = MES.mes + ' ' + ano;
+
+  // Feriados: objeto {dia: nome}
+  const ferMap = {};
+  (MES.feriados || []).forEach(f => { if(f.dia && f.nome) ferMap[parseInt(f.dia)] = f.nome; });
+
+  const primeiroDia = new Date(ano, idxMes, 1).getDay();
+  const totalDias   = new Date(ano, idxMes + 1, 0).getDate();
+
+  grid.innerHTML = '';
+  ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'].forEach(d => {
+    const div = document.createElement('div');
+    div.className = 'cal-dow';
+    div.textContent = d;
+    grid.appendChild(div);
+  });
+
+  for(let i = 0; i < primeiroDia; i++) {
+    const div = document.createElement('div');
+    div.className = 'cal-day empty';
+    grid.appendChild(div);
+  }
+
+  let uteis = 0, sabs = 0, doms = 0, fers = 0;
+  for(let dia = 1; dia <= totalDias; dia++) {
+    const dow = new Date(ano, idxMes, dia).getDay();
+    const isFer = !!ferMap[dia];
+    const div = document.createElement('div');
+    if(isFer) {
+      div.className = 'cal-day feriado';
+      div.innerHTML = dia + '<div class="fpt"></div><div class="cal-tip">' + ferMap[dia] + '</div>';
+      fers++;
+    } else if(dow === 6) {
+      div.className = 'cal-day fds';
+      div.textContent = dia;
+      sabs++;
+    } else if(dow === 0) {
+      div.className = 'cal-day fds';
+      div.textContent = dia;
+      doms++;
+    } else {
+      div.className = 'cal-day util';
+      div.textContent = dia;
+      uteis++;
+    }
+    grid.appendChild(div);
+  }
+
+  const cu = el('cal-uteis'); if(cu) cu.textContent = uteis;
+  const cs = el('cal-sab');   if(cs) cs.textContent = sabs;
+  const cd = el('cal-dom');   if(cd) cd.textContent = doms;
+  const cf = el('cal-fer');   if(cf) cf.textContent = fers;
+}
+
+// ── FERIADOS ADMIN ──────────────────────────────────────────
+function renderFeriadosAdmin() {
+  const lista = el('fer-lista');
+  if(!lista) return;
+  const feriados = MES.feriados || [];
+  if(feriados.length === 0) {
+    lista.innerHTML = '<p style="font-size:12px;color:var(--mu);margin-bottom:8px">Nenhum feriado cadastrado.</p>';
+    return;
+  }
+  lista.innerHTML = feriados.map((f, i) => `
+    <div class="fer-row">
+      <input type="number" min="1" max="31" placeholder="Dia" value="${f.dia||''}" onchange="MES.feriados[${i}].dia=this.value" style="max-width:70px">
+      <input type="text" placeholder="Nome do feriado" value="${f.nome||''}" onchange="MES.feriados[${i}].nome=this.value">
+      <button class="btn-rm" onclick="removeFeriado(${i})">✕</button>
+    </div>`).join('');
+}
+
+function addFeriado() {
+  if(!MES.feriados) MES.feriados = [];
+  MES.feriados.push({dia:'', nome:''});
+  renderFeriadosAdmin();
+}
+
+function removeFeriado(i) {
+  MES.feriados.splice(i, 1);
+  renderFeriadosAdmin();
+}
+
 function initDrag(g) {
   const track = el('track-'+g);
   if(!track) return;
@@ -949,6 +1103,7 @@ function entrar(idxDireto) {
   initDrag('va');
   initDrag('vt');
   updateProgress();
+  renderCalendario();
 }
 
 function onInput(g, w) {
@@ -1114,6 +1269,7 @@ function abaAdmin(aba, btn) {
   if(aba==='painel') renderPainel();
   if(aba==='colab')  renderColab();
   if(aba==='rel')    renderRel();
+  if(aba==='config') renderFeriadosAdmin();
 }
 
 function salvarConfig() {
@@ -1121,7 +1277,26 @@ function salvarConfig() {
   MES.ano   = parseInt(el('cfg-ano').value);
   MES.dias  = parseInt(el('cfg-dias').value)||22;
   MES.prazo = prazoFmt(el('cfg-prazo').value);
+  // Garante que feriados incompletos não são salvos
+  if(!MES.feriados) MES.feriados = [];
+  MES.feriados = MES.feriados.filter(f => f.dia && f.nome);
   atualizarAdmin();
+
+  // Salva feriados na planilha via POST
+  const iframe = document.createElement('iframe');
+  iframe.name = 'pbl_cfg_' + Date.now();
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+  const form = document.createElement('form');
+  form.method = 'POST'; form.action = API; form.target = iframe.name; form.style.display = 'none';
+  const input = document.createElement('input');
+  input.type = 'hidden'; input.name = 'payload';
+  input.value = JSON.stringify({ action:'saveConfig', mes:MES.mes, ano:MES.ano, dias:MES.dias, prazo:MES.prazo, feriados:JSON.stringify(MES.feriados) });
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => { try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e){} }, 5000);
+
   const ok=el('cfg-ok'); ok.style.display='block'; setTimeout(()=>ok.style.display='none',3000);
 }
 
