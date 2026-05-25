@@ -445,17 +445,7 @@
       </div>
     </div>
 
-    <!-- PROGRESSO -->
-    <div class="prog-wrap">
-      <div class="prog-header"><span>Benefícios configurados</span><span id="prog-pct">0%</span></div>
-      <div class="prog-track"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
-      <div class="prog-steps">
-        <span class="prog-step">Início</span>
-        <span class="prog-step">VA/VR</span>
-        <span class="prog-step">VT/AC</span>
-        <span class="prog-step">Concluído</span>
-      </div>
-    </div>
+
 
     <!-- VA/VR -->
     <div class="bcard">
@@ -476,26 +466,24 @@
         <div class="split-wrap">
           <div class="split-label vr">Vale Refeição (VR)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
+          <div class="pct-hint esq" id="hint-vr">50% do total</div>
         </div>
         <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label va">Vale Alimentação (VA)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
+          <div class="pct-hint dir" id="hint-va">50% do total</div>
         </div>
       </div>
       <div class="custom-slider-wrap">
-        <div class="custom-slider-labels">
-          <span class="custom-slider-label left">← 100% VR</span>
-          <span class="custom-slider-label right">100% VA →</span>
+        <div class="custom-slider-dir-labels">
+          <span class="custom-slider-dir-label">← 100% VR</span>
+          <span class="custom-slider-dir-label">100% VA →</span>
         </div>
         <div class="custom-slider-track" id="track-va">
-          <div class="custom-slider-left" id="left-va" style="width:50%"></div>
-          <div class="custom-slider-right" id="right-va" style="width:50%"></div>
+          <div class="custom-slider-gradient"></div>
+          <div class="custom-slider-fill" id="fill-va"></div>
           <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
-        </div>
-        <div class="custom-slider-pcts">
-          <span class="custom-slider-pct" id="pct-vr">VR 50%</span>
-          <span class="custom-slider-pct" id="pct-va">VA 50%</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -527,26 +515,24 @@
         <div class="split-wrap">
           <div class="split-label vt">Vale Transporte (VT)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
+          <div class="pct-hint esq" id="hint-vt">50% do total</div>
         </div>
         <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label ac">Auxílio Combustível (AC)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
+          <div class="pct-hint dir" id="hint-ac">50% do total</div>
         </div>
       </div>
       <div class="custom-slider-wrap">
-        <div class="custom-slider-labels">
-          <span class="custom-slider-label left">← 100% VT</span>
-          <span class="custom-slider-label right">100% AC →</span>
+        <div class="custom-slider-dir-labels">
+          <span class="custom-slider-dir-label">← 100% VT</span>
+          <span class="custom-slider-dir-label">100% AC →</span>
         </div>
         <div class="custom-slider-track" id="track-vt">
-          <div class="custom-slider-left" id="left-vt" style="width:50%"></div>
-          <div class="custom-slider-right" id="right-vt" style="width:50%"></div>
+          <div class="custom-slider-gradient"></div>
+          <div class="custom-slider-fill" id="fill-vt"></div>
           <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
-        </div>
-        <div class="custom-slider-pcts">
-          <span class="custom-slider-pct" id="pct-vt">VT 50%</span>
-          <span class="custom-slider-pct" id="pct-ac">AC 50%</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -904,27 +890,29 @@ function toggleDark() {
 }
 
 // ══ SLIDER CUSTOMIZADO ══════════════════════════════════
-function setSliderPct(g, pctVA) {
-  // pctVA = % do lado direito (VA ou AC)
-  pctVA = clamp(pctVA, 0, 100);
-  const pctVR = 100 - pctVA;
-  const thumb = el('thumb-'+g), left = el('left-'+g), right = el('right-'+g);
-  if(!thumb || !left || !right) return;
-  // bolinha fica na posição pctVA (0=esquerda=100%VR, 100=direita=100%VA)
-  thumb.style.left  = pctVA + '%';
-  // verde (VR) vai da esquerda até a bolinha
-  left.style.width  = pctVA + '%';
-  left.style.borderRadius  = pctVA === 0 ? '99px' : '99px 0 0 99px';
-  // dourado (VA) vai da bolinha até a direita
-  right.style.width = pctVR + '%';
-  right.style.borderRadius = pctVA === 100 ? '99px' : '0 99px 99px 0';
-  // atualiza labels de %
+function setSliderPct(g, pctDir) {
+  // pctDir = % do lado direito (VA ou AC), posição da bolinha
+  pctDir = clamp(pctDir, 0, 100);
+  const pctEsq = 100 - pctDir;
+  const thumb = el('thumb-'+g);
+  const fill  = el('fill-'+g);
+  if(!thumb) return;
+  // bolinha na posição pctDir
+  thumb.style.left = pctDir + '%';
+  // borda da bolinha: verde quando VR domina, dourado quando VA domina
+  thumb.style.borderColor = pctDir > 50 ? 'var(--gold)' : 'var(--g)';
+  // fill: máscara que cobre parte do degradê para mostrar lado "ativo"
+  // cobre o lado direito deixando o esquerdo visível
+  if(fill) {
+    fill.style.background = 'transparent';
+  }
+  // atualiza hints de %
   if(g === 'va') {
-    const pvr = el('pct-vr'); if(pvr) pvr.textContent = 'VR ' + Math.round(pctVR) + '%';
-    const pva = el('pct-va'); if(pva) pva.textContent = 'VA ' + Math.round(pctVA) + '%';
+    const hVR = el('hint-vr'); if(hVR) hVR.textContent = Math.round(pctEsq) + '% do total';
+    const hVA = el('hint-va'); if(hVA) hVA.textContent = Math.round(pctDir) + '% do total';
   } else {
-    const pvt = el('pct-vt'); if(pvt) pvt.textContent = 'VT ' + Math.round(pctVR) + '%';
-    const pac = el('pct-ac'); if(pac) pac.textContent = 'AC ' + Math.round(pctVA) + '%';
+    const hVT = el('hint-vt'); if(hVT) hVT.textContent = Math.round(pctEsq) + '% do total';
+    const hAC = el('hint-ac'); if(hAC) hAC.textContent = Math.round(pctDir) + '% do total';
   }
 }
 
@@ -1170,8 +1158,6 @@ function updateProgress() {
   if(vaOk&&vtOk) pct=100;
   else if(vaOk||vtOk) pct=50;
   else if((vr+va)>0||(vt+ac)>0) pct=25;
-  el('prog-fill').style.width = pct+'%';
-  el('prog-pct').textContent  = pct+'%';
   atualizarResumo();
 }
 
