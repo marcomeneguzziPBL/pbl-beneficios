@@ -484,14 +484,18 @@
         </div>
       </div>
       <div class="custom-slider-wrap">
+        <div class="custom-slider-labels">
+          <span class="custom-slider-label left">← 100% VR</span>
+          <span class="custom-slider-label right">100% VA →</span>
+        </div>
         <div class="custom-slider-track" id="track-va">
           <div class="custom-slider-left" id="left-va" style="width:50%"></div>
           <div class="custom-slider-right" id="right-va" style="width:50%"></div>
           <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
         </div>
-        <div class="custom-slider-labels">
-          <span class="custom-slider-label left">Vale Refeição (VR)</span>
-          <span class="custom-slider-label right">Vale Alimentação (VA)</span>
+        <div class="custom-slider-pcts">
+          <span class="custom-slider-pct" id="pct-vr">VR 50%</span>
+          <span class="custom-slider-pct" id="pct-va">VA 50%</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -531,14 +535,18 @@
         </div>
       </div>
       <div class="custom-slider-wrap">
+        <div class="custom-slider-labels">
+          <span class="custom-slider-label left">← 100% VT</span>
+          <span class="custom-slider-label right">100% AC →</span>
+        </div>
         <div class="custom-slider-track" id="track-vt">
           <div class="custom-slider-left" id="left-vt" style="width:50%"></div>
           <div class="custom-slider-right" id="right-vt" style="width:50%"></div>
           <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
         </div>
-        <div class="custom-slider-labels">
-          <span class="custom-slider-label left">Vale Transporte (VT)</span>
-          <span class="custom-slider-label right">Auxílio Combustível (AC)</span>
+        <div class="custom-slider-pcts">
+          <span class="custom-slider-pct" id="pct-vt">VT 50%</span>
+          <span class="custom-slider-pct" id="pct-ac">AC 50%</span>
         </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap">
@@ -752,7 +760,12 @@ async function carregarConfig() {
           MES.dias   = parseInt(data.dias) || MES.dias;
           MES.prazo  = data.prazo  || MES.prazo;
           MES.status = data.status || 'aberto';
-          try { MES.feriados = data.feriados ? JSON.parse(data.feriados) : []; } catch(e) { MES.feriados = []; }
+          try {
+            const raw = data.feriados;
+            if(Array.isArray(raw)) { MES.feriados = raw; }
+            else if(typeof raw === 'string' && raw.trim().startsWith('[')) { MES.feriados = JSON.parse(raw); }
+            else { MES.feriados = []; }
+          } catch(e) { MES.feriados = []; }
           if(typeof atualizarStatusBadge === 'function') atualizarStatusBadge();
         }
       } catch(e) { console.warn('Erro config:', e); }
@@ -891,14 +904,28 @@ function toggleDark() {
 }
 
 // ══ SLIDER CUSTOMIZADO ══════════════════════════════════
-function setSliderPct(g, pct) {
-  pct = clamp(pct, 0, 100);
+function setSliderPct(g, pctVA) {
+  // pctVA = % do lado direito (VA ou AC)
+  pctVA = clamp(pctVA, 0, 100);
+  const pctVR = 100 - pctVA;
   const thumb = el('thumb-'+g), left = el('left-'+g), right = el('right-'+g);
   if(!thumb || !left || !right) return;
-  thumb.style.left = pct+'%';
-  // Esquerda (VR/VT, verde) = 100-pct, Direita (VA/AC, dourado) = pct
-  left.style.width  = (100-pct)+'%';
-  right.style.width = pct+'%';
+  // bolinha fica na posição pctVA (0=esquerda=100%VR, 100=direita=100%VA)
+  thumb.style.left  = pctVA + '%';
+  // verde (VR) vai da esquerda até a bolinha
+  left.style.width  = pctVA + '%';
+  left.style.borderRadius  = pctVA === 0 ? '99px' : '99px 0 0 99px';
+  // dourado (VA) vai da bolinha até a direita
+  right.style.width = pctVR + '%';
+  right.style.borderRadius = pctVA === 100 ? '99px' : '0 99px 99px 0';
+  // atualiza labels de %
+  if(g === 'va') {
+    const pvr = el('pct-vr'); if(pvr) pvr.textContent = 'VR ' + Math.round(pctVR) + '%';
+    const pva = el('pct-va'); if(pva) pva.textContent = 'VA ' + Math.round(pctVA) + '%';
+  } else {
+    const pvt = el('pct-vt'); if(pvt) pvt.textContent = 'VT ' + Math.round(pctVR) + '%';
+    const pac = el('pct-ac'); if(pac) pac.textContent = 'AC ' + Math.round(pctVA) + '%';
+  }
 }
 
 function atalhoSplit(g, pctEsq, pctDir) {
@@ -913,6 +940,7 @@ function atalhoSplit(g, pctEsq, pctDir) {
     el('inp-vt').value = vE.toFixed(2);
     el('inp-ac').value = vD.toFixed(2);
   }
+  // pctDir = % do lado direito (VA ou AC) = posição da bolinha
   setSliderPct(g, pctDir);
   el('err-'+g).textContent = '';
   updateProgress();
@@ -944,6 +972,7 @@ function atualizarResumo() {
 function renderCalendario() {
   const grid = el('cal-grid');
   if(!grid) return;
+  console.log('Feriados carregados:', JSON.stringify(MES.feriados));
   const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
   const idxMes = meses.indexOf(MES.mes);
   if(idxMes === -1) return;
@@ -1039,15 +1068,17 @@ function initDrag(g) {
   const doMove = e => {
     const rect = track.getBoundingClientRect();
     const cx   = e.touches ? e.touches[0].clientX : e.clientX;
-    const pct  = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
-    setSliderPct(g, pct);
-    const tot  = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
-    const vA   = parseFloat((tot*pct/100).toFixed(2));
-    const vB   = parseFloat((tot-vA).toFixed(2));
-    el(g==='va'?'inp-va':'inp-ac').value = vA.toFixed(2);
-    el(g==='va'?'inp-vr':'inp-vt').value = vB.toFixed(2);
+    const pctVA = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
+    setSliderPct(g, pctVA);
+    const tot = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
+    // pctVA = % do lado direito (VA ou AC)
+    const vDir = parseFloat((tot * pctVA / 100).toFixed(2)); // VA ou AC
+    const vEsq = parseFloat((tot - vDir).toFixed(2));        // VR ou VT
+    el(g==='va'?'inp-va':'inp-ac').value = vDir.toFixed(2);
+    el(g==='va'?'inp-vr':'inp-vt').value = vEsq.toFixed(2);
     el('err-'+g).textContent = '';
     updateProgress();
+    atualizarResumo();
   };
   const stop = () => { document.removeEventListener('mousemove',doMove); document.removeEventListener('touchmove',doMove); document.removeEventListener('mouseup',stop); document.removeEventListener('touchend',stop); };
   track.addEventListener('mousedown', e => { e.preventDefault(); doMove(e); document.addEventListener('mousemove',doMove); document.addEventListener('mouseup',stop); });
@@ -1120,7 +1151,7 @@ function onInput(g, w) {
   err.textContent='';
   if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
   else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
-  // pct representa a proporção do lado DIREITO (VA/AC)
+  // pct = proporção do lado DIREITO (VA ou AC) → posição da bolinha
   const pA = tot>0?(w==='vr'||w==='vt'?(o/tot):(v/tot))*100:50;
   setSliderPct(g, Math.round(pA));
   updateProgress();
