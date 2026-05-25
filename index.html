@@ -263,28 +263,28 @@
 
     /* ── CALENDÁRIO ── */
     .cal-wrap { margin-bottom:1.5rem; }
-    .cal-card-inner { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:20px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
-    .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
-    .cal-head-title { font-size:14px; font-weight:600; color:var(--g); display:flex; align-items:center; gap:7px; }
-    .cal-legend { display:flex; gap:12px; flex-wrap:wrap; }
-    .cal-leg { display:flex; align-items:center; gap:5px; font-size:11px; color:var(--mu); }
-    .cal-leg-dot { width:9px; height:9px; border-radius:50%; flex-shrink:0; }
-    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:14px; }
-    .cal-dow { text-align:center; font-size:10px; font-weight:600; color:var(--mu); padding:3px 0 6px; text-transform:uppercase; letter-spacing:.05em; }
-    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:7px; font-size:12px; font-weight:400; color:var(--tx); position:relative; }
+    .cal-card-inner { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:14px 16px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
+    .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    .cal-head-title { font-size:13px; font-weight:600; color:var(--g); display:flex; align-items:center; gap:6px; }
+    .cal-legend { display:flex; gap:10px; flex-wrap:wrap; }
+    .cal-leg { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--mu); }
+    .cal-leg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+    .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px; }
+    .cal-dow { text-align:center; font-size:9px; font-weight:600; color:var(--mu); padding:2px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
+    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:5px; font-size:11px; font-weight:400; color:var(--tx); position:relative; }
     .cal-day.util { background:#dff0e9; color:#082e25; }
     .cal-day.fds { background:var(--bo); color:var(--mu); }
     .cal-day.feriado { background:#FEF3E2; color:#7a5209; cursor:pointer; }
-    .cal-day.feriado .fpt { width:5px; height:5px; border-radius:50%; background:#C49A45; position:absolute; bottom:4px; }
+    .cal-day.feriado .fpt { width:4px; height:4px; border-radius:50%; background:#C49A45; position:absolute; bottom:3px; }
     .cal-day.empty { background:transparent; }
     .cal-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#412402; color:#FAEEDA; font-size:10px; font-weight:500; padding:4px 8px; border-radius:5px; white-space:nowrap; pointer-events:none; z-index:20; display:none; }
     .cal-day.feriado:hover .cal-tip { display:block; }
-    .cal-summary { display:flex; gap:16px; flex-wrap:wrap; padding-top:12px; border-top:1px solid var(--bo); }
-    .cal-sum-item { display:flex; flex-direction:column; gap:2px; }
-    .cal-sum-val { font-size:17px; font-weight:700; color:var(--g); }
+    .cal-summary { display:flex; gap:14px; flex-wrap:wrap; padding-top:10px; border-top:1px solid var(--bo); }
+    .cal-sum-item { display:flex; flex-direction:column; gap:1px; }
+    .cal-sum-val { font-size:15px; font-weight:700; color:var(--g); }
     .cal-sum-val.muted { color:var(--mu); }
     .cal-sum-val.gold { color:var(--goldd); }
-    .cal-sum-label { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+    .cal-sum-label { font-size:9px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
 
     /* campo feriados admin */
     .fer-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
@@ -294,6 +294,15 @@
     .fer-row .btn-rm:hover { background:#fdf0ee; }
     .btn-add-fer { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 14px; font-size:12px; font-weight:600; color:var(--g); cursor:pointer; font-family:'Inter',sans-serif; margin-top:4px; }
     .btn-add-fer:hover { background:var(--gl); }
+
+    /* ── COLLAPSIBLE INFO ── */
+    .ibox-collapse { border:1px solid #bbd5f5; border-radius:10px; margin-bottom:20px; overflow:hidden; }
+    .ibox-collapse summary { padding:10px 14px; font-size:13px; font-weight:600; color:#1a3a5c; background:#f0f7ff; cursor:pointer; list-style:none; display:flex; align-items:center; gap:7px; }
+    .ibox-collapse summary::-webkit-details-marker { display:none; }
+    .ibox-collapse summary::after { content:'▸'; margin-left:auto; font-size:11px; color:#546860; transition:transform .2s; }
+    .ibox-collapse[open] summary::after { transform:rotate(90deg); }
+    .ibox-content { padding:12px 14px; font-size:13px; color:#1a3a5c; line-height:1.75; background:#f0f7ff; border-top:1px solid #bbd5f5; }
+    .ibox-content strong { font-weight:600; }
 
     /* ── DARK TOGGLE ── */
     .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
@@ -453,12 +462,14 @@
         <span class="total-value" id="f-tva">—</span>
       </div>
       <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc-va"></p>
-      <div class="ibox">
-        Distribua o valor como preferir entre as duas modalidades:<br>
-        <strong>Vale Refeição (VR)</strong> — utilizado em restaurantes, lanchonetes e estabelecimentos de alimentação.<br>
-        <strong>Vale Alimentação (VA)</strong> — utilizado em supermercados, mercearias e estabelecimentos similares.<br>
-        Você pode concentrar 100% em uma opção ou dividir entre as duas.
-      </div>
+      <details class="ibox-collapse">
+        <summary>ℹ️ Como funciona VA/VR?</summary>
+        <div class="ibox-content">
+          <strong>Vale Refeição (VR)</strong> — utilizado em restaurantes, lanchonetes e estabelecimentos de alimentação.<br>
+          <strong>Vale Alimentação (VA)</strong> — utilizado em supermercados, mercearias e estabelecimentos similares.<br>
+          Você pode concentrar 100% em uma opção ou dividir entre as duas.
+        </div>
+      </details>
       <div class="split-grid">
         <div class="split-wrap">
           <div class="split-label vr">Vale Refeição (VR)</div>
@@ -499,12 +510,14 @@
         <span class="total-label">Total disponível</span>
         <span class="total-value" id="f-tvt">—</span>
       </div>
-      <div class="ibox">
-        Distribua o valor como preferir entre as duas modalidades:<br>
-        <strong>Vale Transporte (VT)</strong> — utilizado no transporte público coletivo (ônibus urbano e intermunicipal).<br>
-        <strong>Auxílio Combustível (AC)</strong> — destinado ao abastecimento do veículo.<br>
-        Você pode concentrar 100% em uma opção ou dividir entre as duas.
-      </div>
+      <details class="ibox-collapse">
+        <summary>ℹ️ Como funciona VT/AC?</summary>
+        <div class="ibox-content">
+          <strong>Vale Transporte (VT)</strong> — utilizado no transporte público coletivo (ônibus urbano e intermunicipal).<br>
+          <strong>Auxílio Combustível (AC)</strong> — destinado ao abastecimento do veículo.<br>
+          Você pode concentrar 100% em uma opção ou dividir entre as duas.
+        </div>
+      </details>
       <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc"></p>
       <div class="split-grid">
         <div class="split-wrap">
