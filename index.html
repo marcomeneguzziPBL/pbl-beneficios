@@ -666,8 +666,8 @@ function initDrag(g) {
     const tot  = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
     const vA   = parseFloat((tot*pct/100).toFixed(2));
     const vB   = parseFloat((tot-vA).toFixed(2));
-    el(g==='va'?'inp-vr':'inp-vt').value = vA.toFixed(2);
-    el(g==='va'?'inp-va':'inp-ac').value = vB.toFixed(2);
+    el(g==='va'?'inp-va':'inp-ac').value = vA.toFixed(2);
+    el(g==='va'?'inp-vr':'inp-vt').value = vB.toFixed(2);
     el('err-'+g).textContent = '';
     updateProgress();
   };
@@ -703,8 +703,8 @@ function entrar(idxDireto) {
     el('inp-va').value = parseFloat(r.va).toFixed(2);
     el('inp-vt').value = parseFloat(r.vt).toFixed(2);
     el('inp-ac').value = parseFloat(r.ac).toFixed(2);
-    setSliderPct('va', tva>0 ? Math.round(r.vr/tva*100) : 50);
-    setSliderPct('vt', tvt>0 ? Math.round(r.vt/tvt*100) : 50);
+    setSliderPct('va', tva>0 ? Math.round(r.va/tva*100) : 50);
+    setSliderPct('vt', tvt>0 ? Math.round(r.ac/tvt*100) : 50);
   } else {
     const hva = parseFloat((tva/2).toFixed(2)), hvt = parseFloat((tvt/2).toFixed(2));
     el('inp-vr').value = hva.toFixed(2);
@@ -741,7 +741,7 @@ function onInput(g, w) {
   if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
   else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
   // pct representa a proporção do lado DIREITO (VA/AC)
-  const pA = tot>0?(w==='vr'||w==='vt'?(1-v/tot):(o/tot))*100:50;
+  const pA = tot>0?(w==='vr'||w==='vt'?(o/tot):(v/tot))*100:50;
   setSliderPct(g, Math.round(pA));
   updateProgress();
 }
