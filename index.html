@@ -1269,7 +1269,26 @@ function abaAdmin(aba, btn) {
   if(aba==='painel') renderPainel();
   if(aba==='colab')  renderColab();
   if(aba==='rel')    renderRel();
-  if(aba==='config') renderFeriadosAdmin();
+  if(aba==='config') { popularCamposConfig(); renderFeriadosAdmin(); }
+}
+
+function popularCamposConfig() {
+  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  const cfgMes   = el('cfg-mes');
+  const cfgAno   = el('cfg-ano');
+  const cfgDias  = el('cfg-dias');
+  const cfgPrazo = el('cfg-prazo');
+  if(cfgMes)   cfgMes.value   = MES.mes;
+  if(cfgAno)   cfgAno.value   = MES.ano;
+  if(cfgDias)  cfgDias.value  = MES.dias;
+  if(cfgPrazo) {
+    // Converter prazo "27/05/2026 12h30" → "2026-05-27" para o input date
+    const p = MES.prazo;
+    if(p && p.includes('/')) {
+      const partes = p.split(' ')[0].split('/');
+      if(partes.length === 3) cfgPrazo.value = partes[2] + '-' + partes[1] + '-' + partes[0];
+    }
+  }
 }
 
 function salvarConfig() {
