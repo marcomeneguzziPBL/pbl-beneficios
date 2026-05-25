@@ -88,7 +88,7 @@
     .ibox strong { font-weight:600; }
 
     /* ── SPLIT INPUTS ── */
-    .split-grid { display:grid; grid-template-columns:1fr 36px 1fr; align-items:center; gap:10px; margin-bottom:16px; }
+    .split-grid { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:16px; margin-bottom:16px; }
     .split-plus { text-align:center; font-size:22px; color:var(--mu); padding-top:22px; }
     .split-wrap { display:flex; flex-direction:column; gap:6px; }
     .split-label { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
@@ -271,7 +271,7 @@
     .cal-leg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px; }
     .cal-dow { text-align:center; font-size:9px; font-weight:600; color:var(--mu); padding:2px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
-    .cal-day { aspect-ratio:1; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:5px; font-size:11px; font-weight:400; color:var(--tx); position:relative; }
+    .cal-day { height:32px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:5px; font-size:11px; font-weight:400; color:var(--tx); position:relative; }
     .cal-day.util { background:#dff0e9; color:#082e25; }
     .cal-day.fds { background:var(--bo); color:var(--mu); }
     .cal-day.feriado { background:#FEF3E2; color:#7a5209; cursor:pointer; }
@@ -313,7 +313,7 @@
       .hdr { padding:13px 16px; }
       .bcard { padding:20px 16px; }
       .wrap, .wrap-admin { padding:16px 0 3rem; }
-      .split-grid { grid-template-columns:1fr 28px 1fr; gap:6px; }
+      .split-grid { grid-template-columns:1fr 1fr; gap:10px; }
       .sg4 { grid-template-columns:1fr 1fr; }
       .metrics-row { grid-template-columns:1fr 1fr; }
       .ring-wrap { display:none; }
@@ -476,6 +476,7 @@
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
           <div class="pct-hint esq" id="hint-vr">50% do total</div>
         </div>
+        <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label va">Vale Alimentação (VA)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
@@ -524,6 +525,7 @@
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
           <div class="pct-hint esq" id="hint-vt">50% do total</div>
         </div>
+        <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label ac">Auxílio Combustível (AC)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
