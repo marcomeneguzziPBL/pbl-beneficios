@@ -462,21 +462,13 @@
         <span class="total-value" id="f-tva">—</span>
       </div>
       <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc-va"></p>
-      <details class="ibox-collapse">
-        <summary>ℹ️ Como funciona VA/VR?</summary>
-        <div class="ibox-content">
-          <strong>Vale Refeição (VR)</strong> — utilizado em restaurantes, lanchonetes e estabelecimentos de alimentação.<br>
-          <strong>Vale Alimentação (VA)</strong> — utilizado em supermercados, mercearias e estabelecimentos similares.<br>
-          Você pode concentrar 100% em uma opção ou dividir entre as duas.
-        </div>
-      </details>
+
       <div class="split-grid">
         <div class="split-wrap">
           <div class="split-label vr">Vale Refeição (VR)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
           <div class="pct-hint esq" id="hint-vr">50% do total</div>
         </div>
-        <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label va">Vale Alimentação (VA)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
@@ -510,14 +502,7 @@
         <span class="total-label">Total disponível</span>
         <span class="total-value" id="f-tvt">—</span>
       </div>
-      <details class="ibox-collapse">
-        <summary>ℹ️ Como funciona VT/AC?</summary>
-        <div class="ibox-content">
-          <strong>Vale Transporte (VT)</strong> — utilizado no transporte público coletivo (ônibus urbano e intermunicipal).<br>
-          <strong>Auxílio Combustível (AC)</strong> — destinado ao abastecimento do veículo.<br>
-          Você pode concentrar 100% em uma opção ou dividir entre as duas.
-        </div>
-      </details>
+
       <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc"></p>
       <div class="split-grid">
         <div class="split-wrap">
@@ -525,7 +510,6 @@
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
           <div class="pct-hint esq" id="hint-vt">50% do total</div>
         </div>
-        <div class="split-plus">+</div>
         <div class="split-wrap">
           <div class="split-label ac">Auxílio Combustível (AC)</div>
           <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
