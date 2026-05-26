@@ -722,6 +722,7 @@ window.addEventListener('load', () => {
     if(window.location.search.includes('admin') || window.location.href.includes('?admin')) {
       irPara('pg-admin'); atualizarAdmin();
     }
+    if(typeof renderCalendario === 'function') renderCalendario();
   });
 });
 
