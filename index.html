@@ -724,7 +724,7 @@ let   colabAtual = null;
 const vtTot = c  => parseFloat((c.passagem * 2 * MES.dias).toFixed(2));
 const vaTot = c  => parseFloat((c.vapd * MES.dias).toFixed(2));
 const ini   = n  => { const p=n.trim().split(' '); return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.slice(0,2).toUpperCase(); };
-const fmt   = v  => 'R$ '+parseFloat(v).toFixed(2).replace('.',',');
+const fmt   = v  => 'R$ '+parseFloat(v).toLocaleString('pt-BR', {minimumFractionDigits:2, maximumFractionDigits:2});
 const clamp = (v,a,b) => Math.min(Math.max(v,a),b);
 const prazoFmt = d => { if(!d) return '—'; if(d.includes('-')){ const[y,m,dia]=d.split('-'); return `${dia}/${m}/${y}`; } return d; };
 const el    = id => document.getElementById(id);
