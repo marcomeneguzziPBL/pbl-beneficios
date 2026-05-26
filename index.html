@@ -67,7 +67,7 @@
 
     /* ── CARDS ── */
     .card { background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:24px; margin-bottom:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,.05); }
-    .bcard { background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:28px; margin-bottom:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,.05); }
+    .bcard { background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:28px; margin-bottom:2rem; box-shadow:0 2px 12px rgba(0,0,0,.05); }
 
     /* ── EMPLOYEE ── */
     .emp-card { background:var(--white); border-radius:16px; padding:20px 24px; margin-bottom:1.5rem; box-shadow:0 4px 24px rgba(0,0,0,.08); border:1px solid var(--bo); display:flex; align-items:center; gap:16px; }
@@ -80,7 +80,7 @@
     /* ── BENEFIT CARD ── */
     .benefit-icon { font-size:26px; margin-bottom:8px; display:block; }
     .bcard-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; color:var(--g); margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid var(--gold); }
-    .bcard-divider { color:var(--gold); margin:0 6px; }
+    .bcard-divider { color:var(--gold); margin:0 10px; font-weight:300; font-size:18px; }
     .total-row { display:flex; align-items:center; gap:12px; margin-bottom:20px; background:var(--gl); border-radius:10px; padding:14px 16px; }
     .total-label { font-size:13px; color:var(--mu); font-weight:500; }
     .total-value { font-size:20px; font-weight:700; color:var(--g); margin-left:auto; letter-spacing:-.01em; }
@@ -197,7 +197,7 @@
     .recap-total { display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:var(--g); padding:8px 0 0; margin-top:6px; border-top:2px solid #b4cfc7; }
 
     /* ── BOTÕES RÁPIDOS ── */
-    .btn-split-quick { padding:5px 12px; border:1.5px solid var(--bo); border-radius:99px; font-size:11px; font-weight:600; color:var(--g); background:var(--white); cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; white-space:nowrap; }
+    .btn-split-quick { padding:8px 14px; border:1.5px solid var(--bo); border-radius:99px; font-size:12px; font-weight:600; color:var(--g); background:var(--white); cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; white-space:nowrap; }
     .btn-split-quick:hover { background:var(--gl); border-color:var(--g); }
 
     /* ── PDF ── */
@@ -474,8 +474,7 @@
 
     <!-- VA/VR -->
     <div class="bcard">
-      <span class="benefit-icon">🍽️</span>
-      <div class="bcard-title">Vale Alimentação <span class="bcard-divider">·</span> Vale Refeição</div>
+      <div class="bcard-title">Vale Refeição <span class="bcard-divider">·</span> Vale Alimentação</div>
       <div class="total-row">
         <span class="total-label">Total disponível</span>
         <span class="total-value" id="f-tva">—</span>
@@ -515,7 +514,6 @@
 
     <!-- VT/AC -->
     <div class="bcard">
-      <span class="benefit-icon">🚌</span>
       <div class="bcard-title">Vale Transporte <span class="bcard-divider">·</span> Auxílio Combustível</div>
       <div class="total-row">
         <span class="total-label">Total disponível</span>
@@ -565,7 +563,7 @@
           <div style="padding:10px;background:#fdf6e8;border-radius:8px"><div style="font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:4px">Auxílio Combustível</div><div style="font-size:16px;font-weight:700;color:var(--goldd)" id="res-ac">—</div></div>
         </div>
       </div>
-      <button class="btn-green" onclick="confirmar()">Confirmar escolhas</button>
+      <button class="btn-green" onclick="confirmar()" style="display:flex;align-items:center;justify-content:center;gap:10px"><svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Confirmar escolhas</button>
     </div>
   </div>
 </div>
