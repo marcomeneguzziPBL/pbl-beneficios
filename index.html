@@ -757,6 +757,8 @@ window.addEventListener('load', () => {
   ['logo-sel','logo-hdr','logo-adm','logo-choice'].forEach(id => { const e=el(id); if(e) e.src=src; });
   if(localStorage.getItem('pbl-dark')==='true') { document.body.classList.add('dark'); el('dark-btn').textContent='☀️'; }
   carregarConfig().then(() => {
+    return carregarColaboradores();
+  }).then(() => {
     processarRedirect();
     if(window.location.search.includes('admin') || window.location.href.includes('?admin')) {
       irPara('pg-admin'); atualizarAdmin();
@@ -797,6 +799,36 @@ async function carregarConfig() {
 }
 
 
+
+function carregarColaboradores() {
+  return new Promise(resolve => {
+    const cbName = 'colabCb' + Date.now();
+    window[cbName] = data => {
+      try {
+        if(Array.isArray(data) && data.length > 0) {
+          COLABS.length = 0;
+          data.forEach(c => {
+            COLABS.push({
+              nome:     c.nome     || '',
+              email:    c.email    || '',
+              passagem: parseFloat(c.passagem) || 0,
+              vapd:     parseFloat(c.vapd)     || 24,
+              cidade:   c.cidade   || '',
+              tipo:     c.tipo     || 'municipal'
+            });
+          });
+        }
+      } catch(e) { console.warn('Erro colaboradores:', e); }
+      delete window[cbName];
+      resolve();
+    };
+    const script = document.createElement('script');
+    script.src = API + '?action=listColabs&callback=' + cbName;
+    script.onerror = () => { delete window[cbName]; resolve(); };
+    document.head.appendChild(script);
+    setTimeout(() => { if(window[cbName]) { delete window[cbName]; resolve(); } }, 6000);
+  });
+}
 
 function loginGoogle() {
   const clientId    = '1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com';
