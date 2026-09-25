@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<!-- PBL Benefícios — HTML v23 · total centralizado na barra -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -6,96 +7,108 @@
   <title>PBL — Benefícios</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
 
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --g:#0D4A3A; --gd:#082e25; --gl:#dff0e9; --gold:#C49A45; --goldd:#9c7a34;
-      --tx:#111; --mu:#546860; --bo:#c2d9d1; --bg:#f4f9f7; --white:#fff;
+      /* verdes e dourados alinhados ao site institucional */
+      --g:#0B3A34; --gd:#062E2B; --gl:#E3F0EB; --bo:#CBDDD7; --bg:#F5F9F7; --white:#fff;
+      --hd:#0B3A34;                 /* títulos e valores */
+      --tx:#14201D; --mu:#52655F;
+      --gold:#CB974F;               /* preenchimento de botão */
+      --goldd:#8A6526;              /* dourado como texto (contraste 5,3) */
+      --gold-on:#062E2B;            /* texto sobre dourado (contraste 5,6) */
+      --serif:Georgia,'Times New Roman',serif;
+      --display:'Playfair Display',Georgia,serif;   /* só o logotipo */
+      --mono:'Cascadia Mono',Consolas,'SF Mono',Menlo,monospace;
     }
     body { font-family:'Inter',sans-serif; color:var(--tx); background:var(--bg); min-height:100vh; }
-    body.dark { --g:#3a9c74; --gd:#2a7a58; --gl:#1a2e28; --gold:#d4a84e; --goldd:#b08030; --tx:#e0ede8; --mu:#7aaa9a; --bo:#2a4a40; --bg:#0f1f1a; --white:#162820; }
-    body.dark .hdr { background:#0a1510; }
-    body.dark .sel-outer { background:linear-gradient(160deg,#050f0a 0%,#0a1a12 60%,#0f2018 100%); }
-    body.dark .sel-card, body.dark .ok-card { background:#162820; }
-    body.dark .ibox { background:#1a2e3a; border-color:#2a4060; color:#90b8cc; }
-    body.dark .inp-prefix { background:#1f3428; }
-    body.dark .inp-wrap { background:#1a2e28; }
+    /* ── MODO ESCURO — paleta extraída do site pblcompra.com.br ── */
+    body.dark {
+      --g:#193D3B; --gd:#0F332F; --gl:#10443E; --bo:#16514A; --bg:#062E2B; --white:#093D39;
+      --hd:#EFF4F1;
+      --tx:#EFF4F1; --mu:#9CB5AF;
+      --gold:#DEA760; --goldd:#B8873F; --gold-on:#062E2B;
+    }
+    body.dark .sel-outer, body.dark .choice-outer, body.dark .teste-outer { background:linear-gradient(160deg,#062E2B 0%,#083733 60%,#0B4540 100%); }
+    body.dark .sel-card, body.dark .ok-card, body.dark .choice-card, body.dark .teste-card { background:#093D39; }
+    body.dark .inp2 .pre { background:#0B3733; }
+    body.dark .cal2-dia.fds { background:#0B3733; color:#7f9691; }
+    body.dark .cal2-dia.feriado { background:#3A2C15; color:#E0B978; }
+    body.dark .bp { background:#3A2C15; color:#E0B978; }
+    body.dark .bd { background:#0E4A3A; color:#8FD9B4; }
+    body.dark .tb tbody tr.pend td { color:#6F837D; }
+    body.dark .loading-outer { background:linear-gradient(160deg,#062E2B 0%,#083733 60%,#0B4540 100%); }
 
     .pg { display:none; } .pg.active { display:block; }
 
     /* ── SELEÇÃO ── */
-    .sel-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; background:linear-gradient(160deg,#0a3328 0%,#0D4A3A 60%,#1a6b52 100%); }
+    .sel-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; background:linear-gradient(160deg,#062E2B 0%,#083733 60%,#0B4540 100%); }
     .sel-card { background:var(--white); border-radius:20px; padding:3rem 2.5rem; width:100%; max-width:440px; text-align:center; box-shadow:0 24px 64px rgba(0,0,0,.2); }
     .brand-row { display:flex; align-items:center; justify-content:center; gap:12px; margin-bottom:2.5rem; }
     .brand-row img { height:38px; width:auto; }
-    .brand-name { font-family:'Playfair Display',serif; font-size:28px; font-weight:600; color:var(--g); line-height:1; text-align:left; }
-    .brand-sub { font-size:9px; color:var(--mu); letter-spacing:.14em; text-transform:uppercase; margin-top:5px; text-align:left; }
+    .brand-name { font-family:var(--display); font-size:28px; font-weight:600; color:var(--hd); line-height:1; text-align:left; }
+    .brand-sub { font-family:'Inter',sans-serif; font-size:9px; color:var(--mu); letter-spacing:.14em; text-transform:uppercase; margin-top:5px; text-align:left; }
     .sel-divider { width:48px; height:2px; background:var(--gold); border-radius:99px; margin:0 auto 2rem; }
-    .sel-card h1 { font-family:'Playfair Display',serif; font-size:22px; color:var(--g); margin-bottom:.6rem; }
+    .sel-card h1 { font-family:var(--serif); font-size:24px; color:var(--hd); margin-bottom:.6rem; }
     .sel-card > p { font-size:14px; color:var(--mu); margin-bottom:2rem; line-height:1.65; }
     .sel-select { width:100%; padding:14px 16px; border:1.5px solid var(--bo); border-radius:10px; font-size:15px; background:var(--bg); color:var(--tx); font-family:'Inter',sans-serif; margin-bottom:1rem; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23546860' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; cursor:pointer; }
-    .sel-select:focus { outline:none; border-color:var(--g); }
+    .sel-select:focus { outline:none; border-color:var(--hd); }
 
     /* ── BOTÕES ── */
-    .btn-gold { width:100%; padding:15px; background:var(--gold); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:background .15s; }
-    .btn-gold:hover:not(:disabled) { background:var(--goldd); }
-    .btn-gold:disabled { opacity:.45; cursor:not-allowed; }
     .btn-green { background:var(--g); color:#fff; border:none; border-radius:10px; font-size:15px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; padding:15px; width:100%; transition:background .15s; }
-    .btn-green:hover { background:var(--gd); }
-    .btn-outline { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:500; color:var(--g); font-family:'Inter',sans-serif; cursor:pointer; }
+    .btn-green:hover:not(:disabled) { background:var(--gd); }
+    .btn-green:disabled { opacity:.55; cursor:not-allowed; }
+    .btn-outline { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 16px; font-size:13px; font-weight:500; color:var(--hd); font-family:'Inter',sans-serif; cursor:pointer; }
     .btn-outline:hover { background:var(--gl); }
-    .btn-back { display:inline-flex; align-items:center; gap:6px; font-size:13px; font-weight:500; color:var(--mu); cursor:pointer; background:none; border:none; font-family:'Inter',sans-serif; padding:0; margin-bottom:1.5rem; }
-    .btn-back:hover { color:var(--g); }
 
     /* ── HEADER ── */
     .hdr { background:var(--g); padding:14px 24px; display:flex; align-items:center; gap:12px; position:sticky; top:0; z-index:10; box-shadow:0 2px 16px rgba(0,0,0,.18); }
     .hdr img { height:32px; width:auto; }
     .hdr-texts { display:flex; flex-direction:column; justify-content:center; }
-    .hdr-name { font-family:'Playfair Display',serif; color:#fff; font-size:20px; font-weight:600; line-height:1; }
-    .hdr-sub { font-size:9px; color:rgba(255,255,255,.85); letter-spacing:.14em; text-transform:uppercase; margin-top:4px; }
+    .hdr-name { font-family:var(--display); color:#fff; font-size:20px; font-weight:600; line-height:1; }
+    .hdr-sub { font-family:'Inter',sans-serif; font-size:9px; color:rgba(255,255,255,.85); letter-spacing:.14em; text-transform:uppercase; margin-top:4px; }
     .hdr-right { margin-left:auto; font-size:13px; color:rgba(255,255,255,.85); font-weight:500; }
 
     /* ── TABS ── */
     .tabs { display:flex; border-bottom:1.5px solid var(--bo); margin-bottom:1.5rem; overflow-x:auto; }
     .tab { padding:10px 18px; font-size:13px; font-weight:500; cursor:pointer; border-bottom:2.5px solid transparent; margin-bottom:-1.5px; color:var(--mu); background:none; border-top:none; border-left:none; border-right:none; font-family:'Inter',sans-serif; white-space:nowrap; }
-    .tab.active { color:var(--g); border-bottom-color:var(--gold); }
+    .tab.active { color:var(--hd); border-bottom-color:var(--gold); }
 
     /* ── LAYOUT ── */
     .wrap { max-width:720px; margin:0 auto; padding:28px 1rem 3rem; }
-    .wrap-admin { max-width:800px; margin:0 auto; padding:28px 1rem 3rem; }
+    .wrap-admin { max-width:1280px; margin:0 auto; padding:28px 1rem 3rem; }
 
     /* ── CARDS ── */
-    .card { background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:24px; margin-bottom:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,.05); }
-    .bcard { background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:28px; margin-bottom:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,.05); }
+    .card { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:24px; margin-bottom:1.5rem; }
+    .bcard { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:28px; margin-bottom:1.5rem; }
 
     /* ── EMPLOYEE ── */
     .emp-card { background:var(--white); border-radius:16px; padding:20px 24px; margin-bottom:1.5rem; box-shadow:0 4px 24px rgba(0,0,0,.08); border:1px solid var(--bo); display:flex; align-items:center; gap:16px; }
     .emp-av { width:56px; height:56px; border-radius:50%; background:var(--g); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:600; color:#fff; flex-shrink:0; border:3px solid var(--gold); }
-    .emp-name { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; color:var(--g); }
+    .emp-name { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--hd); }
     .emp-meta { font-size:13px; color:var(--mu); margin-top:3px; }
     .mes-bar { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:14px 20px; margin-bottom:1.5rem; display:flex; flex-wrap:wrap; gap:8px 24px; font-size:14px; color:var(--mu); box-shadow:0 2px 8px rgba(0,0,0,.04); }
-    .mes-bar strong { color:var(--g); font-weight:600; }
+    .mes-bar strong { color:var(--hd); font-weight:600; }
 
     /* ── BENEFIT CARD ── */
     .benefit-icon { font-size:26px; margin-bottom:8px; display:block; }
-    .bcard-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:600; color:var(--g); margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid var(--gold); }
+    .bcard-title { font-family:var(--serif); font-size:20px; font-weight:600; color:var(--hd); margin-bottom:16px; padding-bottom:14px; border-bottom:2px solid var(--gold); }
     .bcard-divider { color:var(--gold); margin:0 6px; }
     .total-row { display:flex; align-items:center; gap:12px; margin-bottom:20px; background:var(--gl); border-radius:10px; padding:14px 16px; }
     .total-label { font-size:13px; color:var(--mu); font-weight:500; }
-    .total-value { font-size:20px; font-weight:700; color:var(--g); margin-left:auto; letter-spacing:-.01em; }
+    .total-value { font-size:20px; font-weight:700; color:var(--hd); margin-left:auto; letter-spacing:-.01em; }
     .ibox { background:#f0f7ff; border:1px solid #bbd5f5; border-radius:10px; padding:14px 16px; margin-bottom:24px; font-size:13.5px; color:#1a3a5c; line-height:1.75; }
     .ibox strong { font-weight:600; }
 
     /* ── SPLIT INPUTS ── */
     .split-grid { display:grid; grid-template-columns:1fr 1fr; align-items:start; gap:16px; margin-bottom:16px; }
-    .split-plus { text-align:center; font-size:22px; color:var(--mu); padding-top:22px; }
     .split-wrap { display:flex; flex-direction:column; gap:6px; }
     .split-label { font-size:12px; font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
-    .split-label.vr { color:var(--g); } .split-label.va { color:var(--goldd); }
-    .split-label.vt { color:var(--g); } .split-label.ac { color:var(--goldd); }
+    .split-label.vr { color:var(--hd); } .split-label.va { color:var(--goldd); }
+    .split-label.vt { color:var(--hd); } .split-label.ac { color:var(--goldd); }
     .inp-wrap { display:flex; align-items:center; border:1.5px solid var(--bo); border-radius:10px; overflow:hidden; background:var(--bg); transition:border-color .15s; }
-    .inp-wrap:focus-within { border-color:var(--g); background:var(--white); }
+    .inp-wrap:focus-within { border-color:var(--hd); background:var(--white); }
     .inp-prefix { padding:0 12px; font-size:14px; color:var(--mu); font-weight:500; border-right:1.5px solid var(--bo); height:46px; display:flex; align-items:center; background:var(--white); }
     .inp-wrap input { border:none; outline:none; padding:0 12px; font-size:16px; font-family:'Inter',sans-serif; background:transparent; color:var(--tx); width:100%; height:46px; font-weight:500; }
     .err-msg { font-size:13px; color:#c0392b; margin-top:6px; min-height:18px; font-weight:500; }
@@ -104,22 +117,15 @@
     .custom-slider-wrap { margin:18px 0 6px; }
     .custom-slider-dir-labels { display:flex; justify-content:space-between; margin-bottom:7px; }
     .custom-slider-dir-label { font-size:11px; font-weight:600; color:var(--mu); }
-    .custom-slider-track { position:relative; height:10px; border-radius:99px; cursor:pointer; user-select:none; touch-action:none; background:linear-gradient(90deg, #0D4A3A 0%, #5a8a6a 35%, #b09040 65%, #C49A45 100%); }
-    .custom-slider-thumb { position:absolute; top:50%; width:22px; height:22px; background:#fff; border:3px solid #0D4A3A; border-radius:50%; transform:translate(-50%,-50%); cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.18); z-index:2; transition:border-color .2s; }
+    .custom-slider-track { position:relative; height:10px; border-radius:99px; cursor:pointer; user-select:none; touch-action:none; background:linear-gradient(90deg, #0B3A34 0%, #3f6d5e 35%, #b08a46 65%, #CB974F 100%); }
+    .custom-slider-thumb { position:absolute; top:50%; width:22px; height:22px; background:var(--white); border:3px solid var(--hd); border-radius:50%; transform:translate(-50%,-50%); cursor:grab; box-shadow:0 2px 8px rgba(0,0,0,.18); z-index:2; transition:border-color .2s; }
     .custom-slider-thumb:active { cursor:grabbing; box-shadow:0 0 0 4px rgba(196,154,69,.25); }
     .pct-hint { font-size:11px; color:var(--mu); margin-top:5px; min-height:15px; font-weight:500; }
-
-    /* ── PROGRESSO ── */
-    .prog-wrap { margin-bottom:1.5rem; }
-    .prog-header { display:flex; justify-content:space-between; font-size:13px; font-weight:600; color:var(--g); margin-bottom:8px; }
-    .prog-track { background:var(--bo); border-radius:99px; height:10px; overflow:hidden; }
-    .prog-fill { height:100%; border-radius:99px; background:linear-gradient(90deg,var(--g),var(--gold)); transition:width .4s cubic-bezier(.4,0,.2,1); }
-    .prog-steps { display:flex; justify-content:space-between; margin-top:5px; }
-    .prog-step { font-size:11px; color:var(--mu); }
 
     /* ── CONFIRM ── */
     .confirm-box { background:var(--gl); border:1px solid #a8d5c0; border-radius:16px; padding:24px; margin-bottom:2rem; }
     .confirm-box p { font-size:13.5px; color:var(--mu); margin-bottom:16px; line-height:1.65; }
+    .confirm-err { display:none; background:#fdf0ee; border:1px solid #e8b4ab; border-radius:10px; padding:12px 14px; font-size:13px; color:#c0392b; margin-bottom:14px; line-height:1.6; font-weight:500; }
 
     /* ── SUCCESS ── */
     .ok-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; background:var(--bg); }
@@ -132,12 +138,34 @@
     .ok-fadeup { animation:fadeUp .4s .5s ease both; }
     .ok-fadeup2 { animation:fadeUp .4s .65s ease both; }
     .ok-fadeup3 { animation:fadeUp .4s .75s ease both; }
-    .ok-card h2 { font-family:'Playfair Display',serif; color:var(--g); font-size:26px; margin-bottom:.5rem; }
+    .ok-card h2 { font-family:var(--serif); color:var(--hd); font-size:28px; margin-bottom:.5rem; }
     .ok-card > p { color:var(--mu); font-size:14px; margin-bottom:2rem; line-height:1.65; }
     .ok-row { display:flex; justify-content:space-between; align-items:center; padding:12px 0; border-bottom:1px solid var(--bo); font-size:15px; }
     .ok-row:last-child { border-bottom:none; }
     .ok-row-key { color:var(--mu); font-weight:500; }
-    .ok-row-val { font-weight:700; color:var(--g); font-size:16px; }
+    .ok-row-val { font-weight:700; color:var(--hd); font-size:16px; }
+
+    /* ── SUCESSO ── */
+    .ok-card2 { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:34px 36px; width:100%; max-width:560px; }
+    .ok-top { display:flex; align-items:flex-start; gap:16px; margin-bottom:24px; }
+    .ok-check { width:46px; height:46px; border-radius:50%; background:var(--gl); color:var(--hd); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+    body.dark .ok-check { background:#0E4A3A; color:#8FD9B4; }
+    .ok-h2 { font-family:var(--serif); font-size:25px; font-weight:600; color:var(--hd); line-height:1.2; }
+    .ok-sub { font-size:13.5px; color:var(--mu); margin-top:5px; line-height:1.55; }
+    .ok-total-box { background:var(--g); border-radius:12px; padding:18px 22px; margin-bottom:20px; }
+    .ok-total-box .eyebrow { color:rgba(255,255,255,.72); }
+    .ok-total-val { font-size:30px; font-weight:700; color:var(--gold); letter-spacing:-.02em; line-height:1.1; margin-top:5px; }
+    .ok-grupos { display:flex; flex-direction:column; gap:14px; margin-bottom:20px; }
+    .ok-grupo { border:1px solid var(--bo); border-radius:10px; padding:14px 16px; }
+    .ok-grupo-head { display:flex; align-items:baseline; justify-content:space-between; padding-bottom:9px; margin-bottom:6px; border-bottom:1px solid var(--bo); }
+    .ok-grupo-nome { font-size:13px; font-weight:600; color:var(--hd); }
+    .ok-grupo-sub { font-family:var(--mono); font-size:13px; font-weight:700; color:var(--goldd); }
+    .ok-linha { display:flex; justify-content:space-between; align-items:center; padding:6px 0; font-size:13.5px; color:var(--mu); }
+    .ok-linha strong { font-weight:600; color:var(--tx); }
+    .ok-nota { font-size:12.5px; color:var(--mu); line-height:1.6; margin-bottom:22px; }
+    .ok-acoes { display:flex; gap:10px; }
+    .btn-outline2 { flex:1; background:transparent; border:1.5px solid var(--bo); border-radius:10px; padding:14px; font-size:14px; font-weight:600; color:var(--hd); font-family:'Inter',sans-serif; cursor:pointer; transition:background .15s; }
+    .btn-outline2:hover { background:var(--gl); }
 
     /* ── ADMIN ── */
     .metrics-row { display:grid; grid-template-columns:auto 1fr 1fr 1fr; gap:16px; align-items:center; margin-bottom:1.5rem; background:var(--white); border:1px solid var(--bo); border-radius:16px; padding:20px 24px; box-shadow:0 2px 12px rgba(0,0,0,.05); }
@@ -145,28 +173,33 @@
     .ring-svg { transform:rotate(-90deg); }
     .ring-bg { fill:none; stroke:var(--bo); stroke-width:8; }
     .ring-fill { fill:none; stroke:var(--gold); stroke-width:8; stroke-linecap:round; transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1); }
-    .ring-pct { font-size:22px; font-weight:700; color:var(--g); letter-spacing:-.02em; margin-top:6px; }
-    .ring-sub { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
-    .metric-sm .mlabel { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; margin-bottom:4px; }
-    .metric-sm .mval { font-size:24px; font-weight:700; color:var(--g); letter-spacing:-.02em; }
-    .badge { display:inline-block; font-size:11px; padding:3px 10px; border-radius:99px; font-weight:600; }
+    .ring-pct { font-size:22px; font-weight:700; color:var(--hd); letter-spacing:-.02em; margin-top:6px; }
+    .ring-sub { font-family:var(--mono); font-size:9.5px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
+    .metric-sm .mlabel { font-family:var(--mono); font-size:9.5px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; margin-bottom:4px; }
+    .metric-sm .mval { font-size:24px; font-weight:700; color:var(--hd); letter-spacing:-.02em; }
+    .badge { display:inline-block; font-family:var(--mono); font-size:10px; padding:3px 10px; border-radius:99px; font-weight:600; }
     .bp { background:#FEF3E2; color:#7a5209; } .bd { background:#E4F2EB; color:#195c38; }
     .crow { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid var(--bo); }
     .crow:last-child { border-bottom:none; }
-    .av { width:36px; height:36px; border-radius:50%; background:var(--gl); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:var(--g); flex-shrink:0; border:1px solid var(--bo); }
+    .av { width:36px; height:36px; border-radius:50%; background:var(--gl); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:var(--hd); flex-shrink:0; border:1px solid var(--bo); }
     .ctag { font-size:11px; color:var(--mu); background:var(--gl); border-radius:99px; padding:2px 10px; display:inline-block; margin-top:3px; }
     .fr { margin-bottom:1.25rem; }
-    .fr label { display:block; font-size:11px; color:var(--mu); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
+    .fr label { display:block; font-family:var(--mono); font-size:10px; color:var(--mu); margin-bottom:6px; text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
     .fr input, .fr select { width:100%; padding:10px 12px; border:1.5px solid var(--bo); border-radius:10px; font-size:15px; background:var(--white); color:var(--tx); font-family:'Inter',sans-serif; }
-    .fr input:focus, .fr select:focus { outline:none; border-color:var(--g); }
-    .inp-edit { width:76px; padding:6px 10px; border:1.5px solid var(--bo); border-radius:8px; font-size:14px; font-family:'Inter',sans-serif; color:var(--g); background:var(--white); text-align:right; font-weight:600; }
-    .inp-edit:focus { outline:none; border-color:var(--g); }
+    .fr input:focus, .fr select:focus { outline:none; border-color:var(--hd); }
+    .inp-edit { width:76px; padding:6px 10px; border:1.5px solid var(--bo); border-radius:8px; font-size:14px; font-family:'Inter',sans-serif; color:var(--hd); background:var(--white); text-align:right; font-weight:600; }
+    .inp-edit:focus { outline:none; border-color:var(--hd); }
     .success-msg { font-size:13px; color:#195c38; background:#E4F2EB; border-radius:8px; padding:8px 14px; margin-top:12px; display:none; }
     .wnote { background:#FEF3E2; border:1px solid #f0c87a; border-radius:10px; padding:12px 16px; font-size:13px; color:#7a5209; margin-bottom:1.25rem; }
+    .cfg-aviso { display:none; border:1px solid #f0c87a; border-radius:8px; padding:9px 12px; font-size:12px; line-height:1.6; margin-top:8px; }
+
+    .cfg-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; }
+    .cfg-val { font-size:19px; font-weight:600; color:var(--hd); margin-top:5px; letter-spacing:-.01em; }
+    @media (max-width:700px) { .cfg-grid { grid-template-columns:1fr 1fr; } }
 
     /* ── CHART ── */
     .chart-bar-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-    .chart-label { font-size:12px; font-weight:600; color:#2d4a43; width:130px; flex-shrink:0; }
+    .chart-label { font-size:12px; font-weight:600; color:var(--mu); width:130px; flex-shrink:0; }
     .chart-track { flex:1; background:var(--bo); border-radius:99px; height:22px; overflow:hidden; }
     .chart-fill { height:100%; border-radius:99px; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; transition:width .8s cubic-bezier(.4,0,.2,1); min-width:60px; }
     .chart-val { font-size:11px; font-weight:700; color:#fff; }
@@ -180,55 +213,42 @@
     .tl-dot.pend { background:var(--bo); }
 
     /* ── RELATÓRIO ── */
-    .sg4 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:1rem; }
-    .sg2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:1.5rem; }
-    .stt { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:.9rem 1.1rem; }
-    .stl { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; margin-bottom:5px; font-weight:600; }
-    .stv { font-size:17px; font-weight:600; color:var(--g); letter-spacing:-.01em; }
-    .rtitle { font-size:10px; font-weight:600; color:var(--g); text-transform:uppercase; letter-spacing:.08em; padding-bottom:8px; border-bottom:2px solid var(--gold); margin-bottom:1rem; }
+    .rtitle { font-family:var(--mono); font-size:9.5px; font-weight:600; color:var(--hd); text-transform:uppercase; letter-spacing:.08em; padding-bottom:8px; border-bottom:2px solid var(--gold); margin-bottom:1rem; }
     .rline { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--bo); font-size:14px; }
     .rline:last-child { border-bottom:none; }
-    .rtot { display:flex; justify-content:space-between; padding:10px 0 2px; font-size:15px; font-weight:700; color:var(--g); border-top:2px solid var(--bo); margin-top:4px; }
-    .rsub { font-size:12px; color:#2d4a43; font-weight:500; }
-    .recap-box { background:var(--gl); border-radius:10px; padding:14px 18px; margin-top:1rem; }
-    .recap-title { font-size:11px; font-weight:600; color:var(--g); margin-bottom:10px; text-transform:uppercase; letter-spacing:.05em; }
-    .recap-row { display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px solid #b4cfc7; }
-    .recap-row:last-child { border-bottom:none; }
-    .recap-total { display:flex; justify-content:space-between; font-size:15px; font-weight:700; color:var(--g); padding:8px 0 0; margin-top:6px; border-top:2px solid #b4cfc7; }
+    .rtot { display:flex; justify-content:space-between; padding:10px 0 2px; font-size:15px; font-weight:700; color:var(--hd); border-top:2px solid var(--bo); margin-top:4px; }
+    .rsub { font-size:12px; color:var(--mu); font-weight:500; }
 
     /* ── BOTÕES RÁPIDOS ── */
-    .btn-split-quick { padding:5px 12px; border:1.5px solid var(--bo); border-radius:99px; font-size:11px; font-weight:600; color:var(--g); background:var(--white); cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; white-space:nowrap; }
-    .btn-split-quick:hover { background:var(--gl); border-color:var(--g); }
-
-    /* ── PDF ── */
-    /* estilos usados apenas nas janelas de impressão — não afetam o app */
+    .btn-split-quick { padding:5px 12px; border:1.5px solid var(--bo); border-radius:99px; font-size:11px; font-weight:600; color:var(--hd); background:var(--white); cursor:pointer; font-family:'Inter',sans-serif; transition:all .15s; white-space:nowrap; }
+    .btn-split-quick:hover { background:var(--gl); border-color:var(--hd); }
 
     /* botão baixar */
-    .btn-download-pdf { display:inline-flex; align-items:center; gap:8px; background:#0D4A3A; color:#fff; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:background .15s; }
-    .btn-download-pdf:hover { background:#082e25; }
+    .btn-download-pdf { display:inline-flex; align-items:center; gap:8px; background:var(--g); color:#fff; border:none; border-radius:10px; padding:11px 22px; font-size:14px; font-weight:600; font-family:'Inter',sans-serif; cursor:pointer; transition:background .15s; }
+    .btn-download-pdf:hover { background:var(--gd); }
     .btn-download-pdf:disabled { opacity:.5; cursor:not-allowed; }
 
-        /* ── ABA RELATÓRIO ── */
+    /* ── ABA RELATÓRIO ── */
     .rel-kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:1.5rem; }
-    .rel-kpi { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:18px 20px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
-    .rel-kpi-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--mu); margin-bottom:8px; }
-    .rel-kpi-value { font-size:22px; font-weight:700; color:var(--g); letter-spacing:-.03em; line-height:1; }
+    .rel-kpi { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:18px 20px; }
+    .rel-kpi-label { font-family:var(--mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--mu); margin-bottom:8px; }
+    .rel-kpi-value { font-size:22px; font-weight:700; color:var(--hd); letter-spacing:-.03em; line-height:1; }
     .rel-kpi-sub { font-size:11px; color:var(--mu); margin-top:5px; }
-    .rel-adesao { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:20px 24px; margin-bottom:1.5rem; display:flex; align-items:center; gap:24px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
+    .rel-adesao { background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:20px 24px; margin-bottom:1.5rem; display:flex; align-items:center; gap:24px; }
     .rel-ring-wrap { flex-shrink:0; display:flex; flex-direction:column; align-items:center; }
-    .rel-ring-pct { font-size:20px; font-weight:700; color:var(--g); margin-top:6px; }
-    .rel-ring-sub { font-size:10px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
+    .rel-ring-pct { font-size:20px; font-weight:700; color:var(--hd); margin-top:6px; }
+    .rel-ring-sub { font-family:var(--mono); font-size:9.5px; color:var(--mu); text-transform:uppercase; letter-spacing:.06em; font-weight:600; }
     .rel-adesao-info { flex:1; }
-    .rel-adesao-title { font-size:15px; font-weight:700; color:var(--g); margin-bottom:10px; }
+    .rel-adesao-title { font-size:15px; font-weight:700; color:var(--hd); margin-bottom:10px; }
     .rel-pend-list { display:flex; flex-wrap:wrap; gap:6px; }
     .rel-pend-chip { background:#FEF3E2; color:#7a5209; font-size:11px; font-weight:600; padding:4px 10px; border-radius:99px; }
-    .rel-section-title { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--g); border-bottom:2px solid var(--gold); padding-bottom:7px; margin-bottom:14px; }
+    .rel-section-title { font-family:var(--mono); font-size:9.5px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--hd); border-bottom:2px solid var(--gold); padding-bottom:7px; margin-bottom:14px; }
     .rel-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:9px; }
-    .rel-bar-name { font-size:12px; font-weight:600; color:#2d4a43; width:150px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .rel-bar-name { font-size:12px; font-weight:600; color:var(--mu); width:150px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .rel-bar-track { flex:1; background:var(--bo); border-radius:99px; height:20px; overflow:hidden; position:relative; }
     .rel-bar-fill-vavr { position:absolute; left:0; top:0; height:100%; background:var(--g); border-radius:99px 0 0 99px; transition:width .6s cubic-bezier(.4,0,.2,1); }
     .rel-bar-fill-vtac { position:absolute; top:0; height:100%; background:var(--gold); border-radius:0 99px 99px 0; transition:width .6s cubic-bezier(.4,0,.2,1); }
-    .rel-bar-val { font-size:11px; font-weight:700; color:var(--g); width:80px; text-align:right; flex-shrink:0; }
+    .rel-bar-val { font-size:11px; font-weight:700; color:var(--hd); width:80px; text-align:right; flex-shrink:0; }
     .rel-legend { display:flex; gap:16px; margin-bottom:16px; }
     .rel-legend-item { display:flex; align-items:center; gap:6px; font-size:11px; color:var(--mu); font-weight:500; }
     .rel-legend-dot { width:10px; height:10px; border-radius:50%; }
@@ -239,49 +259,49 @@
     }
 
     /* ── TELA ESCOLHA ADMIN ── */
-    .choice-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; background:linear-gradient(160deg,#0a3328 0%,#0D4A3A 60%,#1a6b52 100%); }
+    .choice-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; padding:2rem 1rem; background:linear-gradient(160deg,#062E2B 0%,#083733 60%,#0B4540 100%); }
     .choice-card { background:var(--white); border-radius:20px; padding:2.5rem 2rem; width:100%; max-width:480px; box-shadow:0 24px 64px rgba(0,0,0,.2); }
     .choice-header { text-align:center; margin-bottom:2rem; }
-    .choice-title { font-family:'Playfair Display',serif; font-size:22px; color:var(--g); margin-bottom:.4rem; }
+    .choice-title { font-family:var(--serif); font-size:24px; color:var(--hd); margin-bottom:.4rem; }
     .choice-sub { font-size:13px; color:var(--mu); }
     .choice-divider { width:48px; height:2px; background:var(--gold); border-radius:99px; margin:.75rem auto 1.5rem; }
     .choice-btn { display:flex; align-items:center; gap:14px; width:100%; padding:16px 20px; border:1.5px solid var(--bo); border-radius:12px; background:var(--white); cursor:pointer; font-family:'Inter',sans-serif; text-align:left; margin-bottom:10px; transition:all .15s; }
-    .choice-btn:hover { border-color:var(--g); background:var(--gl); }
+    .choice-btn:hover { border-color:var(--hd); background:var(--gl); }
     .choice-btn-icon { width:42px; height:42px; border-radius:10px; background:var(--gl); display:flex; align-items:center; justify-content:center; font-size:20px; flex-shrink:0; }
     .choice-btn-text { display:flex; flex-direction:column; }
-    .choice-btn-label { font-size:15px; font-weight:600; color:var(--g); }
+    .choice-btn-label { font-size:15px; font-weight:600; color:var(--hd); }
     .choice-btn-desc { font-size:12px; color:var(--mu); margin-top:2px; }
 
     /* ── TELA LISTA COLABORADORES ── */
     .colab-list-outer { min-height:100vh; background:var(--bg); }
     .colab-list-wrap { max-width:520px; margin:0 auto; padding:28px 1rem 3rem; }
     .colab-list-item { display:flex; align-items:center; gap:14px; background:var(--white); border:1px solid var(--bo); border-radius:12px; padding:14px 18px; margin-bottom:10px; cursor:pointer; transition:all .15s; }
-    .colab-list-item:hover { border-color:var(--g); box-shadow:0 4px 16px rgba(0,0,0,.08); transform:translateY(-1px); }
+    .colab-list-item:hover { border-color:var(--hd); transform:translateY(-1px); }
     .colab-list-av { width:42px; height:42px; border-radius:50%; background:var(--g); display:flex; align-items:center; justify-content:center; font-size:15px; font-weight:600; color:#fff; flex-shrink:0; border:2px solid var(--gold); }
-    .colab-list-name { font-size:14px; font-weight:600; color:var(--g); }
+    .colab-list-name { font-size:14px; font-weight:600; color:var(--hd); }
     .colab-list-meta { font-size:12px; color:var(--mu); margin-top:2px; }
 
     /* ── CALENDÁRIO ── */
     .cal-wrap { margin-bottom:1.5rem; }
     .cal-card-inner { background:var(--white); border:1px solid var(--bo); border-radius:14px; padding:14px 16px; box-shadow:0 2px 10px rgba(0,0,0,.05); }
     .cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
-    .cal-head-title { font-size:13px; font-weight:600; color:var(--g); display:flex; align-items:center; gap:6px; }
+    .cal-head-title { font-size:13px; font-weight:600; color:var(--hd); display:flex; align-items:center; gap:6px; }
     .cal-legend { display:flex; gap:10px; flex-wrap:wrap; }
     .cal-leg { display:flex; align-items:center; gap:4px; font-size:10px; color:var(--mu); }
     .cal-leg-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
     .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:2px; margin-bottom:10px; }
-    .cal-dow { text-align:center; font-size:9px; font-weight:600; color:var(--mu); padding:2px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
+    .cal-dow { text-align:center; font-family:var(--mono); font-size:9px; font-weight:600; color:var(--mu); padding:2px 0 4px; text-transform:uppercase; letter-spacing:.04em; }
     .cal-day { height:32px; display:flex; flex-direction:column; align-items:center; justify-content:center; border-radius:5px; font-size:11px; font-weight:400; color:var(--tx); position:relative; }
     .cal-day.util { background:#dff0e9; color:#082e25; }
     .cal-day.fds { background:var(--bo); color:var(--mu); }
     .cal-day.feriado { background:#FEF3E2; color:#7a5209; cursor:pointer; }
-    .cal-day.feriado .fpt { width:4px; height:4px; border-radius:50%; background:#C49A45; position:absolute; bottom:3px; }
+    .cal-day.feriado .fpt { width:4px; height:4px; border-radius:50%; background:var(--gold); position:absolute; bottom:3px; }
     .cal-day.empty { background:transparent; }
     .cal-tip { position:absolute; bottom:calc(100% + 5px); left:50%; transform:translateX(-50%); background:#412402; color:#FAEEDA; font-size:10px; font-weight:500; padding:4px 8px; border-radius:5px; white-space:nowrap; pointer-events:none; z-index:20; display:none; }
     .cal-day.feriado:hover .cal-tip { display:block; }
     .cal-summary { display:flex; gap:14px; flex-wrap:wrap; padding-top:10px; border-top:1px solid var(--bo); }
     .cal-sum-item { display:flex; flex-direction:column; gap:1px; }
-    .cal-sum-val { font-size:15px; font-weight:700; color:var(--g); }
+    .cal-sum-val { font-size:15px; font-weight:700; color:var(--hd); }
     .cal-sum-val.muted { color:var(--mu); }
     .cal-sum-val.gold { color:var(--goldd); }
     .cal-sum-label { font-size:9px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; }
@@ -289,40 +309,127 @@
     /* campo feriados admin */
     .fer-row { display:flex; gap:8px; align-items:center; margin-bottom:8px; }
     .fer-row input { flex:1; padding:8px 10px; border:1.5px solid var(--bo); border-radius:8px; font-size:13px; font-family:'Inter',sans-serif; background:var(--white); color:var(--tx); }
-    .fer-row input:focus { outline:none; border-color:var(--g); }
+    .fer-row input:focus { outline:none; border-color:var(--hd); }
     .fer-row .btn-rm { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 10px; font-size:13px; color:#c0392b; cursor:pointer; font-family:'Inter',sans-serif; }
     .fer-row .btn-rm:hover { background:#fdf0ee; }
-    .btn-add-fer { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 14px; font-size:12px; font-weight:600; color:var(--g); cursor:pointer; font-family:'Inter',sans-serif; margin-top:4px; }
+    .btn-add-fer { background:transparent; border:1.5px solid var(--bo); border-radius:8px; padding:7px 14px; font-size:12px; font-weight:600; color:var(--hd); cursor:pointer; font-family:'Inter',sans-serif; margin-top:4px; }
     .btn-add-fer:hover { background:var(--gl); }
 
-    /* ── COLLAPSIBLE INFO ── */
-    .ibox-collapse { border:1px solid #bbd5f5; border-radius:10px; margin-bottom:20px; overflow:hidden; }
-    .ibox-collapse summary { padding:10px 14px; font-size:13px; font-weight:600; color:#1a3a5c; background:#f0f7ff; cursor:pointer; list-style:none; display:flex; align-items:center; gap:7px; }
-    .ibox-collapse summary::-webkit-details-marker { display:none; }
-    .ibox-collapse summary::after { content:'▸'; margin-left:auto; font-size:11px; color:#546860; transition:transform .2s; }
-    .ibox-collapse[open] summary::after { transform:rotate(90deg); }
-    .ibox-content { padding:12px 14px; font-size:13px; color:#1a3a5c; line-height:1.75; background:#f0f7ff; border-top:1px solid #bbd5f5; }
-    .ibox-content strong { font-weight:600; }
-
     /* ── LOADING ── */
-    .loading-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,#0a3328 0%,#0D4A3A 60%,#1a6b52 100%); }
+    .loading-outer { min-height:100vh; display:flex; align-items:center; justify-content:center; background:linear-gradient(160deg,#062E2B 0%,#083733 60%,#0B4540 100%); }
     .loading-card { text-align:center; }
-    .loading-spinner { width:48px; height:48px; border:4px solid rgba(255,255,255,.2); border-top-color:#C49A45; border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 1.25rem; }
+    .loading-spinner { width:48px; height:48px; border:4px solid rgba(255,255,255,.2); border-top-color:#DEA760; border-radius:50%; animation:spin .8s linear infinite; margin:0 auto 1.25rem; }
     @keyframes spin { to { transform:rotate(360deg); } }
     .loading-text { font-size:15px; color:rgba(255,255,255,.9); font-weight:500; }
     .loading-sub { font-size:12px; color:rgba(255,255,255,.5); margin-top:6px; }
 
     /* ── DARK TOGGLE ── */
-    .dark-toggle { position:fixed; bottom:20px; right:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
+    .dark-toggle { position:fixed; bottom:20px; left:20px; width:44px; height:44px; border-radius:50%; background:var(--g); color:#fff; border:none; font-size:18px; cursor:pointer; box-shadow:0 4px 16px rgba(0,0,0,.2); z-index:100; display:flex; align-items:center; justify-content:center; transition:background .2s; }
     .dark-toggle:hover { background:var(--gd); }
+
+
+    /* ══ REDESIGN DESKTOP (v14) ══ */
+    .form-shell { display:flex; gap:28px; padding:30px 40px 70px; max-width:1560px; margin:0 auto; align-items:flex-start; }
+    .form-col-ctx { width:396px; flex-shrink:0; display:flex; flex-direction:column; gap:18px; }
+    .form-col-act { flex:1; min-width:0; display:flex; flex-direction:column; gap:18px; }
+
+    .surf { background:var(--white); border:1px solid var(--bo); border-radius:12px; }
+
+    .emp2 { padding:20px 22px; display:flex; align-items:center; gap:16px; }
+    .emp2-av { width:54px; height:54px; border-radius:50%; background:var(--g); border:3px solid var(--gold); box-sizing:border-box; display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; font-weight:600; flex-shrink:0; }
+    .emp2-nome { font-family:var(--serif); font-size:22px; font-weight:600; color:var(--hd); line-height:1.1; }
+    .emp2-meta { font-size:13px; color:var(--mu); margin-top:4px; }
+
+    .mes2 { padding:18px 22px; display:flex; gap:32px; }
+    .mes2-div { width:1px; background:var(--bo); }
+    .eyebrow { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--mu); font-weight:600; }
+    .mes2-val { font-size:19px; font-weight:600; color:var(--hd); letter-spacing:-.01em; margin-top:5px; }
+
+    .bcard2 { padding:24px 26px; display:flex; flex-direction:column; gap:18px; }
+    .bhead { display:flex; align-items:flex-start; gap:14px; }
+    .btitle { font-family:var(--serif); font-size:22px; font-weight:600; color:var(--hd); line-height:1.25; letter-spacing:-.005em; }
+    .bcalc { font-size:12.5px; color:var(--mu); margin-top:3px; }
+    .btot-wrap { margin-left:auto; text-align:right; }
+    .btot { font-size:22px; font-weight:700; color:var(--hd); letter-spacing:-.02em; line-height:1; margin-top:3px; }
+
+    .split2 { display:flex; gap:18px; }
+    .split2 > div { flex:1; min-width:0; display:flex; flex-direction:column; gap:7px; }
+    .lab2 { font-size:13px; font-weight:600; color:var(--hd); }
+    .lab2.alt { color:var(--goldd); }
+    .inp2 { display:flex; align-items:center; border:1.5px solid var(--bo); border-radius:10px; overflow:hidden; background:var(--white); transition:border-color .15s; }
+    .inp2:focus-within { border-color:var(--hd); }
+    .inp2 .pre { padding:0 13px; font-size:13px; color:var(--mu); font-weight:500; height:48px; display:flex; align-items:center; border-right:1.5px solid var(--bo); background:var(--bg); }
+    .inp2 input { border:none; outline:none; padding:0 14px; font-size:17px; font-family:'Inter',sans-serif; color:var(--tx); width:100%; height:48px; font-weight:500; background:transparent; }
+
+    .confirm-bar { margin-top:2px; background:var(--g); border-radius:12px; padding:22px 26px; display:flex; align-items:center; gap:26px; flex-wrap:wrap; }
+    .cb-sep { width:1px; align-self:stretch; background:rgba(255,255,255,.22); }
+    .cb-total { flex:1; min-width:0; text-align:center; }
+    .cb-total-val { font-size:28px; font-weight:700; color:var(--gold); margin-top:3px; letter-spacing:-.01em; }
+    .cb-nota-fora { font-size:12.5px; color:var(--mu); margin-top:10px; padding-left:2px; }
+    .cb-nota-fora strong { color:var(--hd); font-weight:600; }
+    .cb-chips { display:flex; gap:26px; }
+    .cb-chip-lab { font-family:var(--mono); font-size:9.5px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.72); font-weight:600; }
+    .cb-chip-val { font-size:14px; font-weight:600; color:rgba(255,255,255,.88); margin-top:3px; }
+    .btn-confirm2 { background:var(--gold); color:var(--gold-on); border:none; border-radius:10px; font-family:'Inter',sans-serif; font-size:15.5px; font-weight:700; padding:16px 38px; cursor:pointer; transition:background .15s; white-space:nowrap; }
+    .btn-confirm2:hover:not(:disabled) { background:var(--goldd); }
+    .btn-confirm2:disabled { opacity:.6; cursor:not-allowed; }
+
+    .cal2 { padding:18px 22px 20px; display:flex; flex-direction:column; gap:12px; }
+    .cal2-dia { height:34px; border-radius:7px; font-size:12px; display:flex; align-items:center; justify-content:center; position:relative; }
+    .cal2-dia.util { background:var(--gl); color:#082e25; }
+    body.dark .cal2-dia.util { color:#cfe8dd; }
+    .cal2-dia.fds { background:#eef4f2; color:#7d908a; }
+    body.dark .cal2-dia.fds { background:#1c2c26; color:#7aaa9a; }
+    .cal2-dia.feriado { background:#f6e7c8; color:#6b4a12; font-weight:600; }
+    .cal2-dia.empty { background:transparent; }
+    .cal2-stats { display:flex; gap:18px; padding-top:12px; border-top:1px solid var(--bo); }
+    .cal2-stat-val { font-size:16px; font-weight:700; color:var(--hd); line-height:1.1; }
+    .cal2-stat-val.muted { color:var(--mu); }
+    .cal2-stat-val.gold { color:var(--goldd); }
+    .cal2-stat-lab { font-family:var(--mono); font-size:9px; color:var(--mu); text-transform:uppercase; letter-spacing:.05em; font-weight:600; margin-top:3px; }
+    .cal2-fer-lista { display:flex; flex-direction:column; gap:6px; padding-top:10px; }
+    .cal2-fer-item { display:flex; align-items:center; gap:8px; font-size:12px; color:var(--mu); }
+    .cal2-fer-dot { width:5px; height:5px; border-radius:50%; background:var(--goldd); flex-shrink:0; }
+
+    /* ── PAINEL: TABELA ── */
+    .adm-strip { display:flex; gap:18px; margin-bottom:20px; flex-wrap:wrap; }
+    .adm-strip-main { flex:1; min-width:420px; padding:20px 24px; display:flex; align-items:center; gap:36px; flex-wrap:wrap; }
+    .adm-strip-ring { width:300px; flex-shrink:0; padding:18px 22px; display:flex; align-items:center; gap:18px; }
+    .adm-div { width:1px; height:38px; background:var(--bo); }
+    .tb { width:100%; border-collapse:collapse; font-family:'Inter',sans-serif; }
+    .tb thead th { font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--mu); padding:13px 14px; text-align:right; background:var(--bg); border-bottom:1.5px solid var(--bo); white-space:nowrap; }
+    .tb thead th:first-child { text-align:left; padding-left:24px; }
+    .tb thead th:last-child { padding-right:24px; }
+    .tb tbody td { font-size:13.5px; color:var(--tx); padding:11px 14px; text-align:right; border-bottom:1px solid var(--bo); white-space:nowrap; }
+    .tb tbody td:first-child { text-align:left; padding-left:24px; font-weight:500; white-space:normal; }
+    .tb tbody td:last-child { padding-right:24px; }
+    .tb tbody tr:nth-child(even) td { background:var(--bg); }
+    .tb tbody tr.pend td { color:#9aaba5; }
+    .tb tbody tr.pend td:first-child { color:var(--mu); }
+    .tb td.tot { font-weight:700; color:var(--hd); }
+    .tb tfoot td { font-size:13.5px; font-weight:600; color:rgba(255,255,255,.92); background:var(--g); padding:15px 14px; text-align:right; white-space:nowrap; }
+    .tb tfoot td:first-child { text-align:left; padding-left:24px; font-family:var(--mono); font-size:11px; font-weight:700; color:#fff; }
+    .tb tfoot td:last-child { padding-right:24px; }
+    .tb tfoot td.grand { font-size:15px; font-weight:700; color:var(--gold); }
+    .tb-wrap { overflow-x:auto; border-radius:12px; }
+
+    @media (max-width:1180px) {
+      .form-shell { flex-direction:column; padding:24px 20px; }
+      .form-col-ctx { width:100%; }
+    }
 
     @media (max-width:600px) {
       .sel-card { padding:2.5rem 1.5rem; }
       .hdr { padding:13px 16px; }
       .bcard { padding:20px 16px; }
-      .wrap, .wrap-admin { padding:16px 0 3rem; }
+      .wrap, .wrap-admin { padding:16px 16px 3rem; }
+      .form-shell { padding:18px 16px; gap:16px; }
+      .split2 { flex-direction:column; gap:14px; }
+      .cb-chips { gap:18px; flex-wrap:wrap; }
+      .cb-sep { display:none; }
+      .cb-total { flex:none; text-align:left; width:100%; }
+      .btn-confirm2 { width:100%; }
       .split-grid { grid-template-columns:1fr 1fr; gap:10px; }
-      .sg4 { grid-template-columns:1fr 1fr; }
       .metrics-row { grid-template-columns:1fr 1fr; }
       .ring-wrap { display:none; }
     }
@@ -357,6 +464,7 @@
       <div class="sel-divider"></div>
       <h1>Escolha de Benefícios</h1>
       <p>Entre com sua conta Google da empresa para acessar seus benefícios.</p>
+      <div id="load-warn" style="display:none;background:#FEF3E2;border:1px solid #f0c87a;border-radius:10px;padding:12px 14px;font-size:12.5px;color:#7a5209;margin-bottom:1rem;line-height:1.6;text-align:left"></div>
       <button onclick="loginGoogle()" style="display:flex;align-items:center;justify-content:center;gap:12px;width:100%;padding:13px 16px;border:1.5px solid #dadce0;border-radius:10px;background:#fff;font-size:15px;font-weight:500;color:#3c4043;cursor:pointer;font-family:'Inter',sans-serif;transition:background .15s;box-shadow:0 1px 3px rgba(0,0,0,.08)" onmouseover="this.style.background='#f8f9fa'" onmouseout="this.style.background='#fff'">
         <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
         Fazer Login com o Google
@@ -437,135 +545,153 @@
     </div>
     <div class="hdr-right" style="display:flex;align-items:center;gap:12px"><span id="hdr-mes">—</span><button onclick="logout()" style="background:rgba(255,255,255,.15);border:.5px solid rgba(255,255,255,.3);border-radius:6px;color:#fff;font-size:12px;padding:4px 10px;cursor:pointer;font-family:Inter,sans-serif">Sair</button></div>
   </div>
-  <div class="wrap">
-    
-    <div class="emp-card">
-      <div class="emp-av" id="f-av">?</div>
-      <div><div class="emp-name" id="f-nome">—</div><div class="emp-meta" id="f-meta">—</div></div>
-    </div>
-    <div class="mes-bar">
-      <span>📅 Mês: <strong id="f-mes">—</strong></span>
-      <span>📆 Dias úteis: <strong id="f-dias">—</strong></span>
-      <span>⏰ Prazo: <strong id="f-prazo">—</strong></span>
-    </div>
 
-    <!-- CALENDÁRIO -->
-    <div class="cal-wrap">
-      <div class="cal-card-inner">
-        <div class="cal-head">
-          <div class="cal-head-title">📅 <span id="cal-titulo">—</span></div>
-          <div class="cal-legend">
-            <div class="cal-leg"><div class="cal-leg-dot" style="background:#1D9E75"></div>Dia útil</div>
-            <div class="cal-leg"><div class="cal-leg-dot" style="background:#c2d9d1"></div>Fim de semana</div>
-            <div class="cal-leg"><div class="cal-leg-dot" style="background:#C49A45"></div>Feriado</div>
+  <div class="form-shell">
+
+    <!-- ── CONTEXTO ── -->
+    <div class="form-col-ctx">
+
+      <div class="surf emp2">
+        <div class="emp2-av" id="f-av">?</div>
+        <div>
+          <div class="emp2-nome" id="f-nome">—</div>
+          <div class="emp2-meta" id="f-meta">—</div>
+        </div>
+      </div>
+
+      <div class="surf mes2">
+        <div>
+          <div class="eyebrow">Mês de referência</div>
+          <div class="mes2-val" id="f-mes">—</div>
+        </div>
+        <div class="mes2-div"></div>
+        <div>
+          <div class="eyebrow">Dias úteis</div>
+          <div class="mes2-val" id="f-dias">—</div>
+        </div>
+      </div>
+
+      <div class="surf cal2">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div style="font-size:14px;font-weight:600;color:var(--hd)" id="cal-titulo">—</div>
+          <div style="display:flex;gap:12px">
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:var(--g)"></span><span style="font-size:11px;color:var(--mu)">Útil</span></span>
+            <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:var(--gold)"></span><span style="font-size:11px;color:var(--mu)">Feriado</span></span>
           </div>
         </div>
-        <div class="cal-grid" id="cal-grid"></div>
-        <div class="cal-summary">
-          <div class="cal-sum-item"><div class="cal-sum-val" id="cal-uteis">—</div><div class="cal-sum-label">Dias úteis</div></div>
-          <div class="cal-sum-item"><div class="cal-sum-val muted" id="cal-sab">—</div><div class="cal-sum-label">Sábados</div></div>
-          <div class="cal-sum-item"><div class="cal-sum-val muted" id="cal-dom">—</div><div class="cal-sum-label">Domingos</div></div>
-          <div class="cal-sum-item"><div class="cal-sum-val gold" id="cal-fer">—</div><div class="cal-sum-label">Feriados</div></div>
+        <div class="cal-grid" id="cal-grid" style="gap:4px"></div>
+        <div class="cal2-stats">
+          <div><div class="cal2-stat-val" id="cal-uteis">—</div><div class="cal2-stat-lab">Dias úteis</div></div>
+          <div><div class="cal2-stat-val muted" id="cal-sab">—</div><div class="cal2-stat-lab">Sábados</div></div>
+          <div><div class="cal2-stat-val muted" id="cal-dom">—</div><div class="cal2-stat-lab">Domingos</div></div>
+          <div><div class="cal2-stat-val gold" id="cal-fer">—</div><div class="cal2-stat-lab">Feriados</div></div>
         </div>
+        <div class="cal2-fer-lista" id="cal-fer-lista"></div>
       </div>
+
     </div>
 
+    <!-- ── ESCOLHAS ── -->
+    <div class="form-col-act">
 
+      <div class="surf bcard2">
+        <div class="bhead">
+          <div>
+            <div class="btitle">Vale Refeição e Alimentação</div>
+            <div class="bcalc" id="f-calc-va"></div>
+          </div>
+          <div class="btot-wrap">
+            <div class="eyebrow">Total disponível</div>
+            <div class="btot" id="f-tva">—</div>
+          </div>
+        </div>
 
-    <!-- VA/VR -->
-    <div class="bcard">
-      <span class="benefit-icon">🍽️</span>
-      <div class="bcard-title">Vale Alimentação <span class="bcard-divider">·</span> Vale Refeição</div>
-      <div class="total-row">
-        <span class="total-label">Total disponível</span>
-        <span class="total-value" id="f-tva">—</span>
-      </div>
-      <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc-va"></p>
+        <div class="split2">
+          <div>
+            <label class="lab2" for="inp-vr">Vale Refeição</label>
+            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
+            <span class="pct-hint" id="hint-vr">50% do total</span>
+          </div>
+          <div>
+            <label class="lab2 alt" for="inp-va">Vale Alimentação</label>
+            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
+            <span class="pct-hint" id="hint-va">50% do total</span>
+          </div>
+        </div>
 
-      <div class="split-grid">
-        <div class="split-wrap">
-          <div class="split-label vr">Vale Refeição (VR)</div>
-          <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
-          <div class="pct-hint esq" id="hint-vr">50% do total</div>
+        <div>
+          <div class="custom-slider-track" id="track-va">
+            <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <button onclick="atalhoSplit('va',100,0)" class="btn-split-quick">100% VR</button>
+            <button onclick="atalhoSplit('va',75,25)" class="btn-split-quick">75 / 25</button>
+            <button onclick="atalhoSplit('va',50,50)" class="btn-split-quick">50 / 50</button>
+            <button onclick="atalhoSplit('va',25,75)" class="btn-split-quick">25 / 75</button>
+            <button onclick="atalhoSplit('va',0,100)" class="btn-split-quick">100% VA</button>
+          </div>
+          <div class="err-msg" id="err-va"></div>
         </div>
-        <div class="split-wrap">
-          <div class="split-label va">Vale Alimentação (VA)</div>
-          <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
-          <div class="pct-hint dir" id="hint-va">50% do total</div>
-        </div>
-      </div>
-      <div class="custom-slider-wrap">
-        <div class="custom-slider-dir-labels">
-          <span class="custom-slider-dir-label" style="color:var(--g)">← 100% VR</span>
-          <span class="custom-slider-dir-label" style="color:var(--goldd)">100% VA →</span>
-        </div>
-        <div class="custom-slider-track" id="track-va">
-          <div class="custom-slider-thumb" id="thumb-va" style="left:50%"></div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button onclick="atalhoSplit('va',100,0)" class="btn-split-quick">100% VR</button>
-        <button onclick="atalhoSplit('va',75,25)" class="btn-split-quick">75% VR / 25% VA</button>
-        <button onclick="atalhoSplit('va',50,50)" class="btn-split-quick">50% / 50%</button>
-        <button onclick="atalhoSplit('va',25,75)" class="btn-split-quick">25% VR / 75% VA</button>
-        <button onclick="atalhoSplit('va',0,100)" class="btn-split-quick">100% VA</button>
-      </div>
-      <div class="err-msg" id="err-va"></div>
-    </div>
-
-    <!-- VT/AC -->
-    <div class="bcard">
-      <span class="benefit-icon">🚌</span>
-      <div class="bcard-title">Vale Transporte <span class="bcard-divider">·</span> Auxílio Combustível</div>
-      <div class="total-row">
-        <span class="total-label">Total disponível</span>
-        <span class="total-value" id="f-tvt">—</span>
       </div>
 
-      <p style="font-size:13px;color:var(--mu);margin-bottom:16px;font-weight:500" id="f-calc"></p>
-      <div class="split-grid">
-        <div class="split-wrap">
-          <div class="split-label vt">Vale Transporte (VT)</div>
-          <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
-          <div class="pct-hint esq" id="hint-vt">50% do total</div>
+      <div class="surf bcard2">
+        <div class="bhead">
+          <div>
+            <div class="btitle">Vale Transporte e Combustível</div>
+            <div class="bcalc" id="f-calc"></div>
+          </div>
+          <div class="btot-wrap">
+            <div class="eyebrow">Total disponível</div>
+            <div class="btot" id="f-tvt">—</div>
+          </div>
         </div>
-        <div class="split-wrap">
-          <div class="split-label ac">Auxílio Combustível (AC)</div>
-          <div class="inp-wrap"><div class="inp-prefix">R$</div><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
-          <div class="pct-hint dir" id="hint-ac">50% do total</div>
-        </div>
-      </div>
-      <div class="custom-slider-wrap">
-        <div class="custom-slider-dir-labels">
-          <span class="custom-slider-dir-label" style="color:var(--g)">← 100% VT</span>
-          <span class="custom-slider-dir-label" style="color:var(--goldd)">100% AC →</span>
-        </div>
-        <div class="custom-slider-track" id="track-vt">
-          <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
-        </div>
-      </div>
-      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
-        <button onclick="atalhoSplit('vt',100,0)" class="btn-split-quick">100% VT</button>
-        <button onclick="atalhoSplit('vt',75,25)" class="btn-split-quick">75% VT / 25% AC</button>
-        <button onclick="atalhoSplit('vt',50,50)" class="btn-split-quick">50% / 50%</button>
-        <button onclick="atalhoSplit('vt',25,75)" class="btn-split-quick">25% VT / 75% AC</button>
-        <button onclick="atalhoSplit('vt',0,100)" class="btn-split-quick">100% AC</button>
-      </div>
-      <div class="err-msg" id="err-vt"></div>
-    </div>
 
-    <div class="confirm-box">
-      <p>Revise os valores antes de confirmar. Esta será sua escolha para <strong id="f-mes2">—</strong>. Você poderá alterar até o prazo final.</p>
-      <div id="resumo-confirm" style="background:var(--white);border:1px solid var(--bo);border-radius:12px;padding:16px;margin-bottom:16px;display:none">
-        <div style="font-size:11px;font-weight:600;color:var(--g);text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px">Resumo das suas escolhas</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-          <div style="padding:10px;background:var(--gl);border-radius:8px"><div style="font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:4px">Vale Refeição</div><div style="font-size:16px;font-weight:700;color:var(--g)" id="res-vr">—</div></div>
-          <div style="padding:10px;background:#fdf6e8;border-radius:8px"><div style="font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:4px">Vale Alimentação</div><div style="font-size:16px;font-weight:700;color:var(--goldd)" id="res-va">—</div></div>
-          <div style="padding:10px;background:var(--gl);border-radius:8px"><div style="font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:4px">Vale Transporte</div><div style="font-size:16px;font-weight:700;color:var(--g)" id="res-vt">—</div></div>
-          <div style="padding:10px;background:#fdf6e8;border-radius:8px"><div style="font-size:10px;color:var(--mu);font-weight:600;text-transform:uppercase;margin-bottom:4px">Auxílio Combustível</div><div style="font-size:16px;font-weight:700;color:var(--goldd)" id="res-ac">—</div></div>
+        <div class="split2">
+          <div>
+            <label class="lab2" for="inp-vt">Vale Transporte</label>
+            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
+            <span class="pct-hint" id="hint-vt">50% do total</span>
+          </div>
+          <div>
+            <label class="lab2 alt" for="inp-ac">Auxílio Combustível</label>
+            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
+            <span class="pct-hint" id="hint-ac">50% do total</span>
+          </div>
+        </div>
+
+        <div>
+          <div class="custom-slider-track" id="track-vt">
+            <div class="custom-slider-thumb" id="thumb-vt" style="left:50%"></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+            <button onclick="atalhoSplit('vt',100,0)" class="btn-split-quick">100% VT</button>
+            <button onclick="atalhoSplit('vt',75,25)" class="btn-split-quick">75 / 25</button>
+            <button onclick="atalhoSplit('vt',50,50)" class="btn-split-quick">50 / 50</button>
+            <button onclick="atalhoSplit('vt',25,75)" class="btn-split-quick">25 / 75</button>
+            <button onclick="atalhoSplit('vt',0,100)" class="btn-split-quick">100% AC</button>
+          </div>
+          <div class="err-msg" id="err-vt"></div>
         </div>
       </div>
-      <button class="btn-green" onclick="confirmar()">Confirmar escolhas</button>
+
+      <div class="confirm-err" id="confirm-err"></div>
+
+      <div class="confirm-bar" id="resumo-confirm">
+        <div class="cb-chips">
+          <div><div class="cb-chip-lab">VR</div><div class="cb-chip-val" id="res-vr">—</div></div>
+          <div><div class="cb-chip-lab">VA</div><div class="cb-chip-val" id="res-va">—</div></div>
+          <div><div class="cb-chip-lab">VT</div><div class="cb-chip-val" id="res-vt">—</div></div>
+          <div><div class="cb-chip-lab">AC</div><div class="cb-chip-val" id="res-ac">—</div></div>
+        </div>
+        <div class="cb-sep"></div>
+        <div class="cb-total">
+          <div class="cb-chip-lab">Total do mês</div>
+          <div class="cb-total-val" id="res-total">—</div>
+        </div>
+        <button class="btn-confirm2" id="btn-confirmar" onclick="confirmar()">Confirmar escolhas</button>
+      </div>
+      <p class="cb-nota-fora">Escolha de <strong id="f-mes2">—</strong>. Você pode alterar enquanto o período estiver aberto.</p>
+
     </div>
   </div>
 </div>
@@ -574,9 +700,9 @@
 <div id="pg-encerrado" class="pg">
   <div class="ok-outer">
     <div class="ok-card">
-      <div class="ok-icon" style="background:#c49a45;font-size:28px">🔒</div>
+      <div class="ok-icon" style="background:var(--gold);color:var(--gold-on);font-size:28px">🔒</div>
       <div class="ok-gold-line"></div>
-      <h2 class="ok-fadeup" style="color:#9c7a34">Período Encerrado</h2>
+      <h2 class="ok-fadeup" style="color:var(--goldd)">Período Encerrado</h2>
       <p class="ok-fadeup2">Qualquer dúvida entrar em contato com Financeiro - Administrativo.</p>
       <button class="btn-outline" onclick="irPara('pg-login')" style="width:100%;padding:12px;margin-top:1rem">← Voltar</button>
     </div>
@@ -586,18 +712,49 @@
 <!-- ══ SUCESSO ══ -->
 <div id="pg-ok" class="pg">
   <div class="ok-outer">
-    <div class="ok-card">
-      <div class="ok-icon">✓</div>
-      <div class="ok-gold-line"></div>
-      <h2 class="ok-fadeup">Escolhas confirmadas!</h2>
-      <p class="ok-fadeup2" id="ok-msg"></p>
-      <div class="ok-fadeup3" style="margin-bottom:2rem">
-        <div class="ok-row"><span class="ok-row-key">Vale Refeição (VR)</span><span class="ok-row-val" id="ok-vr">—</span></div>
-        <div class="ok-row"><span class="ok-row-key">Vale Alimentação (VA)</span><span class="ok-row-val" id="ok-va">—</span></div>
-        <div class="ok-row"><span class="ok-row-key">Vale Transporte (VT)</span><span class="ok-row-val" id="ok-vt">—</span></div>
-        <div class="ok-row"><span class="ok-row-key">Auxílio Combustível (AC)</span><span class="ok-row-val" id="ok-ac">—</span></div>
+    <div class="ok-card2">
+
+      <div class="ok-top">
+        <div class="ok-check">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        </div>
+        <div>
+          <h2 class="ok-h2">Escolhas confirmadas</h2>
+          <p class="ok-sub" id="ok-msg"></p>
+        </div>
       </div>
-      <button class="btn-outline" onclick="irPara('pg-login')" style="width:100%;padding:12px">Voltar ao início</button>
+
+      <div class="ok-total-box">
+        <div class="eyebrow">Total do mês</div>
+        <div class="ok-total-val" id="ok-total">—</div>
+      </div>
+
+      <div class="ok-grupos">
+        <div class="ok-grupo">
+          <div class="ok-grupo-head">
+            <span class="ok-grupo-nome">Refeição e Alimentação</span>
+            <span class="ok-grupo-sub" id="ok-sub-va">—</span>
+          </div>
+          <div class="ok-linha"><span>Vale Refeição</span><strong id="ok-vr">—</strong></div>
+          <div class="ok-linha"><span>Vale Alimentação</span><strong id="ok-va">—</strong></div>
+        </div>
+        <div class="ok-grupo">
+          <div class="ok-grupo-head">
+            <span class="ok-grupo-nome">Transporte e Combustível</span>
+            <span class="ok-grupo-sub" id="ok-sub-vt">—</span>
+          </div>
+          <div class="ok-linha"><span>Vale Transporte</span><strong id="ok-vt">—</strong></div>
+          <div class="ok-linha"><span>Auxílio Combustível</span><strong id="ok-ac">—</strong></div>
+        </div>
+      </div>
+
+      <p class="ok-nota">Um e-mail de confirmação foi enviado. Você pode alterar enquanto o período estiver aberto.</p>
+
+      <div class="ok-acoes">
+        <button class="btn-outline2" onclick="irPara('pg-form')">Revisar escolhas</button>
+        <button class="btn-green" style="width:auto;padding:14px 30px" onclick="logout()">Concluir</button>
+      </div>
+
     </div>
   </div>
 </div>
@@ -623,27 +780,44 @@
     </div>
 
     <div id="aba-painel">
-      <div class="mes-bar" style="margin-bottom:1.5rem;justify-content:space-between;align-items:center">
-        <span>Mês: <strong id="adm-mes">—</strong> &nbsp;·&nbsp; Dias úteis: <strong id="adm-dias">—</strong> &nbsp;·&nbsp; Prazo: <strong id="adm-prazo">—</strong></span>
-        <span style="display:flex;align-items:center;gap:10px">
-          <span id="adm-status-badge" style="font-size:12px;font-weight:600;padding:4px 12px;border-radius:99px;background:#E4F2EB;color:#195c38">Aberto</span>
-          <button id="adm-btn-encerrar" onclick="togglePeriodo()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;background:#c0392b;color:#fff">Encerrar período</button>
-        </span>
-      </div>
-      <div class="metrics-row">
-        <div class="ring-wrap">
-          <svg class="ring-svg" width="90" height="90" viewBox="0 0 90 90">
-            <circle class="ring-bg" cx="45" cy="45" r="36"/>
-            <circle class="ring-fill" id="ring-fill" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="226"/>
-          </svg>
-          <div class="ring-pct" id="m-pct">0%</div>
-          <div class="ring-sub">Concluído</div>
+      <div class="adm-strip">
+        <div class="surf adm-strip-main">
+          <div>
+            <div class="eyebrow">Mês vigente</div>
+            <div class="mes2-val" id="adm-mes">—</div>
+          </div>
+          <div class="adm-div"></div>
+          <div>
+            <div class="eyebrow">Dias úteis</div>
+            <div class="mes2-val" id="adm-dias">—</div>
+          </div>
+          <div class="adm-div"></div>
+          <div>
+            <div class="eyebrow">Situação</div>
+            <div style="margin-top:5px"><span id="adm-status-badge" style="font-size:13px;font-weight:600;padding:4px 12px;border-radius:99px;background:#E4F2EB;color:#195c38">Aberto</span></div>
+          </div>
+          <div style="margin-left:auto;text-align:right">
+            <div class="eyebrow">Origem dos dados</div>
+            <div style="font-size:12.5px;color:var(--mu);margin-top:5px">Planilha · aba Config</div>
+          </div>
         </div>
-        <div class="metric-sm"><div class="mlabel">Total</div><div class="mval" id="m-tot">15</div></div>
-        <div class="metric-sm"><div class="mlabel">Responderam</div><div class="mval" id="m-done" style="color:#195c38">0</div></div>
-        <div class="metric-sm"><div class="mlabel">Pendentes</div><div class="mval" id="m-pend" style="color:#c49a45">15</div></div>
+
+        <div class="surf adm-strip-ring">
+          <svg width="62" height="62" viewBox="0 0 62 62" style="flex-shrink:0">
+            <circle cx="31" cy="31" r="26" fill="none" stroke="var(--bo)" stroke-width="7"></circle>
+            <circle id="ring-fill" cx="31" cy="31" r="26" fill="none" stroke="var(--gold)" stroke-width="7" stroke-linecap="round" stroke-dasharray="163.4" stroke-dashoffset="163.4" transform="rotate(-90 31 31)" style="transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)"></circle>
+          </svg>
+          <div>
+            <div style="font-size:24px;font-weight:700;color:var(--hd);letter-spacing:-.02em;line-height:1.1"><span id="m-done">—</span> de <span id="m-tot">—</span></div>
+            <div style="font-size:12.5px;color:var(--mu);margin-top:2px">responderam · <span id="m-pend">—</span> pendentes · <span id="m-pct">0%</span></div>
+          </div>
+        </div>
       </div>
-      <div class="card" style="padding:.5rem 1.25rem"><div id="lista-painel"><p style="font-size:13px;color:var(--mu);padding:1rem 0">Carregando...</p></div></div>
+
+      <div class="surf tb-wrap" style="margin-bottom:1.5rem">
+        <div id="lista-painel"><p style="font-size:13px;color:var(--mu);padding:1.25rem">Carregando...</p></div>
+      </div>
+
       <div class="card" id="chart-card" style="display:none">
         <div class="rtitle">Distribuição por benefício</div>
         <div id="chart-body"></div>
@@ -655,33 +829,48 @@
     </div>
 
     <div id="aba-config" style="display:none">
-      <div class="card">
-        <h3 style="font-family:'Playfair Display',serif;color:var(--g);font-size:18px;margin-bottom:1.5rem">Configurar mês vigente</h3>
-        <div class="fr"><label>Mês</label><select id="cfg-mes"><option>Janeiro</option><option>Fevereiro</option><option>Março</option><option>Abril</option><option selected>Maio</option><option>Junho</option><option>Julho</option><option>Agosto</option><option>Setembro</option><option>Outubro</option><option>Novembro</option><option>Dezembro</option></select></div>
-        <div class="fr"><label>Ano</label><input type="number" id="cfg-ano" value="2026" min="2024" max="2030"></div>
-        <div class="fr"><label>Dias úteis</label><input type="number" id="cfg-dias" value="22" min="1" max="31"></div>
-        <div class="fr"><label>Prazo final</label><input type="date" id="cfg-prazo" value="2026-05-10"></div>
-        <div class="fr">
-          <label>Feriados do mês</label>
-          <div id="fer-lista"></div>
-          <button class="btn-add-fer" onclick="addFeriado()">+ Adicionar feriado</button>
-          <p style="font-size:11px;color:var(--mu);margin-top:6px">Formato: dia e nome. Ex: 04 / Corpus Christi</p>
+      <div class="surf" style="padding:26px 28px;margin-bottom:1.25rem">
+        <h3 style="font-family:var(--serif);color:var(--hd);font-size:20px;margin-bottom:6px">Configuração do mês</h3>
+        <p style="font-size:13px;color:var(--mu);margin-bottom:22px;line-height:1.6">
+          Estes valores são lidos da planilha e não podem ser alterados por aqui.
+          Para mudar, edite a aba <strong style="color:var(--hd)">Config</strong> do Google Sheets e recarregue esta página.
+        </p>
+
+        <div class="cfg-grid">
+          <div><div class="eyebrow">Mês</div><div class="cfg-val" id="ver-mes">—</div></div>
+          <div><div class="eyebrow">Ano</div><div class="cfg-val" id="ver-ano">—</div></div>
+          <div><div class="eyebrow">Dias úteis</div><div class="cfg-val" id="ver-dias">—</div></div>
+          <div><div class="eyebrow">Situação</div><div class="cfg-val" id="ver-status">—</div></div>
         </div>
-        <button class="btn-green" style="width:auto;padding:12px 28px" onclick="salvarConfig()">Salvar e aplicar</button>
-        <div class="success-msg" id="cfg-ok">✓ Configuração salva.</div>
+
+        <div class="cfg-aviso" id="cfg-dias-aviso"></div>
+
+        <div style="margin-top:22px">
+          <div class="eyebrow" style="margin-bottom:10px">Feriados do mês</div>
+          <div id="ver-feriados"></div>
+        </div>
       </div>
     </div>
 
     <div id="aba-colab" style="display:none">
       <div class="card" style="padding:.5rem 1.25rem"><div id="lista-colab"></div></div>
-      <p style="font-size:12px;color:var(--mu);margin-top:8px">* VA/VR = valor diário × dias úteis &nbsp;·&nbsp; VT/AC = passagem × 2 × dias úteis</p>
+      <p style="font-size:12px;color:var(--mu);margin-top:8px">VA/VR = valor diário × dias úteis &nbsp;·&nbsp; VT/AC = passagem × 2 × dias úteis</p>
+      <p style="font-size:12px;color:var(--mu);margin-top:4px">Somente leitura. Para incluir, remover ou alterar valores, edite a aba <strong style="color:var(--hd)">Colaboradores</strong> na planilha.</p>
     </div>
 
     <div id="aba-rel" style="display:none">
-      <div style="display:flex;justify-content:flex-end;margin-bottom:1.25rem">
-        <button class="btn-download-pdf" id="btn-pdf" onclick="baixarRelatorios()">
-          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Baixar Relatórios (PDF)
+      <div style="display:flex;justify-content:flex-end;gap:10px;margin-bottom:1.25rem;flex-wrap:wrap">
+        <button class="btn-download-pdf" onclick="gerarPDF('vavr')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Pedido VA / VR
+        </button>
+        <button class="btn-download-pdf" onclick="gerarPDF('vtac')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Pedido VT / AC
+        </button>
+        <button class="btn-download-pdf" style="background:transparent;color:var(--hd);border:1.5px solid var(--bo)" onclick="gerarPDF('exec')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Resumo interno
         </button>
       </div>
       <div id="rel-body"></div>
@@ -691,26 +880,30 @@
 
 <script>
 // ══ CONFIG ══════════════════════════════════════════════
-const API = 'https://script.google.com/macros/s/AKfycbzbPPYa2mJ_xL87N_Lgh4k5i9ZokUZgGTgk1rt1t0sjoDwOVWJo1o7n31ERdsOCK_Fy/exec';
+const API = 'https://script.google.com/macros/s/AKfycbxHvJ5LFklaj1dEUEKvu5YNouE1hNifdzKfUDkEQFJ_Jm8M5mb-BlshIfbAW1pI17dM/exec';
 const SYMBOL_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAKAAAABlCAYAAADK6ugqAAABCGlDQ1BJQ0MgUHJvZmlsZQAAeJxjYGA8wQAELAYMDLl5JUVB7k4KEZFRCuwPGBiBEAwSk4sLGHADoKpv1yBqL+viUYcLcKakFicD6Q9ArFIEtBxopAiQLZIOYWuA2EkQtg2IXV5SUAJkB4DYRSFBzkB2CpCtkY7ETkJiJxcUgdT3ANk2uTmlyQh3M/Ck5oUGA2kOIJZhKGYIYnBncAL5H6IkfxEDg8VXBgbmCQixpJkMDNtbGRgkbiHEVBYwMPC3MDBsO48QQ4RJQWJRIliIBYiZ0tIYGD4tZ2DgjWRgEL7AwMAVDQsIHG5TALvNnSEfCNMZchhSgSKeDHkMyQx6QJYRgwGDIYMZAKbWPz9HbOBQAAAzEUlEQVR4nO19d3wVVdr/85wzc1sSQksg9E4ICS10gUtXEEGQRIri6rrR3dXVfV939d12jeu7+9vi7rqrvpK1rQiGJIhK77mAIiVKTUILvfeU22bOeX5/zL0kYG5JoSlfPgTNnTtzZs53nn6eg1AHpKUBz8sFQQDQpqmaOiyl5dNtmjUZYjUpbQjApAM7fOTEua3rtp187egVVwECwNQ04Lm5IOpy3bu4YWAMUUoiMJkgcdrQLk+2bRYz2mJiHSUoUUjy8KmL7oKv9px8v6Dk/FIAgLS0NJ6bm1vr+cTaftFhtyuZTqcOAG1+PL67o0eHho92bhWr2lQLMAAgIJAA4NW9sP9YmVZw8NKHWct2/wYATtvtdsVpfPcubhOkpQHPy0NBRNbJg1q/bO/RJiO5baOGNrMKDCUI4oAoQdcJDp71wNcl5xd+tGLn7y5VaLtz0tJ4ei1JWCsCBsjXvWXsiBmjkj8a1SOuBXEATZdCF5KR/7wIRJypZFKR6aDD+l0Xj89bsfvRPSeu5Fch8F3cYqRVaqU2/z25R/a4vm0GRUWr4PPqQkhgBIR+ohAikKIqqDLAzXvPV3z+9akfrtl8cL7DYVcyM2s+nzUmYEZqqppVUKANS26WPm1E9//069DYUubTdSJdYXj96RAQOAgpQGW6HmWxKl8evOzJXrVjyhdF55fdJeGth90OitMJeosY6Joxuc+q8b3btdZ1TSsXQlFAQQT6FkskISggdYtFVfaf8cKir0qemr+uOCsjI1XNyirQanL9GhEwQL6B3Zv98LGxPd7p3bYBVbhdhIwzDHMqCQxQ6iLabOYFx0p9H68pnLp+58lFd0l46xAwhZpFRXV/Pr3XmlG9WjRzub26jlLhfkMqGCQwINJljJnRkYvEc9cX/zjXeeDtmpIwYgIGROyI3m2nzBjeZX7PNjFY4fEhIjKK4CxECIAAKHRps6q4/ahHzFldNH3jrqN5AWJHOpZbDQcAy7cDGw52AADIB4DhTqfMBJC3dGA1QEDydYhXU55+cOhSe/fYVi6PRwAo3KBFcPJVhRRI0RaUh694eJ7z8PO5+XtfX+ewKyMiVMcRETBAvpG9Wv1wxuhubye3jOFulw+QMwQgiISASAQSEZA4kNQoymaCbUcu40drCh/YtPPM4tqI75uNtDTgOTkkEbHa2SEiTE9Hdrt7+QHytW0SnfjjKT3yR6UkNCt3ewQQ5wYjIiNfAFJKijYxeeyy5HPzd/984YYj/5idkao+FcF8hqVOgHzDUpr/ZNa4Xm8mt7DJCpcXGedY04FevSipQOSTZgvDXcd93ty1ex5e/c2xz2tryN4MVPX0mkRDYu/Ozfs1jrV2RuB6WYXr6J5jpZuPnC4vAgAgh4NhZiZBbR/QDUSAfK0aqck/Sxuwwp4c18Ll8gpChRtkqOmQCQAYSCnJZuby2GWN5zkP/DzHue8fkUjCkAQMSKUx/dv8dOaI7m90b24SpW7BOEOMROoFAwMGRABC6hRtVnHH8Qr4aHXRT9fvOv7WbSgJMScnjaWn54qerRuMHdWv7YudWsTaWzWN5lEmBIkALp3BqfMV+skL5RvX7jr9+sYdxz9FRCAiBreRWg7YfJ2bKQMyHui3aGhK8zj3VbVbdwgBFG0heeKK4NnrDvw6d/3+P+TkpPH09FwJQZgdlEYBu2xkavtnHhvb5V+J8VZR4dYYco5IkajdYHYEAQICEAIBAEmiKBuXu0+4+JyVhc/k7zj+5m1kE14l34NDWv/6gb7tX+3RNg4E6eATJBghSSYBQYKCqDBFgZKz5bBm+7k57yzZ8TQiuqYS8Vy49So5QL4uraz9nhjfa5U9uUWs1+UWhMgBWL1cAwlAJ0HRqipPlQs+Z22x45P1B17xazYB1RCiWhoFpNDYfm2enT46+Z/d4i3C5fYyxjhS9ebPNadE/w0ZoehQxyMgKCCkl6Isiiw65eUfrNj9rHPH8TduA0mIRASISI+MTnw7fVinp5pHc1HhEyABOF4XciICQCBhVRloYOGLtx52/jl7y0OIeGHqVLql2Z/AC53Y3GKfNaH3YnuPFtEel1cyYAzCzqcxSwFQBCpaSKBoC9dPlelqdv7+38xfu/d//er4WyT8FvVn+yf+gX5tnn1sTPI/u8dx4fJ4GGOR2XxVp+X6Sfo2JAAIYEzBCo+XJSWYxGNjk/81qkfCs1lZBZrDYVfCXvDGgPnJx38wpvP8mSM7P9Xchnq5R3BA5AyNKan6lyEAInK3jzjXKrRJA1vZX5o+MJ+IEvLyUKSlQb2ouZrCYbcrWQUFWod486jHJ/RcPDKlebS3wi05MBaJD4rAwaCJ8df4/9Df4wyxwqOrLaJRm27v8OrUoR3+d0SmU1/nsH/ry9cQcJ3DrjyVVaCNSG337LSRyf/sHGcWpR5gyBSksN6uX/Ih+9bvMISIJ5CG+GAqXvFKlpxgFrPu7fnPsf3aPZuZ6dRvAQkZkQMQER+/N2XOo6O6pTcwk1aqKwpTwk0YATAAD5hU3Sf0SQPaJL/06MDVt4qEgRhrtxbmUc9MTp0/tEfLaJfHLRgqDJCAMIhQJggxb1XmlAKv3/WQwBhCmRfU5tEmMWN04q8mDevwxxGZTj0nJ41V/dLV/wgMdkzftj+ZOarbm0nNLaLcrTPkYcWY/0Shny2F0UAUEPS6IJvNJPed9fIPVu5+bk3B0X/eRHXMGEMpJcGskUnZj47p+rDF7NO8PlQVUIFQg0hDpwQEHJiuWC3Ksi3HCl/9aNNoRDx1s9RxQO2mtIga9cj4XsuG9YhTXS5NAnLGwmkyQkAMbxcSkWH4hTifkAhRZtBPlevK/NXFf5y/vuRXfsdEAPglYIB8Y3smPP/YqG5vJjU3iXK3xhhjkZEvAo4iYsi5Y357EbmC5R4v6xSvilmjE18f2SvhuaysAm3djZeEAfKZfzimy6JHx3R82KYK3etjKgfuJ1/kQCCQEhTdU6aP69c66bePDF5DRC1uhiQMkC+1TfQ9j09M+dSeEqe4K3ySg8J4BOGLSOYz0uM4I3B7dKVlFNNmjEn6nymD2/89PT1XOOzGfGIgET24e7OHnxzXMzu5dbRe5vJxw+YLF0Fgfk5FGpMh/89w5+UgpKRoK8miUzqfs2L782u3n3r9BnrHAfJZnhzX47PpIzuMtTBN9/i4whGBMOBM1Tz2JAGAA+pmi1lZsfNc8cvv5o9GxBM3ShJeVbstY8Y/PTFlbv/E5g3dbq9E4Cx0kNkw8Q1S1fQ+qYo0/PZnAAhSAlgtTDtTRurc1XteyFt/8DWH3a4gEWFSp8ZJT4xK3jo8Kc5U6vEiQxaRXx5O7QYfbhh1jIaZoEsfxZpVue+Ul+esP/DzRV8d+McNCFZfJd+PJ/T4/KHhHceYQdc0DdSA/K9LzBMAAEmCRKZHWUzKim1niv84Z+Nozw0gYYB8fdrYJswal5rTr3sTq9vtkQqYWODVDzFKv+qt3c0aBAwtWIREiolSxe7j51nWku2jthSW5jNEpJFJCX+0JzW1lnk0YpEof4hcTNfmu0gCkAgUVLDco7MuzS3i0ZFd/j6xf6efZxreVL2oY0cV8j07qcfn6cM7jLGA1DWNqZEZH5FBIgAjqfg8Ln1MaqvElx4bsoaImuXlQb2p44zUVDXT6dR7d2x036P391o4uFsTq8utSUZWI+ofQTz8Rs4pAIDCCN0VXuzRohEbltLh70SkYrfWDYf+1+Te+cntYqHCp7PwPgeG9GprBgqrjgkApCSKspjFgbNeZd7qXf+9bOuRv9Uk4R0Egepfy3OTey96cGin0Vxquq4LxXiYwdVJdUY6kf/zEFKAAAAJhMlq4Wu+OVv4j/lb7r3kcR+fOrVuVeIB06R/lyaTHr0vZX5qx4Ymj1sjBtxfKBJC8hGrE/G+dbqQz4EACMHCuDxa5mOzlxalsf5dm2d0aNGQ+XRJPJKigtoXUVd/vjA3T0CAjGOZV+Nd4riYNTrxtUkD2v73iMoQTY0HdFXyEVlfnNpn8dQhHUdzoWmaTgpGkIyvbsyRmE5G7ge41+PWx/VqmvTLGYPWmAla10USBsjXt2PDibNGd8/r06mhucLjJUTGjPuo+b3UBaGeA/rfX68U1KqRQr3aNXqGxTdS+thUAiEpjFjDWhqoYYcc8pwMABgRqIhY7hGsQ1ObmDkm+a/p9s7/k1lNXCkcHADs94batb6U3nfxg4M7jkLp0YSuqTyMDRNurOGPMSIBjEgp83p1e0pcl5ceH7KGCFrXxjsOkG9I96YTHhvfe36/zk2526VJTlZmGK4hHI6I7uXGQAfkEgCjLawvM6m8sbzmTaluUH61G46jNYZfnUEoDiEAGqqaM8QKr8ZaNrXo00ck/mHa8I5/Tk/PFRQhCauQz/ZfD6Uuvr9/h5Garus+gSqEjI4Zry4CDzlWvPqcMKTnQsgAgSma162P7t2i8+8Nm7BNXh4Iuz0y+zYjw1+ZnpgwefrInp/16RRrLvN6iSNniJrxzIJJNwqfIKgLgmnJwCPhgIASoEGUOYoJXXggTPXrzQBiZB6Ykebx8maxqM8c0/0Xj43tNhvTcwUZxkfQJ5oGwAPke2Fyr8VTBrcbSeTWdakrkWihmpge4WKeBiToRIqoKBNje8d3/v2Tw9Y0NEMbp9Opz85IVR3V3wumpQGnnDSelVWg3ZMYN2XGmG65fTrGYoXHQ8gijF7Us9qtKQxxh6ALAfizSZ0WTB2SNFmQlEQYwgzEKpNwo24gfJwQwfDndEKIVlF36aR88tXh/7y1cOePEEEj+nYZjgOAvYIoicj2P9P6Lbm/X9vhUnp0XZDCAINIiqoOB0DNK0b890KBNRXVv+BIEiRwYbOofNO+CyUfrd77WMG+UxsBABgiZM+fyvfsOYvdu8fTww/nBV40mDKo00sTBrV7tVvrGObyaoTImTGtQQTJNSGWG0tAo2AhhDNGQGazCku2HTmAY3u3euZHE3v9K66BlFJDFsrOIyBgESSj64pwcULwj0AQgEXluk5M+WTzkTWv5xbMJIKz/loBCWBIvgWIQhK1+O3MgR/f17fNME336kJKhfvnqnptGSBg3bzESNJVAASSSFotFrb76AWxpejku6u2Hn/7yHnXTri2lKvBwK5N7MNSWj1n795yVKMGKrk1ASySAUaYXqsPhCMgRxKaLvl7q0v+DwHA+rvHBmyf0DehU3mZAOTIQrvtgaKDeh93JVBC4E0PB5IAKgOfGmU2fbDqwJa3P9s+kBwOxMxMWYV8DX+Z3veLyYPbJwmPW/cCVwAZIAhAkFD9zZDfRqr7pIUvS/NnCwikVeVMkwKKj7voyNlLxaVX3F+pFjwMiO0bx0Tf1zmhUfO28WYQuhReHRmLaEUOhLGz6w/hwlFCAjWwKbSp8Jzrrx9v7aUAgHvLnsOOHq0bftyykU3zenQmFfS7zNU8NCQgEH51fIPeKGJgvPjVp78CBbESGAARKarKzl70gsujrwIAeBkMyZeHKIgo+lfTB3w+oX/bJM1XoQlgqmHxCr+6CuZQVCfpr3fW/J8HHnYQMzQgoIK/VAhIBIicVWhAJiSZ0jaG92oX200QdJMggaMR4hBCSo9PEgFyxsLXZlaaEDeBfCCrMTcCaoaDJACLgvqlcl117jr9l2Ol3oMsJy2NL992JnvBxv3/duk+lZtRIxIAwUp1rp721jktBAyAOIBkZLMq8nSpW5m7riTzwxW7f+NwOLCwMBMXMBREFPebRwYtndCv3VBN8+o+4qoRCZHBbaUqVyGQVf4K/7+BP1V+R0Yu1PgjrvkehJV+/qshglFZraME5G6fThU+n/Tpmi50qXs1oVe4dfJqxACAhx9/ADcz3FKdqWEIKiIAlTENFVI/2XR47SdfHng1Jy2NI8DVsnP88aQeCx4e3mWions1n2AqhomLESGwG2RXUAgJKNHIjjQwKfLgBY3PW3fQsfjL4ldyctL4nvRc8nu7Mb+ZMXDt+AGt+wqPW9clKjrnwImAkYwgv1vdBFcnEa//fSTfu1moz6xVaATPBSNIYqAyqauKoiz8omT7nxdsH0FEVxCruEWBCuBfpvfLu39Ay0lcCk3XUBWcgIWpBKlvdVydExJw3TkxEFInmw1p/0k3y1lT+OPFBSffXuewK29lOslv88W89HD/pRMHtB+iax5dkFRuGQduBeo5vRbyUqEkPDGQgKCi0LnKlU++3Pf1a3mF9zHEc9K/YCsQ9CREZEQkEPGhcqnnTRnc7kEzCE0KVAGNYHDQ6wDV2/xWhi2uBwICgSCdoi0qFZ8qw9wNB2YtLjg5x3Ed+X7xYI9lE/u3uUdobl0jVJABMFn3qpZvj/Xq0G4LflfaejeJfEHnCsAo0QLgHHWFMSVv/f6v/vZp4RiGWP5bIpbpd5OrRt2ln4QSEacywAVT72k9yQykeQVTmd/+CT4YWQ+pulDhCgIpkRpYSBafreDz8488vnTz4TkOh10prCRfgxcf6rV04uD29/ikS5eACvozHHWxWI3vcgAQQMbbJhVGpDAjcyalBCEABQDjgCgxIK9r8iwCx9Z0pNdf42aQj67799vXJ1JAVYSODJR5+SXfvLFoz0SGWP4QEc+sElq6Pu1TlYQPMyFzJw5p+4AFpObTUGUMIOiqOH+6rC6hC7rqvn/7IZIEiDaDOHjGrWSvLXly6ZZDH2RkpKqFmU4ZIN9vpvVfNr5fq8Ga1HUpmFHVEnhJaz0v/uJ6KYGhFNzEuILA3T6AC2XlwBhCA6sZrCYLeJkATdMFCOSGbRxpIUDV1B0FnkTo7179WeXGbpJfSIFXutroFYIkBBOXOqqgLFi//+s3Fu0eyxAv+CXfNfZVdXnHAAl9iPigCyl32j3tp5hV0HwSVYb+IGO1N4uBkqN6fRGJCMyqopf5pJLzZcmrS7ccend2Rqp6MqtAvGOUVDVwzBy4fHzfVoN8mlvXJVcYKAAQqNaqy2AYSNJJNTHiZOG7jlzSD5y6suniFe3TkxcuXuaMQ0KjqIYxNuXBLq1jB6W0aaJwRZMVGiAPs6TBb3df91vDno5sxDc/EnE1lBQszUwEJs504Khkr9379RufF45liBeul3wBBEt8+0noAMTMNAvIf08e1PYJE1c1XZMqIoLEYHYfAaGs/g2tMRAQBEhkEpEpyzaXOBeuP+TwOxxygUG+2N/NHLLsvn4tBnm9Ll0QKhwCb2ntr42EIJGBJB/ZTCqcLgW2Yc/R7M+c+/946OzlndV85W8tG9p6ThnZ7edDu8c/1rqRBdw+TWKY9ENgQq9V17c2L18djBFVF+ercgwBKArqDEGZu65o21uLi+9liBcfCrE4P9wMMSIiRISM+7vOnzqiU1o0qbpbkwpjUH2g+uqAa562q4ybVaojKRnYLIrcXnLG96d5X/Q6chH3DhtGyob1qEuihr95ZNCy+/o1Hyg8pEtZWc8XfgF9eEgpyGJVsfBoub5m28mnstcXvQcAQORgL/8g39TCXC66JETTzotWnjA0Rg+s9BrRs8XjDw3r+rfUjo0aejxuQaiGidvdvHBJzRHIz4e2pCUBmDhpHECdt/Go843Pdk5kiKVVHY7qEK70RyIiEjkQMTOdmS1vTh7Y+ic2k6JpOqoMhTGw6hImgP63OxCJrzmQELgCupC68vWBS3MPX4C9GRl91ISECcLpzDT9d1rfRff3TRjo83k0HZjKrpZU1ZV8CEIQxdjMcvPBUvnhmn1TtxUe+3ydw668nO8Exl7RichT5Qs6vgGQmpqq/nVCNI3IdL5/5pz2zQ8mJa8Y1rVpvNvtEf63MSiqV8e3HteGWaofn0E+0Imb1I9WF299a2nhJIZYKoOo3aqIpPaMEDOByMEQM3+KJJWp97TLMCuKpmmkUqi0MBIY169dnFACgYkzdvRMOWw/XPohAKD56BWWmZWpPWTv+OtxfVsMkbrm80nVpICAyhetdhNpqF0EKQXF2BS549hF/tGy7dO2HbjyeUZGqvpWoVM6nSAAyJQ2rPPTPdo3nWlSua34VOmS95fs/GNBQcGVtzqkcX+h6Pb/W/DNGGVyn1XDEhvGl3p8EpGzoKXqSH6/+WZmLiJFdeNBv8PBwMJJJ2DKfGfxqreWFj7MEK9IIiNsEAaRLu4hxEzwLyj+sa7plrThnWbZFNS8wrAJQ3651nFCkgpj7OCpisNbi45v8dtLvnejsHn/jk2fizGDLPeQogTxnGsKiQiCdIqxKLL4dBmfu6boR1sOXMlz2O1K4SWnzM0FYQFo+3x673lje7YdbI5moJCAe7o0SW4bF/XQ3NV7Z+bm5m5x2O1otEG7vPPtxZvHgNJ35T1d4pq5XG4JIVccUqU3fEs5GJknToSgqqihFGrOxpKFb3xW+BBjSFJeTeaHRU3EEqWn50oiB/x7cdFjuc6j890MVTPnmoygckVSzbuUMcalriOcuFD6NQB4/vmzziZEpGFJbSYmtWsa6xNcAiILESOPGASG5Gtg5vLIBZ3nrDv4vHP72XccdruSD07IzQXRKj4q5VdPDNo06Z72g1WT1FxuXZZ5pCQS+vg+8Z1+9mDP9YMSW0zIdDr14WAHu92u7DtRsTNr0fb7N+w5X2G1WRmRFBSyVQnd0jy7MYaqeewgxxCCykGTJNV5XxzOe/2znQ8TOdBPvognu6bLGwkxE/3qeBqSoIeGtpsWrTDNp0mVQnSKxppW0RADRAY+XYLL5d4GAHCxtCUCHIBWcbF9GtpMJIUADobQqEPFHgBwkFKnKCuXx85LnpN/4Lklmw//0+GwK/n5AE4n6F3aR/V4cmzfVcOSmsZ7PB5dEFdVNKiiATC9Qoh+nZqYSUn5hJngoUync1FGaqoKdlCczisF7y/ZOkFC7xX2pDhTuVuTwBir1jHBSulT23XXtX0OhFXDa8GfqCQAKwfdC1yds27nV+8t3T+LMdQQM2vcD7E2rpdEzCQiB8tavHv6R2v3Z5dJUFUT10FGUPUR4dtNQMAZgk8TUFruvVT1swbRZquCEo0KlLpBAgMpBMWYTfLwBY3PzS/52YKNe6uQz6m3a9mwZ8a4QatHJjWK91Z4hASuIMpK05wYAHJe7vbJvu0syqMjkz8Z0bvdxKyCAq1reSqmpaXxPScq8j9cun3spr0Xz0XbOAMSItxrQ1QPor0miOBakggsHHUNSFm4aV/Oe0v3j2EM3TWVfAHUdoF3VcdkutVkOTN5SOvnYk2K7vZpCmcsaJknQORpOyIJwACYarnmQE3TIiinCnMDfkksSaMGVlUeOOfh2auLn1205dAbBvmc4HSC3ql546SnJvVcNjQxKq6sXAjijANKg3SBMaDhaDFkzOXWZc92URxZ1wXE+NSsgoLPHNHRir9BpPPtJdvvkzI5f0hSfEy5yyeAqRxBD/Isqt7jjTIKQ6XVrr22IAQLA01HUnPWl3z25ue7H2YMobbkA6hbCQtdlYSLdjz/8Zq9717SPYrNpGgynCREAumvmwt6iP8Yk8KgUZTJUvWzCxXacZeOFESJRTZ4QJBCp2gLk3vPlPKPVu565nrytYpvlPL05J75QxObJLhcmiAORv3at5Y8GtXGCAScceb2eKlHGxufZu+YZ09u9aBhExr9mYuPXvn635/tmLCp+PT5aJvKQWrBnxYaajF8L506AAO1jaGr4KXkYGGk6QzUPOehT9/8fPdUIgerC/kA6l5DRYiZ5HDYlQ9X7n9yzqr9/3fBp6lmM9dJRlLCBSFfPCkBzQqCajbZAQDBdU4CAOzZf9p54rwbOWMMIizdvxYMQOoUbeNyz0k3f29J8U+XbTv+ZlXytWhq6/3Mg8nLhyXGxnkqKoREJcIiUAGInLk8Purd2sKnj0nMG5Kc8GClYwJK0eny9e9+tmPspv2lp6OsZkYRMCzSJQo1RSTnlURg5qQJ4OpHa4q+/NeiXbOMyqlMgDr2wK6P8DtlZjoFkYNlrz74kzxnyZ8ve4QSbeK6IK3KJaq7Ub/hi1Rl4U4laYkAFM6heXyDDgBAL+ek6USEOw5f/HLv0YtHTYwhoZAy0gCuv2SeSJdRFhPsPlHO56/Z+4P8XSffqkq+tk1tvX86KXXliO6NW7hcQghm4kZxbiSPy5+ERJVVeCT1amNjM0d3zxvWs8PkAAkzUlPVnSdd38z+dNukL4vOV8RYTIxISBnq/JFIqkhx9VzhuSMJwKQyXWeoZm/Yu+ydZfvGMYZl/lrSOovmemvygphJlJPGP1he/OKCjcd+f84LitWk6FJqELyTJkBlCVa1D5bpUlLLhpauvds37IGYSenp3VUAKP/6yJU/nCr3ooVzASJkVrASKAGkV1otCu46USbnLi/OWFVw7D8Oe6W32yYhts9PJvdeNSalaVO3SwhixBnIatRu0Iv4fwpgiMzt0al32wbskZGdc0f0aDklsCuU3Q5K4fHSLe8s3zFhY+EZT7RFZUA+KWv3nGqIyM4lCcHMuS6FVPK+ODLn/xYVjmcMS+uqdquiPhOQhOm5cnZGqvre0h2/m7tm/z9K3SbFZjLpkkKr48CaimoGh0IXIjHBZurRqdUTAEBJZ+Okw+FgS7/an7Xy6zPruRKlmrn0aVXKH74N9DcRR91mtbEdh93ej/OLHli368S/HQ67kg+Gt9sxITb1+Qd7rxrZvVkTt9snJENe+5SyUTWEqLAKj5d6tjaxaSO6547o0XZKVkGBFogT7jlyJX/2Z9vHrS86Xx5tNTMgKcM7Z3V0wCJSuwAWBTRdcCV7w+GP31j49SzKSeP1ST6AG+NaIeWkMUzPFT8cl/yXh+7p9EIjq9QrNI1zMGG4HnLXnghBSklWG9KXRRfLfv2fL1J8Pjw2dCgp+fkkohHjn53ef/nEvi17ISF5BQhdysBWU2h4l0QcVKmqAKqq8C8Kz1fkOQsnf1F8dlWgS2em06mntIlNnTW+18ohSU0beytcQjITh6txy7qBAAFIlzaTGXce89C8/D3p+d8cXZCRmqomREdTptOpJza32J+cmLpkaFJ8VLlbk8iAhXqlrnlOiBC2bQqSEVUIfRAgMJAkwayC5pGk5jj3Lpm9eN8kIgfVh813PW5ECQZheq6knDT+7rLdv8j78tBvz3lRibIwIUmPbF+vqyeSAJyjz81oYJcmsU+MTnlLSoKXhxtNxF0IZ/7fx1tGfbDu0L/3nbhEJlVXYiwcbSYVo0xINrMC0SYzmizAT15w8U+/PLLqnwu/GPxF8dlVOWlpHMAgX++urfs+ObH/ymHdmjR2ubxCZyZurJwL7UShv2t8OBMUgfyOiQd6trXAo8MTc8b0bz810O3Vbrcrxac9zneW7x62Yc/5C9FWM0MQItIEZiR2YaS2o5AEJkXRdA3VnPUl86qQz18IWr+4kRlHXOew8xGZTv2R0d1fmWbv+tumUaRXeHRe2YQwfA4XiQCIgVlh+gWXpry3puQ3n6wv+l8y8tKQhyCIADq3sva/v1+HH8dHm+9rFNugoaowi0/Xocwjz5+67Nmydcf+d77Yf2UhgLHnW6NGqSwrq0Dr2zFu8A/G91zSr2ODhmUet+SgVikYCJrXgWsWel9dSB9qkgmQAARJiraYaPdxL+R+WTJt+aa9uVUdoA7xjVKemdJjyT2JTVu7PB7/FloRNJe8KkuqX7kXrpwKEEBKAIvCNa8ANXt9yQdZS3b+0F+OVy8OR5DL3lBcJeFjI5N+lza8c2bTaNDLvRpHpiAHAaHyolUhCCHGhPrRy6TkfXn0F/NXb/8rQ4Qn+/RRR7/YQQZq8QAgxmKBxvHRsU09QvedvVRxDAAuAxi9VoYOIyX/p2mE6bkitVvz8Rn3Js/t0b5hQ5fbJRnysC3qQrWxJZIReEMIJIW0Wcyw64QXc9ftfmRlwZF5Rs7ZsEVbNDV1eW5Kf+eI7k2au1xCkNGWC8K+rIFjqDLycG16LTikRLCppFVIpuY6974/e0nxE/5EQ315PtWP+UaduOo1AiScPrrzr9OGdXu1RTTXy70ezpmKNbk3EgJsJibOliNfvOXQh1lLdz8HAJcRAd7+Uap6MsGNv3+lyFe1OAIRYO3v7MqfNp/gAwa0FIH+0vf2bPbTB0Z0/cuANk2t5V6PlExhGLZqJ3zhaER9bQhAkpRRFgZ7TvpY9pqiR1Z+fXRuVRK2a2Hq+pMJqSvtSc3bVHg0ARiqcVSwMYbvQBs4ysJMmluQmvNF8fuzFxXdFPIZo71JCLTUfWRE4v+kD0/8Q0K0ol/xVXDOOAKxCCQHAYECgiTYFBIamfmWvadLtuw9/ue8DYfzAOBC4EhEBCl/xwAAOHtFViVkfKOolIeGtv392J5tJzVvaIFyn5dUVJAwULcYpPbN/294p4TCqjv0V10JqVGUxUzFJ71s/saD05dv2p/tcNiVwkIn5eaCaBVn7vTc5IH5w5OatqzwuCMMhlcdY/DKGvLfFkkAq8J0lwDl47Ulc99dseuRm0U+/xBuGq5KwpkjOr2UZk/8Y7NYRXd5NM6YgjUxMcjQScJsVvnFMjfsPX7l7KFz3nW7j55ZsG330a9LvVAKAOf9h0fHmSE+JbH5oB4dmk3u0jL2gV7tGqkEJDy6ZJF1lqr5Qu/I1DEACUlWq4mKT3pw/rrCGcu3HcmuKgk7x8X2enpKr0/v6da4rcvtEcCUCCVhmOuC0V0sSmG6S0dlvnPfu/9eVvgk5aRxDLG7ZX3jppc9BiRh2vBOL84cmfT/EmIUvczj5bxGJDTiipKY5AqSjQP3SQXOlHrh2NlL2sUyVwVnprMAAEJ3xzRtGNO0TVxDtVkDFRgIKNeZQBIR7gFV27Io8qvjEBchQ1oJqVO0DWnPCS9buHHfjEWbjnxc1TGJi2vQ8YUp/dfYkxq1dbkrBCKvc50WEYGFc61UU9S8jUXvvLO08Ec3m3wAt6juNkDCx8d0/+WD97T/U0KMRS/1ufw2YQ03hSECAUgKA6EwQM44R1bpFRJKIEkgBAldBzAWjwukcD1t6qWhI1V6x9WeovKXQmoUYzVR4Ukvm7d276Orth36KFAM63SC3ikuruOTk1NW25Nj23ndXp1IVRBFjWrNybgtICnBxhTNLUH9cG3xx/9ZuXfGrSAfwC0s/A6Q8OGhXX+RNrLDn1s2UnSXW/jVce2egVE+ZxQJot9YIn+DgqqNcCI7Wf31VwnfHxAAAIGEJJtVpeJTbrZg08HHF23Y/0FVSRhrhg4vPDJkzZgece3cbp8gRF7TQLkgABvnuluCMm9dSc67y3dO9y+/vSk23/W4pSsPAiScfE+bFx4ZmfKXFo1MosKjMR6xcrxxqN9q5HDeqD+8AwCCNIqxMLnvnOS5G/Y//pmfhIWF8ZSXmyviY83tn0sfuGZk92btPd5yXYKiRFKlQ/5VijYF9TJNUfI2Hnona8k3Gf4Vj7eEfAC3wfKrShK2e2HmyKS/tG5s1su8bs7RXCPHpF7gL5q4kcsjw4dpjLUpNotK+8762IL8fU98vunA+xkZqeqlSwUyLxdEA7O5/YszBqwZ3atpe4/Hq/sIFIbBuykgobH3ngX0y26u5n65b/Y7S4qevpnebjDc8tXQgQ1nFn5x+K/Za7e/cOSCW4m2mIWQGtX/thDBgYaavuFrc8MXghMwxtHl0TExXhVp9k7vjRvQ9vGsrAItKcmOU9OAX/F6D2XOWz9q0dYz33CLWYlSVR0kCElkVPFf/UsgJREC6dEWjqcvS/WDVUVvv7Ok6GnKSeO3mnwAt4EEDCCwCeGUwe3/a8bI5NdaN1H1Mo+PV/ZXuRHPqfL2A42MbvgjQX9szrBQQ45NSEFRVi4PnPHxhV8dmfXJuqI5VSUhATR87sE+c4f2aDa+RSMzIBAIQQRI0shAM6YyQpAMvj58sWL5lqO/+3zzob/dDpKv8i5vI1xVx4Pb/3zaiMS/tYpTRIVHYwqaMbJ86E3dkLzOiCRrIqUkm9VE+89qLHfN3qcWbd6fFWjGGciDD+kalzawe8unm8dbhyY0tKoWswoIHCrcGlwsc18pOVm6Mnt9UeaZS9oecjgYZmbeZNsmOG4rAgJUkvD+/m2fnzm2+9/bNVVFhUdnCihhS7nuNAKG3Q3Av95UCEkxFkZ7z/rY/HV7X1iy+dBrRITDhyPPzyeBaES8TSboPKBT40bIWDsOJhA+76H1+y6cBIATAAA5aWk8PTc3ogXjNwu3HQEBKtXx5IFdnn94VJe/t2tiFmVeD6ssowlSReOfsNu30c91wKqFuNUQ8WqXBARJGlktCp28KNnCL/b9de6afb8CAC0nJ42/9943yrIneuuYXj25Ar2zM2+6VxcetyUBAfx7oWUVaBMHtPvZ9NFJr7eO58Ll1pmCppDq2GgDcuP2QbsxiKxoQBKRzcREmZeUNbvObF3x1X7H9pJLy66ehQif6ttX2RtdQAAA8fFAublwQ+r46gu3LQEBKkk4YVC7n00fkfR6+3izcLk1xhkPE6JB/2LxmzbUOoKuk4bBIUmChYFgJjPfd+ISbN9/ZsX2kotz1+08vREAjsBtTLbqcNtPUUAdPzCgTcbDIxJnd4mPFld8bsavSsJQabvbtdtUdYiscNT4lAEjXZoUROIqnrnkgqPnKlyXy/QjW46ce2vZhoNvOBwOlnkbORvBcNvrqcxMp77OYVcWbT6aNXdF4bPFZ8t5lNUsdfIRVK1KrgY3dEF3vSOyFwUBgIEEQMa8GqLXp4m4GIs+olu8eWBKfDeLiasAAIWFhXfCW3f7ExDACFbPzkhVl31z/I05qwufOXjKw2MsNpJCp1ATh4Agg6y4u11Rk0A4M+r5mIoAxy7r/P3VRa8sXLPv72lpaTz3NvN2g+GOICAAwFNZBZrDYVdWbTv+5sdrdz2979QVjLapUiNJFGK/Y0Qy1gPfUdIwFPzVrIQgSFKMCeX5CqnMX7vv5ZxV+x0Ou125U8gHcGcYR9cg4JiM7dvs8Rmje73XOcEkXW6JCoavJ7xZO0bWBRHtrEkMJAFZrYo4ccmtLFhf8tvsdXtf9TcQvWPIB3AHScAAsrIKtIyMVHXltjPv564ueurgSS+LsTIphaCqpejVQdKtb/4YHOFX1RlggXCMfuaKT5m7+tAfstftfXV2RqqabtTz3VG44wgIYJDQ4bArS7Ydzfpo1a6nCo+7uc3GpRQiZAED+ntW337OSdUuWMHXcBAgCAkQZUJ5tsyrfrhi92ufflH869kZqepTWQV60C/fxri99VEYBNTx0OTmTz06LuntHq0aiHKXzjjy8B0YKPyC8puH8IFoAv8mjWZVni7T+Pw1e1/OWX8g0692b3olc33htpmC2iIQJxyZ0uwHj9yb8n5iKwu5XQSBymqjk2n1abu6721XR4RJxQVWzxEY63ajzYp+/IpHydtw9IXstbtfu1Vl9PWJO1IFV0VmplPPyEhV1+4688GcVXsyCo9pYIviJEgPPSkRNMm88YisS5WQQFFWqR27XKF8sGzPn7LX7n5tdkaqeqeTD+A7IAED8O/NodmT2z4+/d6u7/VuEy0qXG5EpoRZSe5fyH0LnkS4ciwJACSJoi2KOHLJp/xn2Y4/L9164kW/1A/s6H1Ho7Y9om87ZBUUaH4Svg9I5Wxku5yebRtBmc9LCpiQgvV7wcrlkzclbRcm52tc3eixLaVOMRaTPHZZU7LX7ntp6dYTf6oSarnjyQfwHVDBVZFVUKA57HbFueto7odr96V/c7zME2U1gQBNhm6SeTPTdgGtGaJjgbEuBGKsqjh2yc0/Xrv/lws3HvjTne5wVIfvjAquioB3PDg5YeZjY7rP6dEuSrpcGgu35JP8C8Vv5aIkQgZSEjWwkH7kolDnrCz+5edflfzFH2rRbtjAbhG+UxIwgKysAi0tLcn05e5Tcz9YvuOxrw9e4dE2C5HQCAmDBqMDabt6l4Z+NR+MfIHwOBID0HWKNjN59CKoc1YU/vHzr0r+4nDYle8i+QC+oxIwAIfdrmQ6nXr/zgnTZ41PmpvaIRbcbi8hAgv/7rEIGhFFhnDpNeMTBUho1MCC8uB54PPy9/3y8y/3/uW7qHar4jtNQIBK73hIUvz0maNSPurVqQF4XBoAQ7/rG8QW88cJjQdU+9Ycxs9wNX4MBBA1MKM8dM7L56098Pznmw68HlgfU8uL3xH4zhMQoJKE/bs0efQH43r+p0+HWHC5vQTIGSMJwfvEGMWutW5OFEFzSCQAEkQ2K8iSC4LPWbnnt0u3Hn31u2rzXY/vpA14PbIKjAKGLfsuzJmzunjG5pIrZLHYGEghKaTDYXxW63rCsC0POQgiirYyWXJO8rnLC/9r6dajr36Xbb7r8b2QgAEEbMIBiQ3GzBzd67OBnZpYjY70xh6+CMHTdsZquwjihOHSa/6fRmGBpGgbowOnPezj/ANPLdl0MCuQWqzLfd5J+F5IwAAynU7dYbcrm4tLV3248puHNpeUlkdZGUoKEyes0S5F4dJr/qJ6qVMDC8p9pzxs7rp9P/o+kg/geyYBAwjYhKmdEsbOGp+4uH/HRqrH5ZXAFBayqDWCtF34bgccpCSy2Yj2nxVs/sqiHyzZWvKfQOyyVjd0B+N7JQEDCGRMCg6cWvnRql2jvyo6WxplsTAgTRpxQoBqJRgSEFYtYPBLzQj3XjM23vFRlAVp32kvy3EWz/o+kw/geyoBAwjYhIktLIOefKD/8iFJsQ1cbiERFBaqvzMBAQMOVx8fipCbdkpAYAiAmiSbVaE9Z0pZjvPwzGVflcz7PqrdqvheExCgkoTJbWMG/WhCn2X9uzSNdbk9VfYMqY/4rwJSSoq2EhWe9LLsDftnrNhU8vH3WfIF8L0nIEAlCft0ajxw1tik5YO6Not1u4z94oz95mpvqSAhEAkZZeWw84SbZa8tmrG64Phd8vlxl4B+2O12xel06j3aNRvw2L1dlw9OatLQ4/YKQl7LbRH8G/9Jn4y2mGH3qVL8eO3eGau2Hc++S75KfC+dkOrg9Idodh4+s/ntJdvv3bD73OUos5kjSWE4JpHSsHL1mpCSoqwq7D7pwmznsel3yfdt3JWA1yGgjpNaWfs/Ma7v8qHdmzRyezxCoimCXYoAAut2UUoZZUPYcdSDuRuKp63YeiznLvm+jbsErAYBEnZp1aTfj8Z1XTEkuVkjj9snCDjHcLsfEQMCIWPMKm4/Xg7zVu+Ztm7HybvkC4K7BAwCux0UpxP09k2Ufk9PSl0yomdCnNtHuq4TZ0hohGkqHx+BEcNmCLrNypRvDpTq8zeUzFi7/VDuXfIFx10ChkDAMYlrAB1/8kDqZ2NSE7oryMHrk0IQIRn9gQABJWeMTMg4MoT1haeOZm84PKNg36kvAtL0Vt/L7Yq7BAyDtDTgubkgACD2qQdSXurZrvFPu7SIibFaTAAUWMykgNurwZGzV3y7Dl2e9/dPt78IAGfvki887hIwAjgA2CuIkoigsQm6TRjW+clOLRsPAl1LJoYoOd915GTF15t3n3m36OT5bxAAplYS9y5C4P8DiH3YMB7tnuMAAAAASUVORK5CYII=';
 
-let MES = { mes:'Junho', ano:2026, dias:21, prazo:'', status:'aberto' };
+let MES = { mes:'Junho', ano:2026, dias:21, status:'aberto', feriados:[] };
 
 const COLABS = [
-  {nome:'Andressa Rodrigues',  email:'andressa.rodrigues@pblcompra.com', passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Arídio Manuel F. Vasquez', email:'aridio.vasquez@pblcompra.com', passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)', tipo:'municipal'},
-  {nome:'Barbara Motta',       email:'barbara.motta@pblcompra.com',      passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Brenna Jamily Pantoja da Luz', email:'brenna.luz@pblcompra.com', passagem:7.24, vapd:24, cidade:'Intermunicipal (São José)', tipo:'intermunicipal'},
-  {nome:'Camila Trindade da Silva', email:'camila.trindade@pblcompra.com', passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)', tipo:'municipal'},
-  {nome:'Daniel Fontana',      email:'daniel.fontana@pblcompra.com',     passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Eduardo Zattar',      email:'eduardo.zattar@pblcompra.com',     passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Gabriella Suzin',     email:'gabriella.suzin@pblcompra.com',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Hilary Barbosa',      email:'hilary.barbosa@pblcompra.com',     passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Luiz Fernando Lentz', email:'luiz.fernando@pblcompra.com',      passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Marco Meneguzzi',     email:'marco.meneguzzi@pblcompra.com',    passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Nicolli da Silva',    email:'nicolli.silva@pblcompra.com',      passagem:7.24, vapd:24, cidade:'Intermunicipal (Biguaçu)',  tipo:'intermunicipal'},
+  {nome:'Amanda Santos de Jesus',     email:'amanda.santos@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Andressa Rodrigues',         email:'andressa.rodrigues@pblcompra.com', passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Arídio Manuel F. Vasquez',   email:'aridio.vasquez@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Barbara Motta',              email:'barbara.motta@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Brenna Jamily Pantoja da Luz', email:'brenna.luz@pblcompra.com',       passagem:7.24,  vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
+  {nome:'Camila Trindade da Silva',   email:'camila.trindade@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Daniel Fontana',             email:'daniel.fontana@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Gabriella Suzin',            email:'gabriella.suzin@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Hilary Barbosa',             email:'hilary.barbosa@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Luiz Fernando Lentz',        email:'luiz.fernando@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Marco Meneguzzi',            email:'marco.meneguzzi@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Millena de Mattos Gehlen',   email:'millena.gehlen@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Natália de Souza Rodrigues', email:'natalia.rodrigues@pblcompra.com',  passagem:7.24,  vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
+  {nome:'Nicolli da Silva',           email:'nicolli.silva@pblcompra.com',      passagem:7.24,  vapd:24, cidade:'Intermunicipal (Biguaçu)',   tipo:'intermunicipal'},
   {nome:'Raphaelly Kathlen Cardoso de Lima', email:'raphaelly.cardoso@pblcompra.com', passagem:10.10, vapd:24, cidade:'Intermunicipal (Palhoça)', tipo:'intermunicipal'},
-  {nome:'Tarciane Zomer',      email:'tarciane.zomer@pblcompra.com',     passagem:7.20, vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Rodrigo Freitas Machado',    email:'rodrigo.machado@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Tarciane Zomer',             email:'tarciane.zomer@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
+  {nome:'Vitória Kelly Campos de Araujo', email:'vitoria.araujo@pblcompra.com', passagem:10.10, vapd:24, cidade:'Intermunicipal (Palhoça)',   tipo:'intermunicipal'},
 ];
 
 // Admins com acesso ao painel RH
@@ -720,113 +913,134 @@ const DOMINIO = 'pblcompra.com';
 const RESPOSTAS  = {};
 const TIMESTAMPS = {};
 let   colabAtual = null;
+let   cfgOk      = false;
+let   colabOk    = false;
 
 // ══ HELPERS ════════════════════════════════════════════
 const vtTot = c  => parseFloat((c.passagem * 2 * MES.dias).toFixed(2));
 const vaTot = c  => parseFloat((c.vapd * MES.dias).toFixed(2));
 const ini   = n  => { const p=n.trim().split(' '); return p.length>=2?(p[0][0]+p[p.length-1][0]).toUpperCase():n.slice(0,2).toUpperCase(); };
-const fmt   = v  => 'R$ '+parseFloat(v).toFixed(2).replace('.',',');
+const fmt   = v  => 'R$ ' + (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const num   = v  => (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const clamp = (v,a,b) => Math.min(Math.max(v,a),b);
-const prazoFmt = d => {
-  if(!d) return '—';
-  if(typeof d === 'string' && d.includes('T')) {
-    const dt = new Date(d);
-    const dia = String(dt.getDate()).padStart(2,'0');
-    const mes = String(dt.getMonth()+1).padStart(2,'0');
-    const ano = dt.getFullYear();
-    const h   = String(dt.getHours()).padStart(2,'0');
-    const min = String(dt.getMinutes()).padStart(2,'0');
-    return `${dia}/${mes}/${ano} ${h}h${min}`;
-  }
-  if(typeof d === 'string' && d.match(/^\d{4}-\d{2}-\d{2}$/)) {
-    const[y,m,dia] = d.split('-');
-    return `${dia}/${m}/${y}`;
-  }
-  return d;
-};
 const el    = id => document.getElementById(id);
+// Concordância: evita construções tipo "respondeu"+"ram".
+const plural    = (n, sing, plur) => n === 1 ? sing : plur;
+const diasLabel = n => n + (parseInt(n) === 1 ? ' dia útil' : ' dias úteis');
+const colabLabel= n => n + (n === 1 ? ' colaborador' : ' colaboradores');
+const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+
+// Sessão de admin — usada para liberar preenchimento mesmo com período
+// encerrado (inclusive ao preencher por outro colaborador).
+const isAdminSession = () => ADMINS.includes(sessionStorage.getItem('pbl_admin_email') || '');
+
+
+function parseFeriados(raw) {
+  try {
+    if(Array.isArray(raw)) return raw;
+    if(typeof raw === 'string' && raw.trim().startsWith('[')) return JSON.parse(raw);
+  } catch(e) { console.warn('Feriados em formato inválido:', e); }
+  return [];
+}
+
+// Conta dias úteis de um mês descontando os feriados informados.
+function contarDiasUteis(mesNome, anoNum, feriados) {
+  const idxMes = MESES.indexOf(mesNome);
+  if(idxMes === -1) return null;
+  const ano = parseInt(anoNum);
+  if(!ano) return null;
+  const ferMap = {};
+  (feriados || []).forEach(f => { if(f.dia && f.nome) ferMap[parseInt(f.dia)] = true; });
+  const totalDias = new Date(ano, idxMes+1, 0).getDate();
+  let uteis = 0, fers = 0;
+  for(let dia = 1; dia <= totalDias; dia++) {
+    const dow = new Date(ano, idxMes, dia).getDay();
+    if(ferMap[dia]) { fers++; continue; }
+    if(dow !== 0 && dow !== 6) uteis++;
+  }
+  return { uteis, fers };
+}
+
+// Chamada JSONP genérica — usada por todas as comunicações com o Apps Script.
+function jsonp(url, timeoutMs) {
+  return new Promise((resolve, reject) => {
+    const cb = 'pblCb' + Date.now() + Math.floor(Math.random()*10000);
+    let done = false;
+    const s = document.createElement('script');
+    const finish = () => { try { document.head.removeChild(s); } catch(e) {} delete window[cb]; };
+    window[cb] = data => { if(done) return; done = true; finish(); resolve(data); };
+    s.src = url + (url.indexOf('?') >= 0 ? '&' : '?') + 'callback=' + cb;
+    s.onerror = () => { if(done) return; done = true; finish(); reject(new Error('falha de rede')); };
+    document.head.appendChild(s);
+    setTimeout(() => { if(done) return; done = true; finish(); reject(new Error('tempo esgotado')); }, timeoutMs || 15000);
+  });
+}
 
 // ══ INIT ════════════════════════════════════════════════
 window.addEventListener('load', () => {
-  // Mostrar loading imediatamente se há id_token no hash
   if(window.location.hash && window.location.hash.includes('id_token')) {
     irPara('pg-loading');
   }
   const src = 'data:image/png;base64,' + SYMBOL_B64;
   ['logo-sel','logo-hdr','logo-adm','logo-choice'].forEach(id => { const e=el(id); if(e) e.src=src; });
   if(localStorage.getItem('pbl-dark')==='true') { document.body.classList.add('dark'); el('dark-btn').textContent='☀️'; }
-  carregarConfig().then(() => {
-    return carregarColaboradores();
-  }).then(() => {
+
+  // Config e colaboradores são independentes — carregam em paralelo.
+  Promise.all([carregarConfig(), carregarColaboradores()]).then(() => {
+    mostrarAvisoCarga();
     processarRedirect();
-    if(window.location.search.includes('admin') || window.location.href.includes('?admin')) {
-      irPara('pg-admin'); atualizarAdmin();
-    }
-    if(typeof renderCalendario === 'function') renderCalendario();
+    if(window.location.search.includes('admin')) { irPara('pg-admin'); atualizarAdmin(); }
+    renderCalendario();
   });
 });
 
-async function carregarConfig() {
-  return new Promise(resolve => {
-    const cbName = 'cfgCb' + Date.now();
-    window[cbName] = data => {
-      try {
-        if(data && data.mes) {
-          MES.mes    = data.mes;
-          MES.ano    = parseInt(data.ano)  || MES.ano;
-          MES.dias   = parseInt(data.dias) || MES.dias;
-          MES.prazo  = data.prazo  || MES.prazo;
-          MES.status = data.status || 'aberto';
-          try {
-            const raw = data.feriados;
-            if(Array.isArray(raw)) { MES.feriados = raw; }
-            else if(typeof raw === 'string' && raw.trim().startsWith('[')) { MES.feriados = JSON.parse(raw); }
-            else { MES.feriados = []; }
-          } catch(e) { MES.feriados = []; }
-          if(typeof atualizarStatusBadge === 'function') atualizarStatusBadge();
-        }
-      } catch(e) { console.warn('Erro config:', e); }
-      delete window[cbName];
-      resolve();
-    };
-    const script = document.createElement('script');
-    script.src = API + '?action=getConfig&callback=' + cbName;
-    script.onerror = () => { delete window[cbName]; resolve(); };
-    document.head.appendChild(script);
-    setTimeout(() => { delete window[cbName]; resolve(); }, 5000);
-  });
+function mostrarAvisoCarga() {
+  const b = el('load-warn');
+  if(!b) return;
+  if(cfgOk && colabOk) { b.style.display = 'none'; return; }
+  const faltou = [];
+  if(!cfgOk)   faltou.push('a configuração do mês');
+  if(!colabOk) faltou.push('a lista de colaboradores');
+  b.innerHTML = '⚠ Não foi possível carregar ' + faltou.join(' e ') +
+    '. Os valores exibidos podem estar desatualizados.' +
+    '<button type="button" class="btn-add-fer" style="margin-top:8px" onclick="location.reload()">Tentar novamente</button>';
+  b.style.display = 'block';
 }
 
+async function carregarConfig() {
+  try {
+    const data = await jsonp(API + '?action=getConfig', 12000);
+    if(data && data.mes) {
+      MES.mes      = data.mes;
+      MES.ano      = parseInt(data.ano)  || MES.ano;
+      MES.dias     = parseInt(data.dias) || MES.dias;
+      MES.status   = data.status || 'aberto';
+      MES.feriados = parseFeriados(data.feriados);
+      cfgOk = true;
+      atualizarStatusBadge();
+    }
+  } catch(e) { console.warn('Config não carregou:', e.message); }
+}
 
-
-function carregarColaboradores() {
-  return new Promise(resolve => {
-    const cbName = 'colabCb' + Date.now();
-    window[cbName] = data => {
-      try {
-        if(Array.isArray(data) && data.length > 0) {
-          COLABS.length = 0;
-          data.forEach(c => {
-            COLABS.push({
-              nome:     c.nome     || '',
-              email:    c.email    || '',
-              passagem: parseFloat(c.passagem) || 0,
-              vapd:     parseFloat(c.vapd)     || 24,
-              cidade:   c.cidade   || '',
-              tipo:     c.tipo     || 'municipal'
-            });
-          });
-        }
-      } catch(e) { console.warn('Erro colaboradores:', e); }
-      delete window[cbName];
-      resolve();
-    };
-    const script = document.createElement('script');
-    script.src = API + '?action=listColabs&callback=' + cbName;
-    script.onerror = () => { delete window[cbName]; resolve(); };
-    document.head.appendChild(script);
-    setTimeout(() => { if(window[cbName]) { delete window[cbName]; resolve(); } }, 6000);
-  });
+async function carregarColaboradores() {
+  try {
+    const data = await jsonp(API + '?action=listColabs', 12000);
+    if(Array.isArray(data) && data.length > 0) {
+      COLABS.length = 0;
+      data.forEach(c => {
+        COLABS.push({
+          nome:     c.nome     || '',
+          email:    c.email    || '',
+          passagem: parseFloat(c.passagem) || 0,
+          vapd:     parseFloat(c.vapd)     || 24,
+          cidade:   c.cidade   || '',
+          tipo:     c.tipo     || 'municipal'
+        });
+      });
+      colabOk = true;
+    }
+  } catch(e) { console.warn('Colaboradores não carregaram:', e.message); }
 }
 
 function loginGoogle() {
@@ -846,9 +1060,8 @@ function loginGoogle() {
 function processarRedirect() {
   const hash = window.location.hash;
   if(!hash || !hash.includes('id_token')) return;
-  // Parse manual pois o hash pode começar com #iss= e não #id_token=
   const idToken = hash.split('id_token=')[1]?.split('&')[0];
-  if(!idToken) return;
+  if(!idToken) { irPara('pg-login'); return; }
 
   try {
     const b64 = idToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
@@ -859,6 +1072,7 @@ function processarRedirect() {
     history.replaceState(null, '', window.location.pathname + window.location.search);
 
     if(dominio !== DOMINIO) {
+      irPara('pg-login');
       const err = el('login-erro');
       err.textContent = 'Acesso restrito a contas @' + DOMINIO + '.';
       err.style.display = 'block';
@@ -873,18 +1087,19 @@ function processarRedirect() {
 
     const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
     if(idx === -1) {
+      irPara('pg-login');
       const err = el('login-erro');
       err.textContent = 'E-mail não encontrado na lista. Contate o RH.';
       err.style.display = 'block';
       return;
     }
-    COLABS[idx].email = email; // garante email real do Google
+    COLABS[idx].email = email;
     entrar(idx);
   } catch(e) {
     console.error('Erro ao processar login:', e);
+    irPara('pg-login');
   }
 }
-
 
 function escolherColab(modo) {
   if(modo === 'self') {
@@ -892,7 +1107,6 @@ function escolherColab(modo) {
     const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
     if(idx !== -1) entrar(idx);
     else { irPara('pg-admin'); atualizarAdmin(); }
-    return;
   }
 }
 
@@ -916,21 +1130,16 @@ function renderColabList() {
 }
 
 function entrarPorAdmin(idx) {
-  colabAtual = COLABS[idx];
   entrar(idx);
-  // Sobrescrever botão sair para voltar à lista
-  setTimeout(() => {
-    const sairBtn = document.querySelector('#pg-form .hdr-right button');
-    if(sairBtn) {
-      sairBtn.textContent = '← Lista';
-      sairBtn.onclick = () => { irPara('pg-colab-list'); renderColabList(); };
-    }
-  }, 100);
+  const sairBtn = document.querySelector('#pg-form .hdr-right button');
+  if(sairBtn) {
+    sairBtn.textContent = '← Lista';
+    sairBtn.onclick = () => { irPara('pg-colab-list'); renderColabList(); };
+  }
 }
 
 function logout() {
-  sessionStorage.removeItem('pbl_email');
-  sessionStorage.removeItem('pbl_nome');
+  sessionStorage.removeItem('pbl_admin_email');
   colabAtual = null;
   irPara('pg-login');
 }
@@ -979,49 +1188,35 @@ function atalhoSplit(g, pctEsq, pctDir) {
     el('inp-vt').value = vE.toFixed(2);
     el('inp-ac').value = vD.toFixed(2);
   }
-  // pctDir = % do lado direito (VA ou AC) = posição da bolinha
   setSliderPct(g, pctDir);
   el('err-'+g).textContent = '';
-  updateProgress();
   atualizarResumo();
 }
 
 function atualizarResumo() {
   if(!colabAtual) return;
-  const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
   const vr = parseFloat(el('inp-vr').value)||0;
   const va = parseFloat(el('inp-va').value)||0;
   const vt = parseFloat(el('inp-vt').value)||0;
   const ac = parseFloat(el('inp-ac').value)||0;
-  const vaOk = Math.abs(vr+va-tva)<0.05;
-  const vtOk = Math.abs(vt+ac-tvt)<0.05;
-  const resumo = el('resumo-confirm');
-  if(vaOk && vtOk) {
-    el('res-vr').textContent = fmt(vr);
-    el('res-va').textContent = fmt(va);
-    el('res-vt').textContent = fmt(vt);
-    el('res-ac').textContent = fmt(ac);
-    resumo.style.display = '';
-  } else {
-    resumo.style.display = 'none';
-  }
+  el('res-vr').textContent = fmt(vr);
+  el('res-va').textContent = fmt(va);
+  el('res-vt').textContent = fmt(vt);
+  el('res-ac').textContent = fmt(ac);
+  el('res-total').textContent = fmt(vr+va+vt+ac);
 }
 
-// ── CALENDÁRIO ─────────────────────────────────────────────
+// ── CALENDÁRIO (visual — não altera o cálculo dos benefícios) ──────────
 function renderCalendario() {
   const grid = el('cal-grid');
   if(!grid) return;
-  console.log('Feriados carregados:', JSON.stringify(MES.feriados));
-  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const idxMes = meses.indexOf(MES.mes);
+  const idxMes = MESES.indexOf(MES.mes);
   if(idxMes === -1) return;
   const ano = parseInt(MES.ano);
 
-  // Título
   const titulo = el('cal-titulo');
   if(titulo) titulo.textContent = MES.mes + ' ' + ano;
 
-  // Feriados: objeto {dia: nome}
   const ferMap = {};
   (MES.feriados || []).forEach(f => { if(f.dia && f.nome) ferMap[parseInt(f.dia)] = f.nome; });
 
@@ -1038,29 +1233,29 @@ function renderCalendario() {
 
   for(let i = 0; i < primeiroDia; i++) {
     const div = document.createElement('div');
-    div.className = 'cal-day empty';
+    div.className = 'cal2-dia empty';
     grid.appendChild(div);
   }
 
   let uteis = 0, sabs = 0, doms = 0, fers = 0;
   for(let dia = 1; dia <= totalDias; dia++) {
     const dow = new Date(ano, idxMes, dia).getDay();
-    const isFer = !!ferMap[dia];
     const div = document.createElement('div');
-    if(isFer) {
-      div.className = 'cal-day feriado';
-      div.innerHTML = dia + '<div class="fpt"></div><div class="cal-tip">' + ferMap[dia] + '</div>';
+    if(ferMap[dia]) {
+      div.className = 'cal2-dia feriado';
+      div.textContent = dia;
+      div.title = ferMap[dia];
       fers++;
     } else if(dow === 6) {
-      div.className = 'cal-day fds';
+      div.className = 'cal2-dia fds';
       div.textContent = dia;
       sabs++;
     } else if(dow === 0) {
-      div.className = 'cal-day fds';
+      div.className = 'cal2-dia fds';
       div.textContent = dia;
       doms++;
     } else {
-      div.className = 'cal-day util';
+      div.className = 'cal2-dia util';
       div.textContent = dia;
       uteis++;
     }
@@ -1071,65 +1266,64 @@ function renderCalendario() {
   const cs = el('cal-sab');   if(cs) cs.textContent = sabs;
   const cd = el('cal-dom');   if(cd) cd.textContent = doms;
   const cf = el('cal-fer');   if(cf) cf.textContent = fers;
+
+  // lista de feriados abaixo do calendário
+  const lista = el('cal-fer-lista');
+  if(lista) {
+    const dias = Object.keys(ferMap).map(Number).sort((a,b) => a-b);
+    lista.innerHTML = dias.map(d =>
+      '<div class="cal2-fer-item"><span class="cal2-fer-dot"></span>' +
+      d + ' de ' + MES.mes.toLowerCase() + ' — ' + ferMap[d] + '</div>').join('');
+    lista.style.display = dias.length ? '' : 'none';
+  }
 }
 
 // ── FERIADOS ADMIN ──────────────────────────────────────────
-function renderFeriadosAdmin() {
-  const lista = el('fer-lista');
-  if(!lista) return;
-  const feriados = MES.feriados || [];
-  if(feriados.length === 0) {
-    lista.innerHTML = '<p style="font-size:12px;color:var(--mu);margin-bottom:8px">Nenhum feriado cadastrado.</p>';
-    return;
-  }
-  lista.innerHTML = feriados.map((f, i) => `
-    <div class="fer-row">
-      <input type="number" min="1" max="31" placeholder="Dia" value="${f.dia||''}" onchange="MES.feriados[${i}].dia=this.value" style="max-width:70px">
-      <input type="text" placeholder="Nome do feriado" value="${f.nome||''}" onchange="MES.feriados[${i}].nome=this.value">
-      <button class="btn-rm" onclick="removeFeriado(${i})">✕</button>
-    </div>`).join('');
-}
 
-function addFeriado() {
-  if(!MES.feriados) MES.feriados = [];
-  MES.feriados.push({dia:'', nome:''});
-  renderFeriadosAdmin();
-}
 
-function removeFeriado(i) {
-  MES.feriados.splice(i, 1);
-  renderFeriadosAdmin();
-}
+
+
 
 function initDrag(g) {
   const track = el('track-'+g);
   if(!track) return;
   const doMove = e => {
+    if(!colabAtual) return;
     const rect = track.getBoundingClientRect();
     const cx   = e.touches ? e.touches[0].clientX : e.clientX;
-    const pctVA = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
-    setSliderPct(g, pctVA);
+    const pctDir = clamp(Math.round((cx-rect.left)/rect.width*100), 0, 100);
+    setSliderPct(g, pctDir);
     const tot = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
-    // pctVA = % do lado direito (VA ou AC)
-    const vDir = parseFloat((tot * pctVA / 100).toFixed(2)); // VA ou AC
-    const vEsq = parseFloat((tot - vDir).toFixed(2));        // VR ou VT
+    const vDir = parseFloat((tot * pctDir / 100).toFixed(2));
+    const vEsq = parseFloat((tot - vDir).toFixed(2));
     el(g==='va'?'inp-va':'inp-ac').value = vDir.toFixed(2);
     el(g==='va'?'inp-vr':'inp-vt').value = vEsq.toFixed(2);
     el('err-'+g).textContent = '';
-    updateProgress();
     atualizarResumo();
   };
-  const stop = () => { document.removeEventListener('mousemove',doMove); document.removeEventListener('touchmove',doMove); document.removeEventListener('mouseup',stop); document.removeEventListener('touchend',stop); };
+  const stop = () => {
+    document.removeEventListener('mousemove',doMove);
+    document.removeEventListener('touchmove',doMove);
+    document.removeEventListener('mouseup',stop);
+    document.removeEventListener('touchend',stop);
+  };
   track.addEventListener('mousedown', e => { e.preventDefault(); doMove(e); document.addEventListener('mousemove',doMove); document.addEventListener('mouseup',stop); });
   track.addEventListener('touchstart', e => { e.preventDefault(); doMove(e); document.addEventListener('touchmove',doMove,{passive:false}); document.addEventListener('touchend',stop); }, {passive:false});
 }
 
 // ══ FORMULÁRIO ══════════════════════════════════════════
 function entrar(idxDireto) {
-  const idx   = idxDireto !== undefined ? idxDireto : parseInt(el('sel-nome').value);
+  const idx = idxDireto !== undefined ? idxDireto : parseInt(el('sel-nome').value);
   if(!isNaN(idx) && idx >= 0) colabAtual = COLABS[idx];
   if(!colabAtual) return;
-  const tva   = vaTot(colabAtual), tvt = vtTot(colabAtual);
+
+  // Bloqueio por período encerrado (admin passa direto).
+  if(MES.status === 'encerrado' && !isAdminSession()) {
+    irPara('pg-encerrado');
+    return;
+  }
+
+  const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
 
   el('f-av').textContent    = ini(colabAtual.nome);
   el('f-nome').textContent  = colabAtual.nome;
@@ -1138,13 +1332,17 @@ function entrar(idxDireto) {
   el('f-mes').textContent   = MES.mes+' '+MES.ano;
   el('f-mes2').textContent  = MES.mes+' '+MES.ano;
   el('f-dias').textContent  = MES.dias;
-  el('f-prazo').textContent = MES.prazo;
   el('f-tva').textContent   = fmt(tva);
   el('f-tvt').textContent   = fmt(tvt);
-  el('f-calc').textContent  = 'Passagem: '+fmt(colabAtual.passagem)+' × 2 × '+MES.dias+' dias = '+fmt(tvt);
-  const fcva = el('f-calc-va'); if(fcva) fcva.textContent = 'R$ '+colabAtual.vapd.toFixed(2).replace('.',',')+'/dia × '+MES.dias+' dias = '+fmt(tva);
-  el('err-va').textContent  = '';
-  el('err-vt').textContent  = '';
+  el('f-calc').textContent  = 'Passagem '+fmt(colabAtual.passagem)+' × 2 × '+diasLabel(MES.dias);
+  const fcva = el('f-calc-va'); if(fcva) fcva.textContent = 'R$ '+colabAtual.vapd.toFixed(2).replace('.',',')+' por dia × '+diasLabel(MES.dias);
+  el('err-va').textContent = '';
+  el('err-vt').textContent = '';
+  el('confirm-err').style.display = 'none';
+
+  // Botão do cabeçalho volta ao padrão (entrarPorAdmin sobrescreve depois).
+  const sairBtn = document.querySelector('#pg-form .hdr-right button');
+  if(sairBtn) { sairBtn.textContent = 'Sair'; sairBtn.onclick = logout; }
 
   const r = RESPOSTAS[colabAtual.nome];
   if(r) {
@@ -1164,15 +1362,10 @@ function entrar(idxDireto) {
     setSliderPct('vt', 50);
   }
 
-  if(MES.status === 'encerrado' && !ADMINS.includes(colabAtual?.email || '')) {
-    irPara('pg-encerrado');
-    return;
-  }
-
   irPara('pg-form');
   initDrag('va');
   initDrag('vt');
-  updateProgress();
+  atualizarResumo();
   renderCalendario();
 }
 
@@ -1190,28 +1383,12 @@ function onInput(g, w) {
   err.textContent='';
   if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
   else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
-  // pct = proporção do lado DIREITO (VA ou AC) → posição da bolinha
-  const pA = tot>0?(w==='vr'||w==='vt'?(o/tot):(v/tot))*100:50;
-  setSliderPct(g, Math.round(pA));
-  updateProgress();
-}
-
-function updateProgress() {
-  if(!colabAtual) return;
-  const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
-  const vr  = parseFloat(el('inp-vr').value)||0;
-  const va  = parseFloat(el('inp-va').value)||0;
-  const vt  = parseFloat(el('inp-vt').value)||0;
-  const ac  = parseFloat(el('inp-ac').value)||0;
-  const vaOk = Math.abs(vr+va-tva)<0.05;
-  const vtOk = Math.abs(vt+ac-tvt)<0.05;
-  let pct = 0;
-  if(vaOk&&vtOk) pct=100;
-  else if(vaOk||vtOk) pct=50;
-  else if((vr+va)>0||(vt+ac)>0) pct=25;
+  const pDir = tot>0 ? (w==='vr'||w==='vt' ? (o/tot) : (v/tot))*100 : 50;
+  setSliderPct(g, Math.round(pDir));
   atualizarResumo();
 }
 
+// Salva na planilha e só mostra "confirmado" depois que o backend responder OK.
 async function confirmar() {
   if(!colabAtual) return;
   const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
@@ -1222,60 +1399,45 @@ async function confirmar() {
   if(Math.abs(vr+va-tva)>0.05){ el('err-va').textContent='Os valores não somam o total disponível.'; return; }
   if(Math.abs(vt+ac-tvt)>0.05){ el('err-vt').textContent='Os valores não somam o total disponível.'; return; }
 
-  // Salva localmente
-  RESPOSTAS[colabAtual.nome] = {vr,va,vt,ac,tipo:colabAtual.tipo,cidade:colabAtual.cidade};
+  const btn    = el('btn-confirmar');
+  const errBox = el('confirm-err');
+  errBox.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Salvando...';
+
   const now = new Date();
   const ts  = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR');
-  TIMESTAMPS[colabAtual.nome] = ts;
 
-  // Mostra tela de sucesso imediatamente
-  el('ok-vr').textContent = fmt(vr); el('ok-va').textContent = fmt(va);
-  el('ok-vt').textContent = fmt(vt); el('ok-ac').textContent = fmt(ac);
-  el('ok-msg').textContent = colabAtual.nome+', suas escolhas para '+MES.mes+' '+MES.ano+' foram registradas.';
-  irPara('pg-ok');
+  const payload = {
+    nome: colabAtual.nome, email: colabAtual.email, cidade: colabAtual.cidade,
+    mes: MES.mes, ano: MES.ano, vr, va, vt, ac,
+    tipo: colabAtual.tipo, timestamp: ts
+  };
 
-  // Salva na planilha via iframe (contorna no-cors)
   try {
-    const payload = JSON.stringify({
-      action: 'save',
-      nome: colabAtual.nome,
-      email: colabAtual.email,
-      cidade: colabAtual.cidade,
-      mes: MES.mes, ano: MES.ano,
-      vr, va, vt, ac,
-      tipo: colabAtual.tipo,
-      timestamp: ts
-    });
+    const res = await jsonp(API + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload)), 25000);
 
-    // Cria iframe oculto
-    const iframe = document.createElement('iframe');
-    iframe.name = 'pbl_submit_' + Date.now();
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    // Cria form apontando para o iframe
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = API;
-    form.target = iframe.name;
-    form.style.display = 'none';
-
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = 'payload';
-    input.value = payload;
-    form.appendChild(input);
-
-    document.body.appendChild(form);
-    form.submit();
-
-    // Limpa após 5s
-    setTimeout(() => {
-      document.body.removeChild(form);
-      document.body.removeChild(iframe);
-    }, 5000);
+    if(res && res.ok) {
+      RESPOSTAS[colabAtual.nome]  = {vr, va, vt, ac, tipo:colabAtual.tipo, cidade:colabAtual.cidade};
+      TIMESTAMPS[colabAtual.nome] = ts;
+      el('ok-vr').textContent = fmt(vr); el('ok-va').textContent = fmt(va);
+      el('ok-vt').textContent = fmt(vt); el('ok-ac').textContent = fmt(ac);
+      el('ok-sub-va').textContent = fmt(vr+va);
+      el('ok-sub-vt').textContent = fmt(vt+ac);
+      el('ok-total').textContent  = fmt(vr+va+vt+ac);
+      el('ok-msg').textContent = colabAtual.nome+' · '+MES.mes+' '+MES.ano+' · '+diasLabel(MES.dias);
+      irPara('pg-ok');
+    } else if(res && res.erro === 'encerrado') {
+      irPara('pg-encerrado');
+    } else {
+      throw new Error(res && res.erro ? res.erro : 'resposta inesperada do servidor');
+    }
   } catch(e) {
-    console.warn('Erro ao salvar na planilha:', e);
+    errBox.innerHTML = '⚠ Não foi possível salvar (' + e.message + '). <strong>Suas escolhas NÃO foram registradas.</strong> Verifique sua conexão e clique novamente em Confirmar.';
+    errBox.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Confirmar escolhas';
   }
 }
 
@@ -1283,202 +1445,195 @@ async function confirmar() {
 function atualizarAdmin() {
   el('adm-mes').textContent   = MES.mes+' '+MES.ano;
   el('adm-dias').textContent  = MES.dias;
-  el('adm-prazo').textContent = MES.prazo;
   atualizarStatusBadge();
 }
 
 function atualizarStatusBadge() {
   const badge = el('adm-status-badge');
-  const btn   = el('adm-btn-encerrar');
-  if(!badge || !btn) return;
-  if(MES.status === 'encerrado') {
-    badge.textContent = 'Encerrado';
-    badge.style.background = '#FEF3E2';
-    badge.style.color = '#7a5209';
-    btn.textContent = 'Reabrir período';
-    btn.style.background = '#0D4A3A';
+  if(badge) {
+    if(MES.status === 'encerrado') {
+      badge.textContent = 'Encerrado';
+      badge.style.background = '#FBEED6'; badge.style.color = '#7a5209';
+    } else {
+      badge.textContent = 'Aberto';
+      badge.style.background = '#E0F0E8'; badge.style.color = '#15603a';
+    }
+  }
+  const v = el('ver-status');
+  if(v) v.textContent = MES.status === 'encerrado' ? 'Encerrado' : 'Aberto para respostas';
+}
+
+// Painel de conferência: mostra o que está na planilha, sem editar.
+function renderConfigView() {
+  const setTxt = (id, val) => { const e = el(id); if(e) e.textContent = val; };
+  setTxt('ver-mes',  MES.mes);
+  setTxt('ver-ano',  MES.ano);
+  setTxt('ver-dias', MES.dias);
+  atualizarStatusBadge();
+
+  const lista = el('ver-feriados');
+  if(lista) {
+    const fers = (MES.feriados || []).filter(f => f.dia && f.nome)
+                   .sort((a,b) => parseInt(a.dia) - parseInt(b.dia));
+    lista.innerHTML = fers.length === 0
+      ? '<p style="font-size:13px;color:var(--mu)">Nenhum feriado cadastrado para este mês.</p>'
+      : fers.map(f => '<div class="cal2-fer-item" style="font-size:13px;padding:3px 0">' +
+          '<span class="cal2-fer-dot"></span>' + parseInt(f.dia) + ' de ' +
+          MES.mes.toLowerCase() + ' — ' + f.nome + '</div>').join('');
+  }
+
+  // Compara o campo "dias" da planilha com a contagem do calendário.
+  const box = el('cfg-dias-aviso');
+  if(!box) return;
+  const c = contarDiasUteis(MES.mes, MES.ano, MES.feriados);
+  if(!c) { box.style.display = 'none'; return; }
+  const fer = c.fers === 0 ? '' : plural(c.fers, ' 1 feriado', ' ' + c.fers + ' feriados');
+  box.style.display = 'block';
+  if(parseInt(MES.dias) === c.uteis) {
+    box.style.background = '#E0F0E8'; box.style.color = '#15603a'; box.style.borderColor = '#A8D5C0';
+    box.textContent = 'Confere com o calendário: ' + diasLabel(c.uteis) +
+      (fer ? ', já descontando' + fer + '.' : '.');
   } else {
-    badge.textContent = 'Aberto';
-    badge.style.background = '#E4F2EB';
-    badge.style.color = '#195c38';
-    btn.textContent = 'Encerrar período';
-    btn.style.background = '#c0392b';
+    box.style.background = '#FBEED6'; box.style.color = '#7a5209'; box.style.borderColor = '#F0C87A';
+    box.innerHTML = 'Atenção: o calendário aponta <strong>' + c.uteis + '</strong> ' +
+      (c.uteis === 1 ? 'dia útil' : 'dias úteis') +
+      (fer ? ' (descontando' + fer + ')' : '') +
+      ', mas a planilha está com <strong>' + MES.dias +
+      '</strong>. Os vales são calculados sobre ' + MES.dias + '. Ajuste a célula <strong>dias</strong> na aba Config se necessário.';
   }
 }
 
-function togglePeriodo() {
-  const novoStatus = MES.status === 'encerrado' ? 'aberto' : 'encerrado';
-  const msg = novoStatus === 'encerrado'
-    ? 'Encerrar o período? Os colaboradores não poderão mais preencher.'
-    : 'Reabrir o período? Os colaboradores poderão preencher novamente.';
-  if(!confirm(msg)) return;
-  MES.status = novoStatus;
-  atualizarStatusBadge();
-  const iframe = document.createElement('iframe');
-  iframe.name = 'pbl_status_' + Date.now();
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  const form = document.createElement('form');
-  form.method = 'POST'; form.action = API; form.target = iframe.name; form.style.display = 'none';
-  const input = document.createElement('input');
-  input.type = 'hidden'; input.name = 'payload';
-  input.value = JSON.stringify({ action: novoStatus === 'encerrado' ? 'encerrar' : 'reabrir' });
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(() => {
-    try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e) {}
-  }, 5000);
-}
-
 function abaAdmin(aba, btn) {
-  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); btn.classList.add('active');
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
   ['painel','config','colab','rel'].forEach(a => el('aba-'+a).style.display = a===aba?'':'none');
   if(aba==='painel') renderPainel();
   if(aba==='colab')  renderColab();
   if(aba==='rel')    renderRel();
-  if(aba==='config') { popularCamposConfig(); renderFeriadosAdmin(); }
+  if(aba==='config') renderConfigView();
 }
 
-function popularCamposConfig() {
-  const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
-  const cfgMes   = el('cfg-mes');
-  const cfgAno   = el('cfg-ano');
-  const cfgDias  = el('cfg-dias');
-  const cfgPrazo = el('cfg-prazo');
-  if(cfgMes)   cfgMes.value   = MES.mes;
-  if(cfgAno)   cfgAno.value   = MES.ano;
-  if(cfgDias)  cfgDias.value  = MES.dias;
-  if(cfgPrazo) {
-    // Converter prazo "27/05/2026 12h30" → "2026-05-27" para o input date
-    const p = MES.prazo;
-    if(p && p.includes('/')) {
-      const partes = p.split(' ')[0].split('/');
-      if(partes.length === 3) cfgPrazo.value = partes[2] + '-' + partes[1] + '-' + partes[0];
-    }
-  }
-}
 
-function salvarConfig() {
-  MES.mes   = el('cfg-mes').value;
-  MES.ano   = parseInt(el('cfg-ano').value);
-  MES.dias  = parseInt(el('cfg-dias').value)||22;
-  MES.prazo = prazoFmt(el('cfg-prazo').value);
-  // Garante que feriados incompletos não são salvos
-  if(!MES.feriados) MES.feriados = [];
-  MES.feriados = MES.feriados.filter(f => f.dia && f.nome);
-  atualizarAdmin();
-
-  // Salva feriados na planilha via POST
-  const iframe = document.createElement('iframe');
-  iframe.name = 'pbl_cfg_' + Date.now();
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-  const form = document.createElement('form');
-  form.method = 'POST'; form.action = API; form.target = iframe.name; form.style.display = 'none';
-  const input = document.createElement('input');
-  input.type = 'hidden'; input.name = 'payload';
-  input.value = JSON.stringify({ action:'saveConfig', mes:MES.mes, ano:MES.ano, dias:MES.dias, prazo:MES.prazo, feriados:JSON.stringify(MES.feriados) });
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(() => { try { document.body.removeChild(form); document.body.removeChild(iframe); } catch(e){} }, 5000);
-
-  const ok=el('cfg-ok'); ok.style.display='block'; setTimeout(()=>ok.style.display='none',3000);
-}
 
 async function renderPainel() {
   atualizarStatusBadge();
-  // Carrega respostas via JSONP (contorna CORS)
-  await new Promise(resolve => {
-    const cbName = 'pblCb' + Date.now();
-    window[cbName] = data => {
-      try {
-        if(Array.isArray(data)) {
-          data.forEach(r => {
-            RESPOSTAS[r.nome] = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
-            TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
-          });
-        }
-      } catch(e) { console.warn('Erro ao processar dados:', e); }
-      try { document.head.removeChild(script); } catch(e) {}
-      delete window[cbName];
-      resolve();
-    };
-    const script = document.createElement('script');
-    script.src = API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano)) + '&callback=' + cbName;
-    script.onerror = e => { console.warn('JSONP erro:', e); resolve(); };
-    document.head.appendChild(script);
-    setTimeout(() => { delete window[cbName]; resolve(); }, 8000);
-  });
 
-  const done=Object.keys(RESPOSTAS).length, tot=COLABS.length;
+  // Zera os dados em memória para não misturar respostas de meses diferentes.
+  Object.keys(RESPOSTAS).forEach(k => delete RESPOSTAS[k]);
+  Object.keys(TIMESTAMPS).forEach(k => delete TIMESTAMPS[k]);
+
+  try {
+    const data = await jsonp(API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano)), 15000);
+    if(Array.isArray(data)) {
+      data.forEach(r => {
+        RESPOSTAS[r.nome]  = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+        TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
+      });
+    }
+  } catch(e) { console.warn('Respostas não carregaram:', e.message); }
+
+  const done = Object.keys(RESPOSTAS).length;
+  const tot  = COLABS.length;
   el('m-tot').textContent  = tot;
   el('m-done').textContent = done;
-  el('m-pend').textContent = tot-done;
-  el('m-pct').textContent  = Math.round(done/tot*100)+'%';
-  const circ=226, offset=circ-(done/tot)*circ;
-  el('ring-fill').style.strokeDashoffset = offset;
+  el('m-pend').textContent = tot - done;
+  el('m-pct').textContent  = (tot > 0 ? Math.round(done/tot*100) : 0) + '%';
+  const circ = 163.4;
+  el('ring-fill').style.strokeDashoffset = circ - (tot > 0 ? done/tot : 0) * circ;
 
-  let h='';
-  COLABS.forEach(c => {
-    const r=RESPOSTAS[c.nome];
-    const badge=r?'<span class="badge bd">Respondeu</span>':'<span class="badge bp">Pendente</span>';
-    const sub=r?`VR ${fmt(r.vr)} · VA ${fmt(r.va)} · VT ${fmt(r.vt)} · AC ${fmt(r.ac)}`:`${fmt(vtTot(c))} VT/AC · ${c.cidade}`;
-    h+=`<div class="crow"><div style="display:flex;align-items:center;gap:10px"><div class="av">${ini(c.nome)}</div><div><div style="font-size:14px;font-weight:600;color:#0a2e25">${c.nome}</div><div style="font-size:12px;color:#3d6058;font-weight:500">${sub}</div></div></div>${badge}</div>`;
-  });
-  el('lista-painel').innerHTML = h;
+  // Tabela: colunas alinhadas + rodapé com os totais parciais
+  let sVR=0, sVA=0, sVT=0, sAC=0;
+  const linhas = COLABS.map(c => {
+    const r = RESPOSTAS[c.nome];
+    if(!r) {
+      return `<tr class="pend"><td>${c.nome}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>`
+           + `<td><span class="badge bp">Pendente</span></td></tr>`;
+    }
+    sVR += +r.vr; sVA += +r.va; sVT += +r.vt; sAC += +r.ac;
+    const t = +r.vr + +r.va + +r.vt + +r.ac;
+    return `<tr><td>${c.nome}</td>`
+         + `<td>${fmt(r.vr)}</td><td>${fmt(r.va)}</td><td>${fmt(r.vt)}</td><td>${fmt(r.ac)}</td>`
+         + `<td class="tot">${fmt(t)}</td>`
+         + `<td><span class="badge bd">Respondeu</span></td></tr>`;
+  }).join('');
 
-  // Chart
-  const resp=COLABS.filter(c=>RESPOSTAS[c.nome]);
-  if(resp.length>0) {
-    el('chart-card').style.display='';
+  el('lista-painel').innerHTML =
+    `<table class="tb">
+      <thead><tr>
+        <th>Colaborador</th><th>VR</th><th>VA</th><th>VT</th><th>AC</th><th>Total</th><th>Situação</th>
+      </tr></thead>
+      <tbody>${linhas}</tbody>
+      <tfoot><tr>
+        <td>TOTAL PARCIAL — ${done} de ${tot}</td>
+        <td>${fmt(sVR)}</td><td>${fmt(sVA)}</td><td>${fmt(sVT)}</td><td>${fmt(sAC)}</td>
+        <td class="grand">${fmt(sVR+sVA+sVT+sAC)}</td>
+        <td></td>
+      </tr></tfoot>
+    </table>`;
+
+  const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
+  if(resp.length > 0) {
+    el('chart-card').style.display = '';
     let tVR=0,tVA=0,tVT=0,tAC=0,tAll=0;
-    resp.forEach(c=>{const r=RESPOSTAS[c.nome]; tVR+=r.vr;tVA+=r.va;tVT+=r.vt;tAC+=r.ac;tAll+=r.vr+r.va+r.vt+r.ac;});
-    const bars=[{l:'Vale Refeição (VR)',v:tVR,c:'var(--g)'},{l:'Vale Alimentação (VA)',v:tVA,c:'var(--gold)'},{l:'Vale Transporte (VT)',v:tVT,c:'var(--gm,#1a6b52)'},{l:'Auxílio Combustível (AC)',v:tAC,c:'var(--goldd)'}];
-    const max=Math.max(...bars.map(b=>b.v));
-    el('chart-body').innerHTML = bars.map(b=>`<div class="chart-bar-row"><div class="chart-label">${b.l}</div><div class="chart-track"><div class="chart-fill" style="width:${max>0?Math.round(b.v/max*100):0}%;background:${b.c}"><span class="chart-val">${fmt(b.v)}</span></div></div><div class="chart-pct">${tAll>0?Math.round(b.v/tAll*100):0}%</div></div>`).join('');
-    // Timeline
-    el('tl-card').style.display='';
-    const tlResp=COLABS.filter(c=>RESPOSTAS[c.nome]);
-    const tlPend=COLABS.filter(c=>!RESPOSTAS[c.nome]);
-    el('tl-body').innerHTML=[
-      ...tlResp.map(c=>`<div class="tl-item"><div class="tl-dot done"></div><div><div style="font-size:14px;font-weight:600;color:#0a2e25">${c.nome}</div><div style="font-size:12px;color:var(--mu)">${TIMESTAMPS[c.nome]||'Hoje'}</div></div></div>`),
-      ...tlPend.map(c=>`<div class="tl-item"><div class="tl-dot pend"></div><div><div style="font-size:14px;font-weight:500;color:var(--mu)">${c.nome}</div><div style="font-size:12px;color:var(--mu)">Aguardando resposta</div></div></div>`)
+    resp.forEach(c => { const r=RESPOSTAS[c.nome]; tVR+=r.vr; tVA+=r.va; tVT+=r.vt; tAC+=r.ac; tAll+=r.vr+r.va+r.vt+r.ac; });
+    const bars = [
+      {l:'Vale Refeição (VR)',      v:tVR, c:'#0B3A34'},
+      {l:'Vale Alimentação (VA)',   v:tVA, c:'#CB974F'},
+      {l:'Vale Transporte (VT)',    v:tVT, c:'#1C5A50'},
+      {l:'Auxílio Combustível (AC)',v:tAC, c:'#B8873F'}
+    ];
+    const max = Math.max(...bars.map(b=>b.v));
+    el('chart-body').innerHTML = bars.map(b =>
+      `<div class="chart-bar-row"><div class="chart-label">${b.l}</div><div class="chart-track"><div class="chart-fill" style="width:${max>0?Math.round(b.v/max*100):0}%;background:${b.c}"><span class="chart-val">${fmt(b.v)}</span></div></div><div class="chart-pct">${tAll>0?Math.round(b.v/tAll*100):0}%</div></div>`
+    ).join('');
+
+    el('tl-card').style.display = '';
+    const tlPend = COLABS.filter(c => !RESPOSTAS[c.nome]);
+    el('tl-body').innerHTML = [
+      ...resp.map(c => `<div class="tl-item"><div class="tl-dot done"></div><div><div style="font-size:14px;font-weight:600;color:var(--hd)">${c.nome}</div><div style="font-size:12px;color:var(--mu)">${TIMESTAMPS[c.nome]||'Hoje'}</div></div></div>`),
+      ...tlPend.map(c => `<div class="tl-item"><div class="tl-dot pend"></div><div><div style="font-size:14px;font-weight:500;color:var(--mu)">${c.nome}</div><div style="font-size:12px;color:var(--mu)">Aguardando resposta</div></div></div>`)
     ].join('');
+  } else {
+    el('chart-card').style.display = 'none';
+    el('tl-card').style.display = 'none';
   }
 }
 
 function renderColab() {
-  el('lista-colab').innerHTML = COLABS.map((c,i)=>`
+  el('lista-colab').innerHTML = COLABS.map(c => `
     <div class="crow">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="av">${ini(c.nome)}</div>
-        <div><div style="font-size:14px;font-weight:600;color:#0a2e25">${c.nome}</div><div class="ctag">${c.cidade}</div></div>
+        <div><div style="font-size:14px;font-weight:600;color:var(--hd)">${c.nome}</div><div class="ctag">${c.cidade}</div></div>
       </div>
-      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;color:#2d4a43;text-transform:uppercase;letter-spacing:.05em;font-weight:600">VA/VR R$/dia</span>
-          <input class="inp-edit" type="number" value="${c.vapd}" step="0.50" onchange="COLABS[${i}].vapd=parseFloat(this.value)||0">
-          <span style="font-size:13px;color:var(--g);font-weight:600">${fmt(vaTot(c))}</span>
+      <div style="display:flex;gap:28px;align-items:center">
+        <div style="text-align:right">
+          <div class="eyebrow">VA/VR por dia</div>
+          <div style="font-size:14px;font-weight:600;color:var(--tx);margin-top:4px">${fmt(c.vapd)}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <span style="font-size:11px;color:#2d4a43;text-transform:uppercase;letter-spacing:.05em;font-weight:600">Passagem R$</span>
-          <input class="inp-edit" type="number" value="${c.passagem}" step="0.01" onchange="COLABS[${i}].passagem=parseFloat(this.value)||0">
-          <span style="font-size:13px;color:var(--g);font-weight:600">${fmt(vtTot(c))}</span>
+        <div style="text-align:right">
+          <div class="eyebrow">Passagem</div>
+          <div style="font-size:14px;font-weight:600;color:var(--tx);margin-top:4px">${fmt(c.passagem)}</div>
+        </div>
+        <div style="text-align:right;min-width:92px">
+          <div class="eyebrow">Total VA/VR</div>
+          <div style="font-size:14px;font-weight:700;color:var(--hd);margin-top:4px">${fmt(vaTot(c))}</div>
+        </div>
+        <div style="text-align:right;min-width:92px">
+          <div class="eyebrow">Total VT/AC</div>
+          <div style="font-size:14px;font-weight:700;color:var(--hd);margin-top:4px">${fmt(vtTot(c))}</div>
         </div>
       </div>
     </div>`).join('');
 }
 
 function renderRel() {
-  const resp    = COLABS.filter(c => RESPOSTAS[c.nome]);
-  const pend    = COLABS.filter(c => !RESPOSTAS[c.nome]);
-  const tot     = COLABS.length;
-  const done    = resp.length;
-  const pct     = tot > 0 ? Math.round(done/tot*100) : 0;
+  const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
+  const pend = COLABS.filter(c => !RESPOSTAS[c.nome]);
+  const tot  = COLABS.length;
+  const done = resp.length;
+  const pct  = tot > 0 ? Math.round(done/tot*100) : 0;
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  let vtMun=0, vtInter=0;
   const cidadesMap = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
@@ -1486,27 +1641,23 @@ function renderRel() {
     const key = c.tipo==='municipal' ? 'Municipal (Florianópolis)' : c.cidade;
     if(!cidadesMap[key]) cidadesMap[key] = {vt:0, ac:0};
     cidadesMap[key].vt += +r.vt; cidadesMap[key].ac += +r.ac;
-    if(c.tipo==='municipal') vtMun += +r.vt; else vtInter += +r.vt;
   });
   const totalGeral = tVR+tVA+tVT+tAC;
   const media = done > 0 ? totalGeral/done : 0;
+  const offset = 226 - (tot > 0 ? done/tot : 0) * 226;
 
-  // ── Anel de adesão ──────────────────────────────────────
-  const circ = 226;
-  const offset = circ - (done/tot)*circ;
-
-  // ── Barras por colaborador (ordenado por total desc) ────
   const sorted = [...resp].sort((a,b) => {
     const ra = RESPOSTAS[a.nome], rb = RESPOSTAS[b.nome];
-    return (+rb.vr+ +rb.va+ +rb.vt+ +rb.ac) - (+ra.vr+ +ra.va+ +ra.vt+ +ra.ac);
+    return (+rb.vr + +rb.va + +rb.vt + +rb.ac) - (+ra.vr + +ra.va + +ra.vt + +ra.ac);
   });
-  const maxVal = sorted.length > 0 ? (+RESPOSTAS[sorted[0].nome].vr + +RESPOSTAS[sorted[0].nome].va + +RESPOSTAS[sorted[0].nome].vt + +RESPOSTAS[sorted[0].nome].ac) : 1;
+  const maxVal = sorted.length > 0
+    ? (+RESPOSTAS[sorted[0].nome].vr + +RESPOSTAS[sorted[0].nome].va + +RESPOSTAS[sorted[0].nome].vt + +RESPOSTAS[sorted[0].nome].ac)
+    : 1;
 
   const barras = sorted.map(c => {
     const r = RESPOSTAS[c.nome];
     const vavr = +r.vr + +r.va;
     const vtac = +r.vt + +r.ac;
-    const total = vavr + vtac;
     const pctVavr = Math.round(vavr/maxVal*100);
     const pctVtac = Math.round(vtac/maxVal*100);
     const nome = c.nome.split(' ').slice(0,2).join(' ');
@@ -1516,49 +1667,32 @@ function renderRel() {
         <div class="rel-bar-fill-vavr" style="width:${pctVavr}%"></div>
         <div class="rel-bar-fill-vtac" style="left:${pctVavr}%;width:${pctVtac}%"></div>
       </div>
-      <div class="rel-bar-val">${fmt(total)}</div>
+      <div class="rel-bar-val">${fmt(vavr+vtac)}</div>
     </div>`;
   }).join('');
 
   const pendChips = pend.map(c => `<span class="rel-pend-chip">${c.nome.split(' ')[0]} ${c.nome.split(' ').slice(-1)[0]}</span>`).join('');
 
   let h = '';
+  if(pend.length > 0) {
+    const aviso = plural(pend.length,
+      '1 colaborador ainda não respondeu',
+      pend.length + ' colaboradores ainda não responderam');
+    h += `<div class="wnote" style="margin-bottom:1.25rem">⚠ ${aviso}. Totais parciais.</div>`;
+  }
 
-  // Aviso pendentes
-  if(pend.length > 0) h += `<div class="wnote" style="margin-bottom:1.25rem">⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não respondeu${pend.length>1?'ram':''}. Totais parciais.</div>`;
-
-  // KPIs
   h += `<div class="rel-kpi-grid">
-    <div class="rel-kpi">
-      <div class="rel-kpi-label">Total Desembolso</div>
-      <div class="rel-kpi-value">${fmt(totalGeral)}</div>
-      <div class="rel-kpi-sub">${mesAnoLabel()}</div>
-    </div>
-    <div class="rel-kpi">
-      <div class="rel-kpi-label">Total VA / VR</div>
-      <div class="rel-kpi-value">${fmt(tVR+tVA)}</div>
-      <div class="rel-kpi-sub">VR ${fmt(tVR)} · VA ${fmt(tVA)}</div>
-    </div>
-    <div class="rel-kpi">
-      <div class="rel-kpi-label">Total VT / AC</div>
-      <div class="rel-kpi-value">${fmt(tVT+tAC)}</div>
-      <div class="rel-kpi-sub">VT ${fmt(tVT)} · AC ${fmt(tAC)}</div>
-    </div>
-    <div class="rel-kpi">
-      <div class="rel-kpi-label">Média por Colaborador</div>
-      <div class="rel-kpi-value">${fmt(media)}</div>
-      <div class="rel-kpi-sub">Sobre ${done} respondente${done!==1?'s':''}</div>
-    </div>
+    <div class="rel-kpi"><div class="rel-kpi-label">Total Desembolso</div><div class="rel-kpi-value">${fmt(totalGeral)}</div><div class="rel-kpi-sub">${MES.mes} ${MES.ano}</div></div>
+    <div class="rel-kpi"><div class="rel-kpi-label">Total VA / VR</div><div class="rel-kpi-value">${fmt(tVR+tVA)}</div><div class="rel-kpi-sub">VR ${fmt(tVR)} · VA ${fmt(tVA)}</div></div>
+    <div class="rel-kpi"><div class="rel-kpi-label">Total VT / AC</div><div class="rel-kpi-value">${fmt(tVT+tAC)}</div><div class="rel-kpi-sub">VT ${fmt(tVT)} · AC ${fmt(tAC)}</div></div>
+    <div class="rel-kpi"><div class="rel-kpi-label">Média por Colaborador</div><div class="rel-kpi-value">${fmt(media)}</div><div class="rel-kpi-sub">Sobre ${done} respondente${done!==1?'s':''}</div></div>
   </div>`;
 
-  // Adesão + pendentes
   h += `<div class="rel-adesao">
     <div class="rel-ring-wrap">
       <svg style="transform:rotate(-90deg)" width="80" height="80" viewBox="0 0 90 90">
         <circle fill="none" stroke="var(--bo)" stroke-width="8" cx="45" cy="45" r="36"/>
-        <circle fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round"
-          cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="${offset}"
-          style="transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)"/>
+        <circle fill="none" stroke="var(--gold)" stroke-width="8" stroke-linecap="round" cx="45" cy="45" r="36" stroke-dasharray="226" stroke-dashoffset="${offset}" style="transition:stroke-dashoffset .8s cubic-bezier(.4,0,.2,1)"/>
       </svg>
       <div class="rel-ring-pct">${pct}%</div>
       <div class="rel-ring-sub">Adesão</div>
@@ -1567,12 +1701,10 @@ function renderRel() {
       <div class="rel-adesao-title">${done} de ${tot} colaboradores responderam</div>
       ${pend.length > 0
         ? `<div style="font-size:12px;color:var(--mu);margin-bottom:8px">Aguardando:</div><div class="rel-pend-list">${pendChips}</div>`
-        : `<div style="font-size:13px;color:#195c38;font-weight:600">✓ Todos responderam!</div>`
-      }
+        : `<div style="font-size:13px;color:#195c38;font-weight:600">✓ Todos responderam!</div>`}
     </div>
   </div>`;
 
-  // Gráfico de barras
   if(done > 0) {
     h += `<div class="card" style="margin-bottom:1.25rem">
       <div class="rel-section-title">Custo por colaborador</div>
@@ -1584,223 +1716,235 @@ function renderRel() {
     </div>`;
   }
 
-  // Resumo VT por cidade
   if(Object.keys(cidadesMap).length > 0) {
-    h += `<div class="card" style="margin-bottom:1.25rem">
-      <div class="rel-section-title">Recarga VT/AC por localidade</div>`;
+    h += `<div class="card" style="margin-bottom:1.25rem"><div class="rel-section-title">Recarga VT/AC por localidade</div>`;
     Object.entries(cidadesMap).forEach(([cidade, v]) => {
       h += `<div class="rline"><span>${cidade}</span><span style="display:flex;gap:14px;align-items:center">
-        <span class="rsub">VT ${fmt(v.vt)}</span>
-        <span class="rsub">AC ${fmt(v.ac)}</span>
-        <strong>${fmt(v.vt+v.ac)}</strong>
+        <span class="rsub">VT ${fmt(v.vt)}</span><span class="rsub">AC ${fmt(v.ac)}</span><strong>${fmt(v.vt+v.ac)}</strong>
       </span></div>`;
     });
-    h += `<div class="rtot"><span>Total a recarregar</span><strong>${fmt(tVT+tAC)}</strong></div>`;
-    h += `</div>`;
+    h += `<div class="rtot"><span>Total a recarregar</span><strong>${fmt(tVT+tAC)}</strong></div></div>`;
   }
 
   el('rel-body').innerHTML = h;
 }
 
-function mesAnoLabel() {
-  return MES.mes + ' ' + MES.ano;
-}
+// ══ PEDIDOS DE RECARGA (PDF) ═══════════════════════════════════
+// Dois documentos vão para fornecedores diferentes, por isso são separados.
+// O terceiro é interno. Cada botão abre uma janela só, evitando bloqueio de pop-up.
 
+const EMPRESA = {
+  razao: 'PBL COMPRA DE CRÉDITOS JUDICIAIS LTDA',
+  cnpj:  '27.192.535/0001-68',
+  end:   'Av. Prefeito Osmar Cunha, 183 · Sala 701, Bloco A · Centro · Florianópolis/SC',
+  resp:  'Marco A. R. Meneguzzi · Analista Administrativo e Financeiro'
+};
 
-function baixarRelatorios() {
-  const btn = el('btn-pdf');
-  btn.disabled = true;
-  btn.innerHTML = '⏳ Gerando...';
+const CSS_PDF = `
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:Georgia,'Times New Roman',serif;font-size:11.5px;color:#14201D;background:#fff;padding:38px 46px 50px}
 
+  .doc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:30px;padding-bottom:14px;border-bottom:2px solid #0B3A34}
+  .emp-nome{font-size:21px;font-weight:700;color:#0B3A34;letter-spacing:-.4px}
+  .emp-dados{font-family:Consolas,'Cascadia Mono',monospace;font-size:8.5px;color:#52655F;line-height:1.7;margin-top:5px;text-transform:uppercase;letter-spacing:.04em}
+  .doc-ref{text-align:right;flex-shrink:0}
+  .doc-ref-lab{font-family:Consolas,'Cascadia Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#6E837C}
+  .doc-ref-val{font-family:Consolas,'Cascadia Mono',monospace;font-size:11px;font-weight:700;color:#0B3A34;margin-bottom:7px}
+
+  .doc-titulo{font-size:19px;font-weight:700;color:#0B3A34;margin:20px 0 4px}
+  .doc-sub{font-size:11.5px;color:#52655F;margin-bottom:18px}
+
+  /* resumo no topo: é o que o fornecedor precisa ver primeiro */
+  .topo{display:flex;border:1.5px solid #0B3A34;border-radius:6px;overflow:hidden;margin-bottom:22px}
+  .topo-cel{flex:1;padding:13px 18px;border-right:1px solid #CBDDD7}
+  .topo-cel:last-child{border-right:none}
+  .topo-cel.forte{background:#0B3A34}
+  .topo-lab{font-family:Consolas,'Cascadia Mono',monospace;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6E837C;margin-bottom:5px}
+  .topo-cel.forte .topo-lab{color:rgba(255,255,255,.7)}
+  .topo-val{font-family:Consolas,'Cascadia Mono',monospace;font-size:18px;font-weight:700;color:#0B3A34;letter-spacing:-.02em}
+  .topo-cel.forte .topo-val{color:#E0B978}
+
+  .nota{background:#FBEED6;border-left:3px solid #CB974F;padding:9px 14px;font-size:10.5px;color:#7a5209;margin-bottom:18px;line-height:1.6}
+
+  table{width:100%;border-collapse:collapse;font-size:11px}
+  thead tr{background:#0B3A34}
+  thead th{padding:9px 12px;font-family:Consolas,'Cascadia Mono',monospace;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#fff;text-align:right}
+  thead th.l{text-align:left}
+  tbody td{padding:7px 12px;border-bottom:1px solid #E6EFEC;text-align:right;font-family:Consolas,'Cascadia Mono',monospace;font-size:10.5px}
+  tbody td.l{text-align:left;font-family:Georgia,'Times New Roman',serif;font-size:11px}
+  tbody tr:nth-child(even) td{background:#F5F9F7}
+  tbody tr.sec td{background:#E3F0EB;font-weight:700;font-size:10px;color:#0B3A34;padding:6px 12px;text-transform:uppercase;letter-spacing:.06em;font-family:Consolas,'Cascadia Mono',monospace}
+  tbody tr.sub td{background:#EDF4F1;font-weight:700;color:#0B3A34}
+  tbody tr.sub td.l{font-family:Georgia,'Times New Roman',serif;font-size:11px}
+  tbody tr.pend td{color:#93A6A0;font-style:italic}
+  tbody td.tot{font-weight:700;color:#0B3A34}
+  tfoot td{padding:11px 12px;background:#0B3A34;color:#fff;font-weight:700;font-size:11.5px;text-align:right;font-family:Consolas,'Cascadia Mono',monospace}
+  tfoot td.l{text-align:left;font-family:Consolas,'Cascadia Mono',monospace;font-size:10px;letter-spacing:.06em}
+  tfoot td.grand{color:#E0B978;font-size:14px}
+
+  .assin{margin-top:38px;padding-top:9px;border-top:1px solid #CBDDD7;width:300px}
+  .assin-nome{font-size:11px;color:#14201D}
+  .assin-lab{font-family:Consolas,'Cascadia Mono',monospace;font-size:8px;text-transform:uppercase;letter-spacing:.1em;color:#6E837C;margin-top:3px}
+  .rodape{margin-top:26px;font-family:Consolas,'Cascadia Mono',monospace;font-size:8px;color:#93A6A0;text-transform:uppercase;letter-spacing:.06em;text-align:center}
+
+  @media print{
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+    body{padding:16px 30px 30px}
+    thead{display:table-header-group}
+    tfoot{display:table-footer-group}
+    tr{page-break-inside:avoid}
+    .topo{page-break-inside:avoid}
+  }
+`;
+
+function dadosMes() {
   const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
   const pend = COLABS.filter(c => !RESPOSTAS[c.nome]);
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  const cidadesMap = {};
+  const cidades = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
     tVR+=+r.vr; tVA+=+r.va; tVT+=+r.vt; tAC+=+r.ac;
-    const key = c.tipo==='municipal' ? 'Municipal (Florianópolis)' : c.cidade;
-    if(!cidadesMap[key]) cidadesMap[key] = {vt:0, ac:0, cols:[]};
-    cidadesMap[key].vt += +r.vt;
-    cidadesMap[key].ac += +r.ac;
-    cidadesMap[key].cols.push(c);
+    const k = c.tipo === 'municipal' ? 'Municipal (Florianópolis)' : c.cidade;
+    if(!cidades[k]) cidades[k] = {vt:0, ac:0, cols:[]};
+    cidades[k].vt += +r.vt; cidades[k].ac += +r.ac; cidades[k].cols.push(c);
   });
-
-  const agora  = new Date().toLocaleDateString('pt-BR');
-  const mesAno = MES.mes + ' ' + MES.ano;
-  const sub    = `${mesAno} · ${MES.dias} dias úteis · Prazo: ${MES.prazo}`;
-
-  const pendWarn = pend.length > 0
-    ? `<div style="background:#FEF3E2;border-left:3px solid #C49A45;border-radius:0 6px 6px 0;padding:8px 14px;font-size:11px;color:#7a5209;margin-bottom:18px">
-        ⚠ ${pend.length} colaborador${pend.length>1?'es':''} ainda não respondeu${pend.length>1?'ram':''}. Valores parciais.</div>` : '';
-
-  const CSS = `
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:'Segoe UI',Arial,sans-serif;font-size:12px;color:#111;background:#fff;padding:44px 52px 60px}
-    .brand-name{font-size:24px;font-weight:700;color:#0D4A3A;letter-spacing:-.5px}
-    .brand-sub{font-size:9px;color:#7aaa9a;letter-spacing:.16em;text-transform:uppercase;margin-top:3px}
-    .hdr{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px}
-    .hdr-meta{text-align:right;font-size:10px;color:#9abaaf;line-height:1.8}
-    .gold-line{height:3px;background:#C49A45;border-radius:99px;margin:12px 0 22px}
-    .rep-title{font-size:17px;font-weight:700;color:#0D4A3A;margin-bottom:3px}
-    .rep-sub{font-size:11px;color:#546860;margin-bottom:20px}
-    .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
-    .summary.two{grid-template-columns:1fr 1fr}
-    .sum-card{background:#f4f9f7;border:1px solid #c2d9d1;border-radius:7px;padding:12px 14px}
-    .sum-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#7aaa9a;margin-bottom:5px}
-    .sum-value{font-size:18px;font-weight:700;color:#0D4A3A;letter-spacing:-.5px}
-    .sum-value span{font-size:11px;color:#7aaa9a;font-weight:500}
-    .section-label{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#0D4A3A;border-bottom:2px solid #C49A45;padding-bottom:6px;margin:20px 0 12px}
-    table{width:100%;border-collapse:collapse;font-size:11.5px}
-    thead tr{background:#0D4A3A}
-    thead th{padding:9px 12px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#fff;text-align:left}
-    thead th.r{text-align:right}
-    tbody tr:nth-child(even) td{background:#f4f9f7}
-    tbody tr.sec td{background:#dff0e9;font-weight:700;font-size:10.5px;color:#0D4A3A;padding:6px 12px}
-    tbody tr.ind td:first-child{padding-left:22px}
-    tbody tr.sub td{background:#eaf4f0;font-weight:600;color:#546860;font-size:10.5px}
-    tbody tr.sub td:first-child{padding-left:22px}
-    tbody td{padding:8px 12px;border-bottom:1px solid #e4eeeb;color:#1a2e28}
-    tbody td.r{text-align:right;font-weight:700;color:#0D4A3A}
-    tbody tr.pend td{color:#9abaaf;font-style:italic}
-    tbody tr.pend td.r{font-weight:400}
-    tfoot td{padding:9px 12px;background:#0D4A3A;color:#fff;font-weight:700;font-size:12px}
-    tfoot td.r{text-align:right;color:#C49A45;font-size:13px}
-    .badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 6px;border-radius:3px;letter-spacing:.04em;text-transform:uppercase}
-    .bp{background:#FEF3E2;color:#9c7a34}
-    .bd{background:#E4F2EB;color:#195c38}
-    @media print{
-      *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
-      body{padding:20px 36px 40px}
-      table{page-break-inside:auto}
-      tr{page-break-inside:avoid;page-break-after:auto}
-      thead{display:table-header-group}
-      tfoot{display:table-footer-group}
-    }
-  `;
-
-  function cab(titulo) {
-    return `<div class="hdr">
-      <div><div class="brand-name">PBL</div><div class="brand-sub">Compra de Créditos Judiciais</div></div>
-      <div class="hdr-meta">Gerado em ${agora}<br>Referência: ${mesAno}</div>
-    </div>
-    <div class="gold-line"></div>
-    <div class="rep-title">${titulo}</div>
-    <div class="rep-sub">${sub}</div>
-    ${pendWarn}`;
-  }
-
-  const pendRows = pend.map(c =>
-    `<tr class="pend"><td>${c.nome}</td><td class="r">—</td><td class="r">—</td><td class="r"><span class="badge bp">Aguardando</span></td></tr>`
-  ).join('');
-
-  // ── PDF 1: VA/VR ──────────────────────────────────────────────────────────
-  const vavrRows = resp.map(c => {
-    const r = RESPOSTAS[c.nome];
-    return `<tr><td>${c.nome}</td><td class="r">${fmt(+r.vr)}</td><td class="r">${fmt(+r.va)}</td><td class="r">${fmt(+r.vr+ +r.va)}</td></tr>`;
-  }).join('') + pendRows;
-
-  const htmlVAVR = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-    <title>Benefícios VA/VR — ${mesAno}</title><style>${CSS}</style></head><body>
-    ${cab('Relatório de Recarga — Vale Alimentação / Refeição')}
-    <table>
-      <thead><tr><th>Colaborador</th><th class="r">Vale Refeição (VR)</th><th class="r">Vale Alimentação (VA)</th><th class="r">Total</th></tr></thead>
-      <tbody>${vavrRows}</tbody>
-      <tfoot><tr><td>TOTAL — ${resp.length} colaboradores</td><td class="r">${fmt(tVR)}</td><td class="r">${fmt(tVA)}</td><td class="r">${fmt(tVR+tVA)}</td></tr></tfoot>
-    </table>
-    <div style="margin-top:18px"><div class="summary two">
-      <div class="sum-card"><div class="sum-label">Total Vale Refeição</div><div class="sum-value">${fmt(tVR)}</div></div>
-      <div class="sum-card"><div class="sum-label">Total Vale Alimentação</div><div class="sum-value">${fmt(tVA)}</div></div>
-    </div></div>
-  </body></html>`;
-
-  // ── PDF 2: VT/AC ──────────────────────────────────────────────────────────
-  let vtacRows = '';
-  Object.entries(cidadesMap).forEach(([cidade, data]) => {
-    vtacRows += `<tr class="sec"><td colspan="4">${cidade}</td></tr>`;
-    data.cols.forEach(c => {
-      const r = RESPOSTAS[c.nome];
-      vtacRows += `<tr class="ind"><td>${c.nome}</td><td class="r">${fmt(+r.vt)}</td><td class="r">${fmt(+r.ac)}</td><td class="r">${fmt(+r.vt+ +r.ac)}</td></tr>`;
-    });
-    vtacRows += `<tr class="sub"><td>Subtotal ${cidade}</td><td class="r">${fmt(data.vt)}</td><td class="r">${fmt(data.ac)}</td><td class="r">${fmt(data.vt+data.ac)}</td></tr>`;
-  });
-  vtacRows += pendRows;
-
-  const htmlVTAC = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-    <title>Benefícios VT/AC — ${mesAno}</title><style>${CSS}</style></head><body>
-    ${cab('Relatório de Recarga — Vale Transporte / Auxílio Combustível')}
-    <table>
-      <thead><tr><th>Colaborador</th><th class="r">Vale Transporte (VT)</th><th class="r">Auxílio Combustível (AC)</th><th class="r">Total</th></tr></thead>
-      <tbody>${vtacRows}</tbody>
-      <tfoot><tr><td>TOTAL — ${resp.length} colaboradores</td><td class="r">${fmt(tVT)}</td><td class="r">${fmt(tAC)}</td><td class="r">${fmt(tVT+tAC)}</td></tr></tfoot>
-    </table>
-    <div style="margin-top:18px"><div class="summary two">
-      <div class="sum-card"><div class="sum-label">Total Vale Transporte</div><div class="sum-value">${fmt(tVT)}</div></div>
-      <div class="sum-card"><div class="sum-label">Total Auxílio Combustível</div><div class="sum-value">${fmt(tAC)}</div></div>
-    </div></div>
-  </body></html>`;
-
-  // ── PDF 3: Executivo ──────────────────────────────────────────────────────
-  const totColab = COLABS.length;
-  const doneColab = resp.length;
-  const pctAdesao = Math.round(doneColab/totColab*100);
-  const totalGeral = tVR+tVA+tVT+tAC;
-  const media = doneColab > 0 ? totalGeral/doneColab : 0;
-
-  const execRows = COLABS.map(c => {
-    const r = RESPOSTAS[c.nome];
-    if(r) return `<tr>
-      <td>${c.nome}</td>
-      <td class="r">${fmt(+r.vr+ +r.va)}</td>
-      <td class="r">${fmt(+r.vt+ +r.ac)}</td>
-      <td class="r">${fmt(+r.vr+ +r.va+ +r.vt+ +r.ac)}</td>
-      <td style="text-align:center"><span class="badge bd">Respondeu</span></td>
-    </tr>`;
-    return `<tr class="pend">
-      <td>${c.nome}</td><td class="r">—</td><td class="r">—</td><td class="r">—</td>
-      <td style="text-align:center"><span class="badge bp">Aguardando</span></td>
-    </tr>`;
-  }).join('');
-
-  const htmlExec = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
-    <title>Benefícios Executivo — ${mesAno}</title><style>${CSS}</style></head><body>
-    ${cab('Relatório Executivo de Benefícios')}
-    <div class="summary">
-      <div class="sum-card"><div class="sum-label">Total Desembolso</div><div class="sum-value">${fmt(totalGeral)}</div></div>
-      <div class="sum-card"><div class="sum-label">Média por Colaborador</div><div class="sum-value">${fmt(media)}</div></div>
-      <div class="sum-card"><div class="sum-label">Adesão</div><div class="sum-value">${pctAdesao}% <span>(${doneColab}/${totColab})</span></div></div>
-      <div class="sum-card"><div class="sum-label">Total VA/VR</div><div class="sum-value">${fmt(tVR+tVA)}</div></div>
-    </div>
-    <div class="section-label">Detalhamento por Colaborador</div>
-    <table>
-      <thead><tr><th>Colaborador</th><th class="r">VA/VR</th><th class="r">VT/AC</th><th class="r">Total</th><th style="text-align:center">Status</th></tr></thead>
-      <tbody>${execRows}</tbody>
-      <tfoot><tr><td>TOTAL — ${doneColab} responderam</td><td class="r">${fmt(tVR+tVA)}</td><td class="r">${fmt(tVT+tAC)}</td><td class="r">${fmt(totalGeral)}</td><td></td></tr></tfoot>
-    </table>
-  </body></html>`;
-
-  // ── Abrir e imprimir ──────────────────────────────────────────────────────
-  [
-    { h: htmlVAVR }, { h: htmlVTAC }, { h: htmlExec }
-  ].forEach((pdf, i) => {
-    setTimeout(() => {
-      const win = window.open('', '_blank');
-      if(!win) { alert('Permita popups para este site para baixar os relatórios.'); return; }
-      win.document.write(pdf.h);
-      win.document.close();
-      win.onload = () => setTimeout(() => win.print(), 400);
-    }, i * 500);
-  });
-
-  setTimeout(() => {
-    btn.disabled = false;
-    btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Baixar Relatórios (PDF)';
-  }, 2000);
+  return { resp, pend, tVR, tVA, tVT, tAC, cidades };
 }
 
+function cabecalhoPDF(titulo, subtitulo, sigla) {
+  const hoje = new Date();
+  const ref  = 'PBL-' + sigla + '-' + MES.ano + String(MESES.indexOf(MES.mes)+1).padStart(2,'0');
+  return `
+  <div class="doc-head">
+    <div>
+      <div class="emp-nome">PBL</div>
+      <div class="emp-dados">${EMPRESA.razao}<br>CNPJ ${EMPRESA.cnpj}<br>${EMPRESA.end}</div>
+    </div>
+    <div class="doc-ref">
+      <div class="doc-ref-lab">Documento</div>
+      <div class="doc-ref-val">${ref}</div>
+      <div class="doc-ref-lab">Emitido em</div>
+      <div class="doc-ref-val">${hoje.toLocaleDateString('pt-BR')}</div>
+    </div>
+  </div>
+  <div class="doc-titulo">${titulo}</div>
+  <div class="doc-sub">${subtitulo}</div>`;
+}
 
-// Init admin if on admin page
-if(window.location.search.includes('admin') || window.location.href.includes('?admin')) { document.addEventListener('DOMContentLoaded', atualizarAdmin); }
+function rodapePDF() {
+  return `
+  <div class="assin">
+    <div class="assin-nome">${EMPRESA.resp}</div>
+    <div class="assin-lab">Responsável pela solicitação</div>
+  </div>
+  <div class="rodape">${EMPRESA.razao} · CNPJ ${EMPRESA.cnpj}</div>`;
+}
+
+function abrirPDF(html) {
+  const win = window.open('', '_blank');
+  if(!win) { alert('Permita pop-ups para este site para gerar o documento.'); return; }
+  win.document.write(html);
+  win.document.close();
+  win.onload = () => setTimeout(() => win.print(), 350);
+}
+
+function gerarPDF(tipo) {
+  const d = dadosMes();
+  const mesAno = MES.mes + ' ' + MES.ano;
+  const sub = `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · ${d.resp.length} de ${COLABS.length} colaboradores com valor a recarregar`;
+  const aviso = d.pend.length > 0
+    ? `<div class="nota">${plural(d.pend.length,
+        '<strong>1 colaborador</strong> ainda não informou a divisão e aparece',
+        '<strong>' + d.pend.length + ' colaboradores</strong> ainda não informaram a divisão e aparecem')
+      } sem valor nesta relação. O total abaixo é parcial.</div>` : '';
+
+  let html = '';
+
+  if(tipo === 'vavr') {
+    const linhas = d.resp.map(c => {
+      const r = RESPOSTAS[c.nome];
+      return `<tr><td class="l">${c.nome}</td><td>${num(r.vr)}</td><td>${num(r.va)}</td><td class="tot">${num(+r.vr + +r.va)}</td></tr>`;
+    }).join('') + d.pend.map(c =>
+      `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+
+    html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+      <title>Pedido de recarga VA-VR — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
+      ${cabecalhoPDF('Pedido de recarga — Vale Refeição e Alimentação', sub, 'VAVR')}
+      <div class="topo">
+        <div class="topo-cel"><div class="topo-lab">Vale Refeição</div><div class="topo-val">${fmt(d.tVR)}</div></div>
+        <div class="topo-cel"><div class="topo-lab">Vale Alimentação</div><div class="topo-val">${fmt(d.tVA)}</div></div>
+        <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(d.tVR + d.tVA)}</div></div>
+      </div>
+      ${aviso}
+      <table>
+        <thead><tr><th class="l">Colaborador</th><th>Vale Refeição</th><th>Vale Alimentação</th><th>Total</th></tr></thead>
+        <tbody>${linhas}</tbody>
+        <tfoot><tr><td class="l">Total · ${colabLabel(d.resp.length)}</td><td>${num(d.tVR)}</td><td>${num(d.tVA)}</td><td class="grand">${num(d.tVR + d.tVA)}</td></tr></tfoot>
+      </table>
+      ${rodapePDF()}</body></html>`;
+  }
+
+  if(tipo === 'vtac') {
+    let linhas = '';
+    Object.entries(d.cidades).forEach(([cidade, v]) => {
+      linhas += `<tr class="sec"><td class="l" colspan="4">${cidade}</td></tr>`;
+      v.cols.forEach(c => {
+        const r = RESPOSTAS[c.nome];
+        linhas += `<tr><td class="l">${c.nome}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
+      });
+      linhas += `<tr class="sub"><td class="l">Subtotal · ${cidade}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
+    });
+    linhas += d.pend.map(c =>
+      `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+
+    html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+      <title>Pedido de recarga VT-AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
+      ${cabecalhoPDF('Pedido de recarga — Vale Transporte e Auxílio Combustível', sub, 'VTAC')}
+      <div class="topo">
+        <div class="topo-cel"><div class="topo-lab">Vale Transporte</div><div class="topo-val">${fmt(d.tVT)}</div></div>
+        <div class="topo-cel"><div class="topo-lab">Auxílio Combustível</div><div class="topo-val">${fmt(d.tAC)}</div></div>
+        <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(d.tVT + d.tAC)}</div></div>
+      </div>
+      ${aviso}
+      <table>
+        <thead><tr><th class="l">Colaborador</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
+        <tbody>${linhas}</tbody>
+        <tfoot><tr><td class="l">Total · ${colabLabel(d.resp.length)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td class="grand">${num(d.tVT + d.tAC)}</td></tr></tfoot>
+      </table>
+      ${rodapePDF()}</body></html>`;
+  }
+
+  if(tipo === 'exec') {
+    const total = d.tVR + d.tVA + d.tVT + d.tAC;
+    const media = d.resp.length > 0 ? total / d.resp.length : 0;
+    const pct   = COLABS.length > 0 ? Math.round(d.resp.length / COLABS.length * 100) : 0;
+    const linhas = COLABS.map(c => {
+      const r = RESPOSTAS[c.nome];
+      if(!r) return `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`;
+      return `<tr><td class="l">${c.nome}</td><td>${num(+r.vr + +r.va)}</td><td>${num(+r.vt + +r.ac)}</td><td class="tot">${num(+r.vr + +r.va + +r.vt + +r.ac)}</td></tr>`;
+    }).join('');
+
+    html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
+      <title>Resumo interno de benefícios — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
+      ${cabecalhoPDF('Resumo interno de benefícios', `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · uso interno`, 'INT')}
+      <div class="topo">
+        <div class="topo-cel"><div class="topo-lab">Adesão</div><div class="topo-val">${pct}%</div></div>
+        <div class="topo-cel"><div class="topo-lab">Média por colaborador</div><div class="topo-val">${fmt(media)}</div></div>
+        <div class="topo-cel forte"><div class="topo-lab">Desembolso total</div><div class="topo-val">${fmt(total)}</div></div>
+      </div>
+      ${aviso}
+      <table>
+        <thead><tr><th class="l">Colaborador</th><th>VA / VR</th><th>VT / AC</th><th>Total</th></tr></thead>
+        <tbody>${linhas}</tbody>
+        <tfoot><tr><td class="l">Total · ${d.resp.length} de ${COLABS.length}</td><td>${num(d.tVR + d.tVA)}</td><td>${num(d.tVT + d.tAC)}</td><td class="grand">${num(total)}</td></tr></tfoot>
+      </table>
+      ${rodapePDF()}</body></html>`;
+  }
+
+  abrirPDF(html);
+}
+
 </script>
 </body>
 </html>
