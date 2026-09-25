@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- PBL Benefícios — HTML v25 · status do período tolerante a variações de escrita -->
+<!-- PBL Benefícios — HTML v26 · liberação do período pelo caminho do RH, não pela pessoa -->
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -338,6 +338,8 @@
 
     .surf { background:var(--white); border:1px solid var(--bo); border-radius:12px; }
 
+    .aviso-rh { background:#FBEED6; border:1px solid #F0C87A; border-radius:12px; padding:14px 18px; font-size:12.5px; color:#7a5209; line-height:1.6; }
+    body.dark .aviso-rh { background:#3A2C15; border-color:#5C4A24; color:#E0B978; }
     .emp2 { padding:20px 22px; display:flex; align-items:center; gap:16px; }
     .emp2-av { width:54px; height:54px; border-radius:50%; background:var(--g); border:3px solid var(--gold); box-sizing:border-box; display:flex; align-items:center; justify-content:center; color:#fff; font-size:17px; font-weight:600; flex-shrink:0; }
     .emp2-nome { font-family:var(--serif); font-size:22px; font-weight:600; color:var(--hd); line-height:1.1; }
@@ -567,6 +569,10 @@
 
     <!-- ── CONTEXTO ── -->
     <div class="form-col-ctx">
+
+      <div class="aviso-rh" id="aviso-rh" style="display:none">
+        <strong>Período encerrado.</strong> Você está lançando como RH, fora do prazo normal. O registro ficará marcado na planilha.
+      </div>
 
       <div class="surf emp2">
         <div class="emp2-av" id="f-av">?</div>
@@ -932,6 +938,10 @@ const DOMINIO = 'pblcompra.com';
 const RESPOSTAS  = {};
 const TIMESTAMPS = {};
 let   colabAtual = null;
+// Liberação do período encerrado é do CAMINHO, não da pessoa:
+// só vale quando o RH entra por "Preencher por colaborador" —
+// mesmo que o colaborador escolhido seja ele próprio.
+let   porAdmin   = false;
 let   cfgOk      = false;
 let   colabOk    = false;
 
@@ -1140,6 +1150,7 @@ function processarRedirect() {
       return;
     }
     COLABS[idx].email = email;
+    porAdmin = false;
     entrar(idx);
   } catch(e) {
     console.error('Erro ao processar login:', e);
@@ -1149,6 +1160,7 @@ function processarRedirect() {
 
 function escolherColab(modo) {
   if(modo === 'self') {
+    porAdmin = false;            // o próprio formulário segue a regra geral
     const email = sessionStorage.getItem('pbl_admin_email') || '';
     const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
     if(idx !== -1) entrar(idx);
@@ -1176,6 +1188,7 @@ function renderColabList() {
 }
 
 function entrarPorAdmin(idx) {
+  porAdmin = isAdminSession();   // caminho do RH
   entrar(idx);
   const sairBtn = document.querySelector('#pg-form .hdr-right button');
   if(sairBtn) {
@@ -1187,6 +1200,7 @@ function entrarPorAdmin(idx) {
 function logout() {
   sessionStorage.removeItem('pbl_admin_email');
   colabAtual = null;
+  porAdmin = false;
   irPara('pg-login');
 }
 
@@ -1363,8 +1377,9 @@ function entrar(idxDireto) {
   if(!isNaN(idx) && idx >= 0) colabAtual = COLABS[idx];
   if(!colabAtual) return;
 
-  // Bloqueio por período encerrado (admin passa direto).
-  if(MES.status === 'encerrado' && !isAdminSession()) {
+  // Período encerrado bloqueia todo mundo, inclusive o RH no próprio
+  // formulário. A exceção é entrar por "Preencher por colaborador".
+  if(MES.status === 'encerrado' && !porAdmin) {
     irPara('pg-encerrado');
     return;
   }
@@ -1385,6 +1400,8 @@ function entrar(idxDireto) {
   el('err-va').textContent = '';
   el('err-vt').textContent = '';
   el('confirm-err').style.display = 'none';
+  const avisoRH = el('aviso-rh');
+  if(avisoRH) avisoRH.style.display = (MES.status === 'encerrado' && porAdmin) ? '' : 'none';
 
   // Botão do cabeçalho volta ao padrão (entrarPorAdmin sobrescreve depois).
   const sairBtn = document.querySelector('#pg-form .hdr-right button');
@@ -1452,12 +1469,15 @@ async function confirmar() {
   btn.textContent = 'Salvando...';
 
   const now = new Date();
-  const ts  = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR');
+  const foraDoPrazo = (MES.status === 'encerrado' && porAdmin);
+  const ts  = now.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})+' · '+now.toLocaleDateString('pt-BR')
+            + (foraDoPrazo ? ' · lançado pelo RH' : '');
 
   const payload = {
     nome: colabAtual.nome, email: colabAtual.email, cidade: colabAtual.cidade,
     mes: MES.mes, ano: MES.ano, vr, va, vt, ac,
-    tipo: colabAtual.tipo, timestamp: ts
+    tipo: colabAtual.tipo, timestamp: ts,
+    porAdmin: porAdmin ? 1 : 0
   };
 
   try {
