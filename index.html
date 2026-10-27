@@ -1981,31 +1981,37 @@ function abrirPDF(html) {
 function gerarPDF(tipo) {
   const d = dadosMes();
   const mesAno = MES.mes + ' ' + MES.ano;
-  const sub = `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · ${d.resp.length} de ${COLABS.length} colaboradores com valor a recarregar`;
-  const aviso = d.pend.length > 0
-    ? `<div class="nota">${plural(d.pend.length,
-        '<strong>1 colaborador</strong> ainda não informou a divisão e aparece',
-        '<strong>' + d.pend.length + ' colaboradores</strong> ainda não informaram a divisão e aparecem')
-      } sem valor nesta relação. O total abaixo é parcial.</div>` : '';
+  const porNome = (a, b) => a.nome.localeCompare(b.nome, 'pt-BR');
+
+  // Os pedidos vão para fornecedores: levam só quem tem valor a recarregar.
+  // Quem ainda não respondeu é avisado aqui, na tela, e não no documento.
+  if(tipo !== 'exec') {
+    if(d.resp.length === 0) { alert('Ninguém respondeu ainda. Não há valores para pedir.'); return; }
+    if(d.pend.length > 0) {
+      const nomes = [...d.pend].sort(porNome).map(c => '• ' + c.nome).join('\n');
+      const msg = plural(d.pend.length, '1 colaborador ainda não respondeu:', d.pend.length + ' colaboradores ainda não responderam:')
+        + '\n\n' + nomes + '\n\nO pedido vai sair só com quem já respondeu. Gerar mesmo assim?';
+      if(!confirm(msg)) return;
+    }
+  }
+  const subFornecedor = `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · ${colabLabel(d.resp.length)}`;
 
   let html = '';
 
   if(tipo === 'vavr') {
-    const linhas = d.resp.map(c => {
+    const linhas = [...d.resp].sort(porNome).map(c => {
       const r = RESPOSTAS[c.nome];
       return `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vr)}</td><td>${num(r.va)}</td><td class="tot">${num(+r.vr + +r.va)}</td></tr>`;
-    }).join('') + d.pend.map(c =>
-      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+    }).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
       <title>Pedido de recarga VA-VR — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
-      ${cabecalhoPDF('Pedido de recarga — Vale Refeição e Alimentação', sub, 'VAVR')}
+      ${cabecalhoPDF('Pedido de recarga — Vale Refeição e Alimentação', subFornecedor, 'VAVR')}
       <div class="topo">
         <div class="topo-cel"><div class="topo-lab">Vale Refeição</div><div class="topo-val">${fmt(d.tVR)}</div></div>
         <div class="topo-cel"><div class="topo-lab">Vale Alimentação</div><div class="topo-val">${fmt(d.tVA)}</div></div>
         <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(d.tVR + d.tVA)}</div></div>
       </div>
-      ${aviso}
       <table>
         <thead><tr><th class="l">Colaborador</th><th>Vale Refeição</th><th>Vale Alimentação</th><th>Total</th></tr></thead>
         <tbody>${linhas}</tbody>
@@ -2018,12 +2024,10 @@ function gerarPDF(tipo) {
     // Empresa como coluna: tabela contínua, ordenada por empresa e nome.
     // Os totais de cada empresa ficam nos cards abaixo da tabela.
     const porEmpresa = (a, b) => (a.empresa || '').localeCompare(b.empresa || '', 'pt-BR') || a.nome.localeCompare(b.nome, 'pt-BR');
-    let linhas = [...d.resp].sort(porEmpresa).map(c => {
+    const linhas = [...d.resp].sort(porEmpresa).map(c => {
       const r = RESPOSTAS[c.nome];
       return `<tr><td class="l">${esc(c.nome)}</td><td class="l emp">${esc(c.empresa)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
     }).join('');
-    linhas += [...d.pend].sort(porEmpresa).map(c =>
-      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td class="l emp">${esc(c.empresa)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
 
     const cards = Object.keys(d.empresas).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(empresa => {
       const v = d.empresas[empresa];
@@ -2038,13 +2042,12 @@ function gerarPDF(tipo) {
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
       <title>Pedido de recarga VT-AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
-      ${cabecalhoPDF('Pedido de recarga — Vale Transporte e Auxílio Combustível', sub, 'VTAC')}
+      ${cabecalhoPDF('Pedido de recarga — Vale Transporte e Auxílio Combustível', subFornecedor, 'VTAC')}
       <div class="topo">
         <div class="topo-cel"><div class="topo-lab">Vale Transporte</div><div class="topo-val">${fmt(d.tVT)}</div></div>
         <div class="topo-cel"><div class="topo-lab">Auxílio Combustível</div><div class="topo-val">${fmt(d.tAC)}</div></div>
         <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(d.tVT + d.tAC)}</div></div>
       </div>
-      ${aviso}
       <table>
         <thead><tr><th class="l">Colaborador</th><th class="l">Empresa</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
         <tbody>${linhas}</tbody>
@@ -2055,14 +2058,28 @@ function gerarPDF(tipo) {
   }
 
   if(tipo === 'exec') {
-    const total = d.tVR + d.tVA + d.tVT + d.tAC;
-    const media = d.resp.length > 0 ? total / d.resp.length : 0;
+    // O total de cada pessoa é fixo (VA/dia × dias + passagem × 2 × dias);
+    // ela só escolhe a divisão. Por isso o desembolso do mês é exato mesmo
+    // com gente pendente.
+    const totalPessoa = c => vaTot(c) + vtTot(c);
+    const previsto = COLABS.reduce((s, c) => s + totalPessoa(c), 0);
+    const respondido = d.tVR + d.tVA + d.tVT + d.tAC;
+    const media = COLABS.length > 0 ? previsto / COLABS.length : 0;
     const pct   = COLABS.length > 0 ? Math.round(d.resp.length / COLABS.length * 100) : 0;
-    const linhas = COLABS.map(c => {
+    const linhas = [...COLABS].sort(porNome).map(c => {
       const r = RESPOSTAS[c.nome];
-      if(!r) return `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`;
-      return `<tr><td class="l">${esc(c.nome)}</td><td>${num(+r.vr + +r.va)}</td><td>${num(+r.vt + +r.ac)}</td><td class="tot">${num(+r.vr + +r.va + +r.vt + +r.ac)}</td></tr>`;
+      if(!r) return `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>${num(totalPessoa(c))} · previsto</td></tr>`;
+      return `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vr)}</td><td>${num(r.va)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vr + +r.va + +r.vt + +r.ac)}</td></tr>`;
     }).join('');
+    const notaPend = d.pend.length > 0
+      ? `<div class="nota">${plural(d.pend.length,
+          '<strong>1 colaborador</strong> ainda não informou a divisão',
+          '<strong>' + d.pend.length + ' colaboradores</strong> ainda não informaram a divisão')
+        }. O desembolso previsto já inclui o valor ${plural(d.pend.length, 'dele', 'deles')}: a divisão entre os vales pode mudar, o total não.</div>` : '';
+    const rodapeTabela = d.pend.length > 0
+      ? `<tr><td class="l">Respondido · ${d.resp.length} de ${COLABS.length}</td><td>${num(d.tVR)}</td><td>${num(d.tVA)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td>${num(respondido)}</td></tr>
+         <tr><td class="l" colspan="5">Previsto · ${colabLabel(COLABS.length)}</td><td class="grand">${num(previsto)}</td></tr>`
+      : `<tr><td class="l">Total · ${colabLabel(COLABS.length)}</td><td>${num(d.tVR)}</td><td>${num(d.tVA)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td class="grand">${num(respondido)}</td></tr>`;
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
       <title>Resumo interno de benefícios — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
@@ -2070,13 +2087,13 @@ function gerarPDF(tipo) {
       <div class="topo">
         <div class="topo-cel"><div class="topo-lab">Adesão</div><div class="topo-val">${pct}%</div></div>
         <div class="topo-cel"><div class="topo-lab">Média por colaborador</div><div class="topo-val">${fmt(media)}</div></div>
-        <div class="topo-cel forte"><div class="topo-lab">Desembolso total</div><div class="topo-val">${fmt(total)}</div></div>
+        <div class="topo-cel forte"><div class="topo-lab">Desembolso previsto</div><div class="topo-val">${fmt(previsto)}</div></div>
       </div>
-      ${aviso}
+      ${notaPend}
       <table>
-        <thead><tr><th class="l">Colaborador</th><th>VA / VR</th><th>VT / AC</th><th>Total</th></tr></thead>
+        <thead><tr><th class="l">Colaborador</th><th>VR</th><th>VA</th><th>VT</th><th>AC</th><th>Total</th></tr></thead>
         <tbody>${linhas}</tbody>
-        <tfoot><tr><td class="l">Total · ${d.resp.length} de ${COLABS.length}</td><td>${num(d.tVR + d.tVA)}</td><td>${num(d.tVT + d.tAC)}</td><td class="grand">${num(total)}</td></tr></tfoot>
+        <tfoot>${rodapeTabela}</tfoot>
       </table>
       ${rodapePDF()}</body></html>`;
   }
