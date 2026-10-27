@@ -1079,7 +1079,7 @@ async function carregarColaboradores() {
           email:    c.email    || '',
           passagem: parseFloat(c.passagem) || 0,
           vapd:     Number.isFinite(vapd) ? vapd : 24,
-          cidade:   c.cidade   || '',
+          empresa:  c.empresa  || c.cidade || '',   // "cidade" vem do script antigo
           tipo:     c.tipo     || 'municipal'
         });
       });
@@ -1219,7 +1219,7 @@ function renderColabList() {
       <div class="colab-list-av">${esc(ini(c.nome))}</div>
       <div style="flex:1">
         <div class="colab-list-name">${esc(c.nome)}</div>
-        <div class="colab-list-meta">${esc(c.cidade)}</div>
+        <div class="colab-list-meta">${esc(c.empresa)}</div>
       </div>
       ${badge}
     </div>`;
@@ -1432,7 +1432,7 @@ function entrar(idxDireto) {
 
   el('f-av').textContent    = ini(colabAtual.nome);
   el('f-nome').textContent  = colabAtual.nome;
-  el('f-meta').textContent  = colabAtual.cidade+' · '+MES.mes+' '+MES.ano;
+  el('f-meta').textContent  = colabAtual.empresa+' · '+MES.mes+' '+MES.ano;
   el('hdr-mes').textContent = MES.mes+' '+MES.ano;
   el('f-mes').textContent   = MES.mes+' '+MES.ano;
   el('f-mes2').textContent  = MES.mes+' '+MES.ano;
@@ -1520,7 +1520,7 @@ async function confirmar() {
             + (foraDoPrazo ? ' · lançado pelo RH' : '');
 
   const payload = {
-    nome: colabAtual.nome, email: colabAtual.email, cidade: colabAtual.cidade,
+    nome: colabAtual.nome, email: colabAtual.email, empresa: colabAtual.empresa,
     mes: MES.mes, ano: MES.ano, vr, va, vt, ac,
     tipo: colabAtual.tipo, timestamp: ts,
     porAdmin: porAdmin ? 1 : 0
@@ -1531,7 +1531,7 @@ async function confirmar() {
     if(res && res.erro === 'login') { sessaoExpirada(); return; }
 
     if(res && res.ok) {
-      RESPOSTAS[colabAtual.nome]  = {vr, va, vt, ac, tipo:colabAtual.tipo, cidade:colabAtual.cidade};
+      RESPOSTAS[colabAtual.nome]  = {vr, va, vt, ac, tipo:colabAtual.tipo, empresa:colabAtual.empresa};
       TIMESTAMPS[colabAtual.nome] = ts;
       el('ok-vr').textContent = fmt(vr); el('ok-va').textContent = fmt(va);
       el('ok-vt').textContent = fmt(vt); el('ok-ac').textContent = fmt(ac);
@@ -1639,7 +1639,7 @@ async function carregarRespostas() {
     Object.keys(RESPOSTAS).forEach(k => delete RESPOSTAS[k]);
     Object.keys(TIMESTAMPS).forEach(k => delete TIMESTAMPS[k]);
     data.forEach(r => {
-      RESPOSTAS[r.nome]  = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+      RESPOSTAS[r.nome]  = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, empresa:r.empresa || r.cidade };
       TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
     });
   } catch(e) { console.warn('Respostas não carregaram:', e.message); }
@@ -1721,7 +1721,7 @@ function renderColab() {
     <div class="crow">
       <div style="display:flex;align-items:center;gap:10px">
         <div class="av">${esc(ini(c.nome))}</div>
-        <div><div style="font-size:14px;font-weight:600;color:var(--hd)">${esc(c.nome)}</div><div class="ctag">${esc(c.cidade)}</div></div>
+        <div><div style="font-size:14px;font-weight:600;color:var(--hd)">${esc(c.nome)}</div><div class="ctag">${esc(c.empresa)}</div></div>
       </div>
       <div style="display:flex;gap:28px;align-items:center">
         <div style="text-align:right">
@@ -1751,13 +1751,13 @@ function renderRel() {
   const done = resp.length;
   const pct  = tot > 0 ? Math.round(done/tot*100) : 0;
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  const cidadesMap = {};
+  const empresasMap = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
     tVR += +r.vr; tVA += +r.va; tVT += +r.vt; tAC += +r.ac;
-    const key = c.tipo==='municipal' ? 'Municipal (Florianópolis)' : c.cidade;
-    if(!cidadesMap[key]) cidadesMap[key] = {vt:0, ac:0};
-    cidadesMap[key].vt += +r.vt; cidadesMap[key].ac += +r.ac;
+    const key = c.empresa || 'Sem empresa';
+    if(!empresasMap[key]) empresasMap[key] = {vt:0, ac:0};
+    empresasMap[key].vt += +r.vt; empresasMap[key].ac += +r.ac;
   });
   const totalGeral = tVR+tVA+tVT+tAC;
   const media = done > 0 ? totalGeral/done : 0;
@@ -1833,10 +1833,10 @@ function renderRel() {
     </div>`;
   }
 
-  if(Object.keys(cidadesMap).length > 0) {
-    h += `<div class="card" style="margin-bottom:1.25rem"><div class="rel-section-title">Recarga VT/AC por localidade</div>`;
-    Object.entries(cidadesMap).forEach(([cidade, v]) => {
-      h += `<div class="rline"><span>${esc(cidade)}</span><span style="display:flex;gap:14px;align-items:center">
+  if(Object.keys(empresasMap).length > 0) {
+    h += `<div class="card" style="margin-bottom:1.25rem"><div class="rel-section-title">Recarga VT/AC por empresa</div>`;
+    Object.entries(empresasMap).forEach(([empresa, v]) => {
+      h += `<div class="rline"><span>${esc(empresa)}</span><span style="display:flex;gap:14px;align-items:center">
         <span class="rsub">VT ${fmt(v.vt)}</span><span class="rsub">AC ${fmt(v.ac)}</span><strong>${fmt(v.vt+v.ac)}</strong>
       </span></div>`;
     });
@@ -1918,15 +1918,15 @@ function dadosMes() {
   const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
   const pend = COLABS.filter(c => !RESPOSTAS[c.nome]);
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  const cidades = {};
+  const empresas = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
     tVR+=+r.vr; tVA+=+r.va; tVT+=+r.vt; tAC+=+r.ac;
-    const k = c.tipo === 'municipal' ? 'Municipal (Florianópolis)' : c.cidade;
-    if(!cidades[k]) cidades[k] = {vt:0, ac:0, cols:[]};
-    cidades[k].vt += +r.vt; cidades[k].ac += +r.ac; cidades[k].cols.push(c);
+    const k = c.empresa || 'Sem empresa';
+    if(!empresas[k]) empresas[k] = {vt:0, ac:0, cols:[]};
+    empresas[k].vt += +r.vt; empresas[k].ac += +r.ac; empresas[k].cols.push(c);
   });
-  return { resp, pend, tVR, tVA, tVT, tAC, cidades };
+  return { resp, pend, tVR, tVA, tVT, tAC, empresas };
 }
 
 function cabecalhoPDF(titulo, subtitulo, sigla) {
@@ -2004,13 +2004,13 @@ function gerarPDF(tipo) {
 
   if(tipo === 'vtac') {
     let linhas = '';
-    Object.entries(d.cidades).forEach(([cidade, v]) => {
-      linhas += `<tr class="sec"><td class="l" colspan="4">${esc(cidade)}</td></tr>`;
+    Object.entries(d.empresas).forEach(([empresa, v]) => {
+      linhas += `<tr class="sec"><td class="l" colspan="4">${esc(empresa)}</td></tr>`;
       v.cols.forEach(c => {
         const r = RESPOSTAS[c.nome];
         linhas += `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
       });
-      linhas += `<tr class="sub"><td class="l">Subtotal · ${esc(cidade)}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
+      linhas += `<tr class="sub"><td class="l">Subtotal · ${esc(empresa)}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
     });
     linhas += d.pend.map(c =>
       `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
