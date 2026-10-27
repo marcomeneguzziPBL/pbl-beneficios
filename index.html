@@ -463,7 +463,7 @@
         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>
       </div>
       <h1 style="margin-bottom:.75rem">Não foi possível carregar</h1>
-      <p style="margin-bottom:1.5rem">O sistema não conseguiu ler a configuração do mês na planilha. Para não registrar suas escolhas no mês errado, o acesso fica bloqueado até os dados carregarem.</p>
+      <p style="margin-bottom:1.5rem">O sistema não conseguiu ler os dados da planilha. Para não registrar suas escolhas no mês errado, o acesso fica bloqueado até os dados carregarem.</p>
       <button class="btn-green" onclick="location.reload()">Tentar novamente</button>
       <p style="font-size:12px;color:var(--mu);margin-top:1.25rem;line-height:1.6">Se o problema continuar, avise o Financeiro &ndash; Administrativo.</p>
     </div>
@@ -1030,11 +1030,12 @@ window.addEventListener('load', () => {
 });
 
 async function iniciar() {
-  // Config e colaboradores são independentes — carregam em paralelo.
-  await Promise.all([carregarConfig(), carregarColaboradores()]);
+  // Só a configuração é pública. Colaboradores e respostas exigem login
+  // e são carregados depois dele (processarRedirect).
+  await carregarConfig();
 
-  // Sem os dois, nada de entrar: é o que impede gravar no mês errado.
-  if(!cfgOk || !colabOk) { irPara('pg-falha'); return; }
+  // Sem configuração, nada de entrar: é o que impede gravar no mês errado.
+  if(!cfgOk) { irPara('pg-falha'); return; }
 
   renderCalendario();
 
@@ -1063,10 +1064,13 @@ async function carregarConfig() {
   } catch(e) { console.warn('Config não carregou:', e.message); }
 }
 
+// O servidor só devolve a lista completa para o RH; para o colaborador,
+// devolve apenas a própria linha.
 async function carregarColaboradores() {
   try {
-    const data = await jsonpTentando(API + '?action=listColabs', 'colaboradores');
-    if(Array.isArray(data) && data.length > 0) {
+    const data = await jsonpTentando(comToken(API + '?action=listColabs'), 'colaboradores');
+    if(data && data.erro === 'login') { sessaoExpirada(); return; }
+    if(Array.isArray(data)) {
       COLABS.length = 0;
       data.forEach(c => {
         const vapd = parseFloat(c.vapd);
@@ -1103,7 +1107,18 @@ function loginGoogle() {
   window.location.href = url;
 }
 
-function processarRedirect() {
+// Token do login Google, enviado em toda chamada que lê ou grava dados.
+// O Apps Script confere com o Google quem é a pessoa.
+const comToken = url => url + '&token=' + encodeURIComponent(sessionStorage.getItem('pbl_token') || '');
+
+function sessaoExpirada() {
+  logout();
+  const err = el('login-erro');
+  err.textContent = 'Sua sessão expirou. Entre novamente.';
+  err.style.display = 'block';
+}
+
+async function processarRedirect() {
   const hash = window.location.hash;
   if(!hash || !hash.includes('id_token')) return;
   const idToken = hash.split('id_token=')[1]?.split('&')[0];
@@ -1140,6 +1155,12 @@ function processarRedirect() {
       return;
     }
 
+    sessionStorage.setItem('pbl_token', idToken);
+    textoLoading('Carregando seus dados', 'Aguarde um momento');
+    await carregarColaboradores();
+    if(!sessionStorage.getItem('pbl_token')) return;   // sessão recusada pelo servidor
+    if(!colabOk) { irPara('pg-falha'); return; }
+
     if(ADMINS.includes(email)) {
       sessionStorage.setItem('pbl_admin_email', email);
       const eu = COLABS.find(c => c.email.toLowerCase() === email);
@@ -1158,6 +1179,7 @@ function processarRedirect() {
     }
     COLABS[idx].email = email;
     porAdmin = false;
+    await carregarRespostas();   // traz a escolha já feita, se houver
     entrar(idx);
   } catch(e) {
     console.error('Erro ao processar login:', e);
@@ -1165,9 +1187,10 @@ function processarRedirect() {
   }
 }
 
-function escolherColab(modo) {
+async function escolherColab(modo) {
   if(modo === 'self') {
     porAdmin = false;            // o próprio formulário segue a regra geral
+    await carregarRespostas();
     const email = sessionStorage.getItem('pbl_admin_email') || '';
     const idx = COLABS.findIndex(c => c.email.toLowerCase() === email.toLowerCase());
     if(idx !== -1) entrar(idx);
@@ -1215,6 +1238,9 @@ function entrarPorAdmin(idx) {
 
 function logout() {
   sessionStorage.removeItem('pbl_admin_email');
+  sessionStorage.removeItem('pbl_token');
+  COLABS.length = 0;
+  colabOk = false;
   colabAtual = null;
   porAdmin = false;
   irPara('pg-login');
@@ -1501,7 +1527,8 @@ async function confirmar() {
   };
 
   try {
-    const res = await jsonp(API + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload)), 25000);
+    const res = await jsonp(comToken(API + '?action=save&payload=' + encodeURIComponent(JSON.stringify(payload))), 25000);
+    if(res && res.erro === 'login') { sessaoExpirada(); return; }
 
     if(res && res.ok) {
       RESPOSTAS[colabAtual.nome]  = {vr, va, vt, ac, tipo:colabAtual.tipo, cidade:colabAtual.cidade};
@@ -1605,7 +1632,8 @@ function abaAdmin(aba, btn) {
 
 async function carregarRespostas() {
   try {
-    const data = await jsonp(API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano)), 15000);
+    const data = await jsonp(comToken(API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano))), 15000);
+    if(data && data.erro === 'login') { sessaoExpirada(); return; }
     if(!Array.isArray(data)) return;
     // Zera os dados em memória para não misturar respostas de meses diferentes.
     Object.keys(RESPOSTAS).forEach(k => delete RESPOSTAS[k]);
