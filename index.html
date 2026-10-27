@@ -1895,14 +1895,21 @@ const CSS_PDF = `
   tbody td{padding:7px 12px;border-bottom:1px solid #E6EFEC;text-align:right;font-family:'Inter',Arial,sans-serif;font-size:10.5px}
   tbody td.l{text-align:left;font-family:Georgia,'Times New Roman',serif;font-size:11px}
   tbody tr:nth-child(even) td{background:#F5F9F7}
-  tbody tr.sec td{background:#E3F0EB;font-weight:700;font-size:10px;color:#0B3A34;padding:6px 12px;text-transform:uppercase;letter-spacing:.06em;font-family:'Inter',Arial,sans-serif}
-  tbody tr.sub td{background:#EDF4F1;font-weight:700;color:#0B3A34}
-  tbody tr.sub td.l{font-family:Georgia,'Times New Roman',serif;font-size:11px}
   tbody tr.pend td{color:#93A6A0;font-style:italic}
   tbody td.tot{font-weight:700;color:#0B3A34}
   tfoot td{padding:11px 12px;background:#0B3A34;color:#fff;font-weight:700;font-size:11.5px;text-align:right;font-family:'Inter',Arial,sans-serif}
   tfoot td.l{text-align:left;font-family:'Inter',Arial,sans-serif;font-size:10px;letter-spacing:.06em}
   tfoot td.grand{color:#E0B978;font-size:14px}
+
+  tbody td.emp{font-family:'Inter',Arial,sans-serif;font-size:10.5px;color:#52655F}
+  .emp-cards-tit{font-family:'Inter',Arial,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6E837C;margin:24px 0 8px}
+  .emp-cards{display:flex;gap:12px;flex-wrap:wrap;page-break-inside:avoid}
+  .emp-card{flex:1;min-width:170px;border:1.5px solid #CBDDD7;border-radius:6px;padding:12px 14px;font-family:'Inter',Arial,sans-serif}
+  .emp-card-nome{font-size:13px;font-weight:700;color:#0B3A34}
+  .emp-card-sub{font-size:9.5px;color:#6E837C;margin:2px 0 8px}
+  .emp-card-linha{display:flex;justify-content:space-between;font-size:10.5px;color:#52655F;padding:3px 0}
+  .emp-card-tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #CBDDD7;margin-top:6px;padding-top:7px;font-size:10px;font-weight:600;color:#0B3A34}
+  .emp-card-tot span:last-child{font-size:15px;font-weight:700}
 
   .assin{margin-top:38px;padding-top:9px;border-top:1px solid #CBDDD7;width:300px}
   .assin-nome{font-size:11px;color:#14201D}
@@ -2008,17 +2015,26 @@ function gerarPDF(tipo) {
   }
 
   if(tipo === 'vtac') {
-    let linhas = '';
-    Object.entries(d.empresas).forEach(([empresa, v]) => {
-      linhas += `<tr class="sec"><td class="l" colspan="4">${esc(empresa)}</td></tr>`;
-      v.cols.forEach(c => {
-        const r = RESPOSTAS[c.nome];
-        linhas += `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
-      });
-      linhas += `<tr class="sub"><td class="l">Subtotal · ${esc(empresa)}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
-    });
-    linhas += d.pend.map(c =>
-      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+    // Empresa como coluna: tabela contínua, ordenada por empresa e nome.
+    // Os totais de cada empresa ficam nos cards abaixo da tabela.
+    const porEmpresa = (a, b) => (a.empresa || '').localeCompare(b.empresa || '', 'pt-BR') || a.nome.localeCompare(b.nome, 'pt-BR');
+    let linhas = [...d.resp].sort(porEmpresa).map(c => {
+      const r = RESPOSTAS[c.nome];
+      return `<tr><td class="l">${esc(c.nome)}</td><td class="l emp">${esc(c.empresa)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
+    }).join('');
+    linhas += [...d.pend].sort(porEmpresa).map(c =>
+      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td class="l emp">${esc(c.empresa)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+
+    const cards = Object.keys(d.empresas).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(empresa => {
+      const v = d.empresas[empresa];
+      return `<div class="emp-card">
+        <div class="emp-card-nome">${esc(empresa)}</div>
+        <div class="emp-card-sub">${colabLabel(v.cols.length)}</div>
+        <div class="emp-card-linha"><span>Vale Transporte</span><span>${fmt(v.vt)}</span></div>
+        <div class="emp-card-linha"><span>Auxílio Combustível</span><span>${fmt(v.ac)}</span></div>
+        <div class="emp-card-tot"><span>A recarregar</span><span>${fmt(v.vt + v.ac)}</span></div>
+      </div>`;
+    }).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
       <title>Pedido de recarga VT-AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
@@ -2030,10 +2046,11 @@ function gerarPDF(tipo) {
       </div>
       ${aviso}
       <table>
-        <thead><tr><th class="l">Colaborador</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
+        <thead><tr><th class="l">Colaborador</th><th class="l">Empresa</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
         <tbody>${linhas}</tbody>
-        <tfoot><tr><td class="l">Total · ${colabLabel(d.resp.length)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td class="grand">${num(d.tVT + d.tAC)}</td></tr></tfoot>
+        <tfoot><tr><td class="l" colspan="2">Total · ${colabLabel(d.resp.length)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td class="grand">${num(d.tVT + d.tAC)}</td></tr></tfoot>
       </table>
+      ${cards ? `<div class="emp-cards-tit">Total por empresa</div><div class="emp-cards">${cards}</div>` : ''}
       ${rodapePDF()}</body></html>`;
   }
 
