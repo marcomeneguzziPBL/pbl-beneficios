@@ -505,7 +505,7 @@
   <div class="choice-outer">
     <div class="choice-card">
       <div class="choice-header">
-        <div class="choice-title">Bem-vindo, Marco</div>
+        <div class="choice-title" id="choice-title">Bem-vindo</div>
         <div class="choice-divider"></div>
         <div class="choice-sub">O que deseja fazer?</div>
       </div>
@@ -523,7 +523,7 @@
           <span class="choice-btn-desc">Preencher minhas próprias escolhas de benefícios</span>
         </div>
       </button>
-      <button class="choice-btn" onclick="irPara('pg-colab-list');renderColabList()">
+      <button class="choice-btn" onclick="irPara('pg-colab-list');abrirColabList()">
         <div class="choice-btn-icon">✏️</div>
         <div class="choice-btn-text">
           <span class="choice-btn-label">Preencher por colaborador</span>
@@ -791,7 +791,7 @@
       <div class="hdr-sub">Gestão de Benefícios · RH</div>
     </div>
     <div class="hdr-right">
-      <button class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:12px;padding:5px 12px" onclick="irPara('pg-login')">← Início</button>
+      <button class="btn-outline" style="color:#fff;border-color:rgba(255,255,255,.4);font-size:12px;padding:5px 12px" onclick="irPara('pg-choice')">← Início</button>
     </div>
   </div>
   <div class="wrap-admin">
@@ -910,26 +910,8 @@ const SYMBOL_B64 = 'iVBORw0KGgoAAAANSUhEUgAAAKAAAABlCAYAAADK6ugqAAABCGlDQ1BJQ0Mg
 // não deixa ninguém preencher, para nunca gravar em um mês adivinhado.
 let MES = { mes:null, ano:null, dias:null, status:'aberto', feriados:[] };
 
-const COLABS = [
-  {nome:'Amanda Santos de Jesus',     email:'amanda.santos@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Andressa Rodrigues',         email:'andressa.rodrigues@pblcompra.com', passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Arídio Manuel F. Vasquez',   email:'aridio.vasquez@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Barbara Motta',              email:'barbara.motta@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Brenna Jamily Pantoja da Luz', email:'brenna.luz@pblcompra.com',       passagem:7.24,  vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
-  {nome:'Camila Trindade da Silva',   email:'camila.trindade@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Daniel Fontana',             email:'daniel.fontana@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Gabriella Suzin',            email:'gabriella.suzin@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Hilary Barbosa',             email:'hilary.barbosa@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Luiz Fernando Lentz',        email:'luiz.fernando@pblcompra.com',      passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Marco Meneguzzi',            email:'marco.meneguzzi@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Millena de Mattos Gehlen',   email:'millena.gehlen@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Natália de Souza Rodrigues', email:'natalia.rodrigues@pblcompra.com',  passagem:7.24,  vapd:24, cidade:'Intermunicipal (São José)',  tipo:'intermunicipal'},
-  {nome:'Nicolli da Silva',           email:'nicolli.silva@pblcompra.com',      passagem:7.24,  vapd:24, cidade:'Intermunicipal (Biguaçu)',   tipo:'intermunicipal'},
-  {nome:'Raphaelly Kathlen Cardoso de Lima', email:'raphaelly.cardoso@pblcompra.com', passagem:10.10, vapd:24, cidade:'Intermunicipal (Palhoça)', tipo:'intermunicipal'},
-  {nome:'Rodrigo Freitas Machado',    email:'rodrigo.machado@pblcompra.com',    passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Tarciane Zomer',             email:'tarciane.zomer@pblcompra.com',     passagem:7.20,  vapd:24, cidade:'Municipal (Florianópolis)',  tipo:'municipal'},
-  {nome:'Vitória Kelly Campos de Araujo', email:'vitoria.araujo@pblcompra.com', passagem:10.10, vapd:24, cidade:'Intermunicipal (Palhoça)',   tipo:'intermunicipal'},
-];
+// Preenchida a partir da aba Colaboradores da planilha (carregarColaboradores).
+const COLABS = [];
 
 // Admins com acesso ao painel RH
 const ADMINS = ['marco.meneguzzi@pblcompra.com'];
@@ -953,6 +935,8 @@ const fmt   = v  => 'R$ ' + (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFr
 const num   = v  => (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const clamp = (v,a,b) => Math.min(Math.max(v,a),b);
 const el    = id => document.getElementById(id);
+// Escapa texto vindo da planilha antes de ir para innerHTML.
+const esc   = s  => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 // Concordância: evita construções tipo "respondeu"+"ram".
 const plural    = (n, sing, plur) => n === 1 ? sing : plur;
 const diasLabel = n => n + (parseInt(n) === 1 ? ' dia útil' : ' dias úteis');
@@ -1054,8 +1038,6 @@ async function iniciar() {
 
   renderCalendario();
 
-  if(window.location.search.includes('admin')) { irPara('pg-admin'); atualizarAdmin(); return; }
-
   if(window.location.hash && window.location.hash.includes('id_token')) {
     textoLoading('Entrando', 'Aguarde um momento');
     processarRedirect();
@@ -1067,10 +1049,12 @@ async function iniciar() {
 async function carregarConfig() {
   try {
     const data = await jsonpTentando(API + '?action=getConfig', 'config');
-    if(data && data.mes) {
+    const ano = parseInt(data && data.ano), dias = parseInt(data && data.dias);
+    // Mês, ano e dias úteis são obrigatórios: sem eles os totais sairiam zerados.
+    if(data && MESES.includes(data.mes) && ano > 0 && dias > 0) {
       MES.mes      = data.mes;
-      MES.ano      = parseInt(data.ano)  || MES.ano;
-      MES.dias     = parseInt(data.dias) || MES.dias;
+      MES.ano      = ano;
+      MES.dias     = dias;
       MES.status   = normStatus(data.status);
       MES.feriados = parseFeriados(data.feriados);
       cfgOk = true;
@@ -1085,11 +1069,12 @@ async function carregarColaboradores() {
     if(Array.isArray(data) && data.length > 0) {
       COLABS.length = 0;
       data.forEach(c => {
+        const vapd = parseFloat(c.vapd);
         COLABS.push({
           nome:     c.nome     || '',
           email:    c.email    || '',
           passagem: parseFloat(c.passagem) || 0,
-          vapd:     parseFloat(c.vapd)     || 24,
+          vapd:     Number.isFinite(vapd) ? vapd : 24,
           cidade:   c.cidade   || '',
           tipo:     c.tipo     || 'municipal'
         });
@@ -1099,12 +1084,17 @@ async function carregarColaboradores() {
   } catch(e) { console.warn('Colaboradores não carregaram:', e.message); }
 }
 
+const GOOGLE_CLIENT_ID = '1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com';
+
 function loginGoogle() {
-  const clientId    = '1003596789880-rmt1u9ckp5gqdh1kfarckgtf5rhtckb1.apps.googleusercontent.com';
   const redirectUri = 'https://marcomeneguzzipbl.github.io/pbl-beneficios/';
-  const nonce       = Math.random().toString(36).substring(2);
+  const rnd         = new Uint8Array(16);
+  crypto.getRandomValues(rnd);
+  const nonce       = Array.from(rnd, b => b.toString(16).padStart(2,'0')).join('');
+  // Guardado para conferir no retorno: impede reaproveitar um token antigo.
+  sessionStorage.setItem('pbl_nonce', nonce);
   const url = 'https://accounts.google.com/o/oauth2/v2/auth'
-    + '?client_id='    + encodeURIComponent(clientId)
+    + '?client_id='    + encodeURIComponent(GOOGLE_CLIENT_ID)
     + '&redirect_uri=' + encodeURIComponent(redirectUri)
     + '&response_type=id_token'
     + '&scope='        + encodeURIComponent('openid email profile')
@@ -1121,11 +1111,26 @@ function processarRedirect() {
 
   try {
     const b64 = idToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');
-    const payload = JSON.parse(atob(b64));
-    const email   = payload.email || '';
+    const payload = JSON.parse(decodeURIComponent(escape(atob(b64))));
+    const email   = (payload.email || '').toLowerCase();
     const dominio = email.split('@')[1] || '';
 
     history.replaceState(null, '', window.location.pathname + window.location.search);
+
+    const nonceEsperado = sessionStorage.getItem('pbl_nonce');
+    sessionStorage.removeItem('pbl_nonce');
+    const tokenValido = payload.aud === GOOGLE_CLIENT_ID
+      && /^(https:\/\/)?accounts\.google\.com$/.test(payload.iss || '')
+      && payload.exp * 1000 > Date.now()
+      && payload.email_verified !== false
+      && nonceEsperado && payload.nonce === nonceEsperado;
+    if(!tokenValido) {
+      irPara('pg-login');
+      const err = el('login-erro');
+      err.textContent = 'Login expirado ou inválido. Tente entrar novamente.';
+      err.style.display = 'block';
+      return;
+    }
 
     if(dominio !== DOMINIO) {
       irPara('pg-login');
@@ -1137,6 +1142,8 @@ function processarRedirect() {
 
     if(ADMINS.includes(email)) {
       sessionStorage.setItem('pbl_admin_email', email);
+      const eu = COLABS.find(c => c.email.toLowerCase() === email);
+      el('choice-title').textContent = 'Bem-vindo' + (eu ? ', ' + eu.nome.split(' ')[0] : '');
       irPara('pg-choice');
       return;
     }
@@ -1168,6 +1175,15 @@ function escolherColab(modo) {
   }
 }
 
+// Carrega as respostas antes de listar, para os selos Respondeu/Pendente
+// e o preenchimento inicial do formulário refletirem a planilha.
+async function abrirColabList() {
+  const body = el('colab-list-body');
+  if(body) body.innerHTML = '<p style="font-size:13px;color:var(--mu)">Carregando...</p>';
+  await carregarRespostas();
+  renderColabList();
+}
+
 function renderColabList() {
   const body = el('colab-list-body');
   if(!body) return;
@@ -1177,10 +1193,10 @@ function renderColabList() {
       ? `<span class="badge bd" style="margin-left:auto">Respondeu</span>`
       : `<span class="badge bp" style="margin-left:auto">Pendente</span>`;
     return `<div class="colab-list-item" onclick="entrarPorAdmin(${i})">
-      <div class="colab-list-av">${ini(c.nome)}</div>
+      <div class="colab-list-av">${esc(ini(c.nome))}</div>
       <div style="flex:1">
-        <div class="colab-list-name">${c.nome}</div>
-        <div class="colab-list-meta">${c.cidade}</div>
+        <div class="colab-list-name">${esc(c.nome)}</div>
+        <div class="colab-list-meta">${esc(c.cidade)}</div>
       </div>
       ${badge}
     </div>`;
@@ -1193,7 +1209,7 @@ function entrarPorAdmin(idx) {
   const sairBtn = document.querySelector('#pg-form .hdr-right button');
   if(sairBtn) {
     sairBtn.textContent = '← Lista';
-    sairBtn.onclick = () => { irPara('pg-colab-list'); renderColabList(); };
+    sairBtn.onclick = () => { irPara('pg-colab-list'); abrirColabList(); };
   }
 }
 
@@ -1333,7 +1349,7 @@ function renderCalendario() {
     const dias = Object.keys(ferMap).map(Number).sort((a,b) => a-b);
     lista.innerHTML = dias.map(d =>
       '<div class="cal2-fer-item"><span class="cal2-fer-dot"></span>' +
-      d + ' de ' + MES.mes.toLowerCase() + ' — ' + ferMap[d] + '</div>').join('');
+      d + ' de ' + MES.mes.toLowerCase() + ' — ' + esc(ferMap[d]) + '</div>').join('');
     lista.style.display = dias.length ? '' : 'none';
   }
 }
@@ -1346,7 +1362,9 @@ function renderCalendario() {
 
 function initDrag(g) {
   const track = el('track-'+g);
-  if(!track) return;
+  // entrar() roda a cada formulário aberto; os eventos só podem ser ligados uma vez.
+  if(!track || track.dataset.dragOk) return;
+  track.dataset.dragOk = '1';
   const doMove = e => {
     if(!colabAtual) return;
     const rect = track.getBoundingClientRect();
@@ -1459,6 +1477,8 @@ async function confirmar() {
   const va  = parseFloat(el('inp-va').value)||0;
   const vt  = parseFloat(el('inp-vt').value)||0;
   const ac  = parseFloat(el('inp-ac').value)||0;
+  if(vr<0 || va<0){ el('err-va').textContent='Os valores não podem ser negativos.'; return; }
+  if(vt<0 || ac<0){ el('err-vt').textContent='Os valores não podem ser negativos.'; return; }
   if(Math.abs(vr+va-tva)>0.05){ el('err-va').textContent='Os valores não somam o total disponível.'; return; }
   if(Math.abs(vt+ac-tvt)>0.05){ el('err-vt').textContent='Os valores não somam o total disponível.'; return; }
 
@@ -1512,6 +1532,8 @@ function atualizarAdmin() {
   el('adm-mes').textContent   = MES.mes+' '+MES.ano;
   el('adm-dias').textContent  = MES.dias;
   atualizarStatusBadge();
+  // A aba Painel abre selecionada; sem isto a tabela ficava em "Carregando...".
+  abaAdmin('painel', document.querySelector('#pg-admin .tab'));
 }
 
 function atualizarStatusBadge() {
@@ -1545,7 +1567,7 @@ function renderConfigView() {
       ? '<p style="font-size:13px;color:var(--mu)">Nenhum feriado cadastrado para este mês.</p>'
       : fers.map(f => '<div class="cal2-fer-item" style="font-size:13px;padding:3px 0">' +
           '<span class="cal2-fer-dot"></span>' + parseInt(f.dia) + ' de ' +
-          MES.mes.toLowerCase() + ' — ' + f.nome + '</div>').join('');
+          MES.mes.toLowerCase() + ' — ' + esc(f.nome) + '</div>').join('');
   }
 
   // Compara o campo "dias" da planilha com a contagem do calendário.
@@ -1581,22 +1603,23 @@ function abaAdmin(aba, btn) {
 
 
 
-async function renderPainel() {
-  atualizarStatusBadge();
-
-  // Zera os dados em memória para não misturar respostas de meses diferentes.
-  Object.keys(RESPOSTAS).forEach(k => delete RESPOSTAS[k]);
-  Object.keys(TIMESTAMPS).forEach(k => delete TIMESTAMPS[k]);
-
+async function carregarRespostas() {
   try {
     const data = await jsonp(API + '?action=list&mes=' + encodeURIComponent(MES.mes) + '&ano=' + encodeURIComponent(String(MES.ano)), 15000);
-    if(Array.isArray(data)) {
-      data.forEach(r => {
-        RESPOSTAS[r.nome]  = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
-        TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
-      });
-    }
+    if(!Array.isArray(data)) return;
+    // Zera os dados em memória para não misturar respostas de meses diferentes.
+    Object.keys(RESPOSTAS).forEach(k => delete RESPOSTAS[k]);
+    Object.keys(TIMESTAMPS).forEach(k => delete TIMESTAMPS[k]);
+    data.forEach(r => {
+      RESPOSTAS[r.nome]  = { vr:+r.vr, va:+r.va, vt:+r.vt, ac:+r.ac, tipo:r.tipo, cidade:r.cidade };
+      TIMESTAMPS[r.nome] = r.timestamp || 'Registrado';
+    });
   } catch(e) { console.warn('Respostas não carregaram:', e.message); }
+}
+
+async function renderPainel() {
+  atualizarStatusBadge();
+  await carregarRespostas();
 
   const done = Object.keys(RESPOSTAS).length;
   const tot  = COLABS.length;
@@ -1612,12 +1635,12 @@ async function renderPainel() {
   const linhas = COLABS.map(c => {
     const r = RESPOSTAS[c.nome];
     if(!r) {
-      return `<tr class="pend"><td>${c.nome}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>`
+      return `<tr class="pend"><td>${esc(c.nome)}</td><td>—</td><td>—</td><td>—</td><td>—</td><td>—</td>`
            + `<td><span class="badge bp">Pendente</span></td></tr>`;
     }
     sVR += +r.vr; sVA += +r.va; sVT += +r.vt; sAC += +r.ac;
     const t = +r.vr + +r.va + +r.vt + +r.ac;
-    return `<tr><td>${c.nome}</td>`
+    return `<tr><td>${esc(c.nome)}</td>`
          + `<td>${fmt(r.vr)}</td><td>${fmt(r.va)}</td><td>${fmt(r.vt)}</td><td>${fmt(r.ac)}</td>`
          + `<td class="tot">${fmt(t)}</td>`
          + `<td><span class="badge bd">Respondeu</span></td></tr>`;
@@ -1656,8 +1679,8 @@ async function renderPainel() {
     el('tl-card').style.display = '';
     const tlPend = COLABS.filter(c => !RESPOSTAS[c.nome]);
     el('tl-body').innerHTML = [
-      ...resp.map(c => `<div class="tl-item"><div class="tl-dot done"></div><div><div style="font-size:14px;font-weight:600;color:var(--hd)">${c.nome}</div><div style="font-size:12px;color:var(--mu)">${TIMESTAMPS[c.nome]||'Hoje'}</div></div></div>`),
-      ...tlPend.map(c => `<div class="tl-item"><div class="tl-dot pend"></div><div><div style="font-size:14px;font-weight:500;color:var(--mu)">${c.nome}</div><div style="font-size:12px;color:var(--mu)">Aguardando resposta</div></div></div>`)
+      ...resp.map(c => `<div class="tl-item"><div class="tl-dot done"></div><div><div style="font-size:14px;font-weight:600;color:var(--hd)">${esc(c.nome)}</div><div style="font-size:12px;color:var(--mu)">${esc(TIMESTAMPS[c.nome]||'Hoje')}</div></div></div>`),
+      ...tlPend.map(c => `<div class="tl-item"><div class="tl-dot pend"></div><div><div style="font-size:14px;font-weight:500;color:var(--mu)">${esc(c.nome)}</div><div style="font-size:12px;color:var(--mu)">Aguardando resposta</div></div></div>`)
     ].join('');
   } else {
     el('chart-card').style.display = 'none';
@@ -1669,8 +1692,8 @@ function renderColab() {
   el('lista-colab').innerHTML = COLABS.map(c => `
     <div class="crow">
       <div style="display:flex;align-items:center;gap:10px">
-        <div class="av">${ini(c.nome)}</div>
-        <div><div style="font-size:14px;font-weight:600;color:var(--hd)">${c.nome}</div><div class="ctag">${c.cidade}</div></div>
+        <div class="av">${esc(ini(c.nome))}</div>
+        <div><div style="font-size:14px;font-weight:600;color:var(--hd)">${esc(c.nome)}</div><div class="ctag">${esc(c.cidade)}</div></div>
       </div>
       <div style="display:flex;gap:28px;align-items:center">
         <div style="text-align:right">
@@ -1728,7 +1751,7 @@ function renderRel() {
     const pctVtac = Math.round(vtac/maxVal*100);
     const nome = c.nome.split(' ').slice(0,2).join(' ');
     return `<div class="rel-bar-row">
-      <div class="rel-bar-name" title="${c.nome}">${nome}</div>
+      <div class="rel-bar-name" title="${esc(c.nome)}">${esc(nome)}</div>
       <div class="rel-bar-track">
         <div class="rel-bar-fill-vavr" style="width:${pctVavr}%"></div>
         <div class="rel-bar-fill-vtac" style="left:${pctVavr}%;width:${pctVtac}%"></div>
@@ -1737,7 +1760,7 @@ function renderRel() {
     </div>`;
   }).join('');
 
-  const pendChips = pend.map(c => `<span class="rel-pend-chip">${c.nome.split(' ')[0]} ${c.nome.split(' ').slice(-1)[0]}</span>`).join('');
+  const pendChips = pend.map(c => `<span class="rel-pend-chip">${esc(c.nome.split(' ')[0])} ${esc(c.nome.split(' ').slice(-1)[0])}</span>`).join('');
 
   let h = '';
   if(pend.length > 0) {
@@ -1785,7 +1808,7 @@ function renderRel() {
   if(Object.keys(cidadesMap).length > 0) {
     h += `<div class="card" style="margin-bottom:1.25rem"><div class="rel-section-title">Recarga VT/AC por localidade</div>`;
     Object.entries(cidadesMap).forEach(([cidade, v]) => {
-      h += `<div class="rline"><span>${cidade}</span><span style="display:flex;gap:14px;align-items:center">
+      h += `<div class="rline"><span>${esc(cidade)}</span><span style="display:flex;gap:14px;align-items:center">
         <span class="rsub">VT ${fmt(v.vt)}</span><span class="rsub">AC ${fmt(v.ac)}</span><strong>${fmt(v.vt+v.ac)}</strong>
       </span></div>`;
     });
@@ -1930,9 +1953,9 @@ function gerarPDF(tipo) {
   if(tipo === 'vavr') {
     const linhas = d.resp.map(c => {
       const r = RESPOSTAS[c.nome];
-      return `<tr><td class="l">${c.nome}</td><td>${num(r.vr)}</td><td>${num(r.va)}</td><td class="tot">${num(+r.vr + +r.va)}</td></tr>`;
+      return `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vr)}</td><td>${num(r.va)}</td><td class="tot">${num(+r.vr + +r.va)}</td></tr>`;
     }).join('') + d.pend.map(c =>
-      `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
       <title>Pedido de recarga VA-VR — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
@@ -1954,15 +1977,15 @@ function gerarPDF(tipo) {
   if(tipo === 'vtac') {
     let linhas = '';
     Object.entries(d.cidades).forEach(([cidade, v]) => {
-      linhas += `<tr class="sec"><td class="l" colspan="4">${cidade}</td></tr>`;
+      linhas += `<tr class="sec"><td class="l" colspan="4">${esc(cidade)}</td></tr>`;
       v.cols.forEach(c => {
         const r = RESPOSTAS[c.nome];
-        linhas += `<tr><td class="l">${c.nome}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
+        linhas += `<tr><td class="l">${esc(c.nome)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
       });
-      linhas += `<tr class="sub"><td class="l">Subtotal · ${cidade}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
+      linhas += `<tr class="sub"><td class="l">Subtotal · ${esc(cidade)}</td><td>${num(v.vt)}</td><td>${num(v.ac)}</td><td>${num(v.vt + v.ac)}</td></tr>`;
     });
     linhas += d.pend.map(c =>
-      `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
+      `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
       <title>Pedido de recarga VT-AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
@@ -1987,8 +2010,8 @@ function gerarPDF(tipo) {
     const pct   = COLABS.length > 0 ? Math.round(d.resp.length / COLABS.length * 100) : 0;
     const linhas = COLABS.map(c => {
       const r = RESPOSTAS[c.nome];
-      if(!r) return `<tr class="pend"><td class="l">${c.nome}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`;
-      return `<tr><td class="l">${c.nome}</td><td>${num(+r.vr + +r.va)}</td><td>${num(+r.vt + +r.ac)}</td><td class="tot">${num(+r.vr + +r.va + +r.vt + +r.ac)}</td></tr>`;
+      if(!r) return `<tr class="pend"><td class="l">${esc(c.nome)}</td><td>—</td><td>—</td><td>não respondeu</td></tr>`;
+      return `<tr><td class="l">${esc(c.nome)}</td><td>${num(+r.vr + +r.va)}</td><td>${num(+r.vt + +r.ac)}</td><td class="tot">${num(+r.vr + +r.va + +r.vt + +r.ac)}</td></tr>`;
     }).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">
