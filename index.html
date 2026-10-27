@@ -635,12 +635,12 @@
         <div class="split2">
           <div>
             <label class="lab2" for="inp-vr">Vale Refeição</label>
-            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-vr" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','vr')"></div>
+            <div class="inp2"><span class="pre">R$</span><input type="text" inputmode="decimal" autocomplete="off" id="inp-vr" placeholder="0,00" oninput="onInput('va','vr')"></div>
             <span class="pct-hint" id="hint-vr">50% do total</span>
           </div>
           <div>
             <label class="lab2 alt" for="inp-va">Vale Alimentação</label>
-            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-va" min="0" step="0.01" placeholder="0,00" oninput="onInput('va','va')"></div>
+            <div class="inp2"><span class="pre">R$</span><input type="text" inputmode="decimal" autocomplete="off" id="inp-va" placeholder="0,00" oninput="onInput('va','va')"></div>
             <span class="pct-hint" id="hint-va">50% do total</span>
           </div>
         </div>
@@ -675,12 +675,12 @@
         <div class="split2">
           <div>
             <label class="lab2" for="inp-vt">Vale Transporte</label>
-            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-vt" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','vt')"></div>
+            <div class="inp2"><span class="pre">R$</span><input type="text" inputmode="decimal" autocomplete="off" id="inp-vt" placeholder="0,00" oninput="onInput('vt','vt')"></div>
             <span class="pct-hint" id="hint-vt">50% do total</span>
           </div>
           <div>
             <label class="lab2 alt" for="inp-ac">Auxílio Combustível</label>
-            <div class="inp2"><span class="pre">R$</span><input type="number" id="inp-ac" min="0" step="0.01" placeholder="0,00" oninput="onInput('vt','ac')"></div>
+            <div class="inp2"><span class="pre">R$</span><input type="text" inputmode="decimal" autocomplete="off" id="inp-ac" placeholder="0,00" oninput="onInput('vt','ac')"></div>
             <span class="pct-hint" id="hint-ac">50% do total</span>
           </div>
         </div>
@@ -890,9 +890,13 @@
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Pedido VA / VR
         </button>
-        <button class="btn-download-pdf" onclick="gerarPDF('vtac')">
+        <button class="btn-download-pdf" onclick="gerarPDF('vt')">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-          Pedido VT / AC
+          Pedido VT
+        </button>
+        <button class="btn-download-pdf" onclick="gerarPDF('ac')">
+          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Pedido AC
         </button>
         <button class="btn-download-pdf" style="background:transparent;color:var(--hd);border:1.5px solid var(--bo)" onclick="gerarPDF('exec')">
           <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
@@ -937,6 +941,14 @@ const ini   = n  => { const p=n.trim().split(' '); return p.length>=2?(p[0][0]+p
 const fmt   = v  => 'R$ ' + (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const num   = v  => (parseFloat(v)||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
 const clamp = (v,a,b) => Math.min(Math.max(v,a),b);
+// Campos de valor no formato brasileiro: mostram "342,50" e aceitam
+// "342,50", "342.50" ou "1.234,56".
+const valorCampo = v => (Number(v) || 0).toFixed(2).replace('.', ',');
+const lerValor   = s => {
+  let t = String(s == null ? '' : s).replace(/[^\d,.-]/g, '');
+  if(t.includes(',')) t = t.replace(/\./g, '').replace(',', '.');
+  return parseFloat(t) || 0;
+};
 const el    = id => document.getElementById(id);
 // Escapa texto vindo da planilha antes de ir para innerHTML.
 const esc   = s  => String(s == null ? '' : s).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
@@ -1287,11 +1299,11 @@ function atalhoSplit(g, pctEsq, pctDir) {
   const vE = parseFloat((tot * pctEsq / 100).toFixed(2));
   const vD = parseFloat((tot - vE).toFixed(2));
   if(g==='va') {
-    el('inp-vr').value = vE.toFixed(2);
-    el('inp-va').value = vD.toFixed(2);
+    el('inp-vr').value = valorCampo(vE);
+    el('inp-va').value = valorCampo(vD);
   } else {
-    el('inp-vt').value = vE.toFixed(2);
-    el('inp-ac').value = vD.toFixed(2);
+    el('inp-vt').value = valorCampo(vE);
+    el('inp-ac').value = valorCampo(vD);
   }
   setSliderPct(g, pctDir);
   el('err-'+g).textContent = '';
@@ -1300,10 +1312,10 @@ function atalhoSplit(g, pctEsq, pctDir) {
 
 function atualizarResumo() {
   if(!colabAtual) return;
-  const vr = parseFloat(el('inp-vr').value)||0;
-  const va = parseFloat(el('inp-va').value)||0;
-  const vt = parseFloat(el('inp-vt').value)||0;
-  const ac = parseFloat(el('inp-ac').value)||0;
+  const vr = lerValor(el('inp-vr').value);
+  const va = lerValor(el('inp-va').value);
+  const vt = lerValor(el('inp-vt').value);
+  const ac = lerValor(el('inp-ac').value);
   el('res-vr').textContent = fmt(vr);
   el('res-va').textContent = fmt(va);
   el('res-vt').textContent = fmt(vt);
@@ -1403,8 +1415,8 @@ function initDrag(g) {
     const tot = g==='va' ? vaTot(colabAtual) : vtTot(colabAtual);
     const vDir = parseFloat((tot * pctDir / 100).toFixed(2));
     const vEsq = parseFloat((tot - vDir).toFixed(2));
-    el(g==='va'?'inp-va':'inp-ac').value = vDir.toFixed(2);
-    el(g==='va'?'inp-vr':'inp-vt').value = vEsq.toFixed(2);
+    el(g==='va'?'inp-va':'inp-ac').value = valorCampo(vDir);
+    el(g==='va'?'inp-vr':'inp-vt').value = valorCampo(vEsq);
     el('err-'+g).textContent = '';
     atualizarResumo();
   };
@@ -1456,18 +1468,18 @@ function entrar(idxDireto) {
 
   const r = RESPOSTAS[colabAtual.nome];
   if(r) {
-    el('inp-vr').value = parseFloat(r.vr).toFixed(2);
-    el('inp-va').value = parseFloat(r.va).toFixed(2);
-    el('inp-vt').value = parseFloat(r.vt).toFixed(2);
-    el('inp-ac').value = parseFloat(r.ac).toFixed(2);
+    el('inp-vr').value = valorCampo(parseFloat(r.vr));
+    el('inp-va').value = valorCampo(parseFloat(r.va));
+    el('inp-vt').value = valorCampo(parseFloat(r.vt));
+    el('inp-ac').value = valorCampo(parseFloat(r.ac));
     setSliderPct('va', tva>0 ? Math.round(r.va/tva*100) : 50);
     setSliderPct('vt', tvt>0 ? Math.round(r.ac/tvt*100) : 50);
   } else {
     const hva = parseFloat((tva/2).toFixed(2)), hvt = parseFloat((tvt/2).toFixed(2));
-    el('inp-vr').value = hva.toFixed(2);
-    el('inp-va').value = (tva-hva).toFixed(2);
-    el('inp-vt').value = hvt.toFixed(2);
-    el('inp-ac').value = (tvt-hvt).toFixed(2);
+    el('inp-vr').value = valorCampo(hva);
+    el('inp-va').value = valorCampo(tva-hva);
+    el('inp-vt').value = valorCampo(hvt);
+    el('inp-ac').value = valorCampo(tvt-hvt);
     setSliderPct('va', 50);
     setSliderPct('vt', 50);
   }
@@ -1485,14 +1497,14 @@ function onInput(g, w) {
   const iA  = el(g==='va'?'inp-vr':'inp-vt');
   const iB  = el(g==='va'?'inp-va':'inp-ac');
   const err = el('err-'+g);
-  let v = parseFloat(w==='vr'||w==='vt' ? iA.value : iB.value)||0;
+  let v = lerValor(w==='vr'||w==='vt' ? iA.value : iB.value);
   v = Math.max(0,v);
   let o = parseFloat((tot-v).toFixed(2));
   if(o<-0.01){ err.textContent='Valor ultrapassa o total disponível ('+fmt(tot)+').'; return; }
   if(o<0) o=0;
   err.textContent='';
-  if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=o.toFixed(2); }
-  else { if(document.activeElement!==iA) iA.value=o.toFixed(2); }
+  if(w==='vr'||w==='vt'){ if(document.activeElement!==iB) iB.value=valorCampo(o); }
+  else { if(document.activeElement!==iA) iA.value=valorCampo(o); }
   const pDir = tot>0 ? (w==='vr'||w==='vt' ? (o/tot) : (v/tot))*100 : 50;
   setSliderPct(g, Math.round(pDir));
   atualizarResumo();
@@ -1502,10 +1514,10 @@ function onInput(g, w) {
 async function confirmar() {
   if(!colabAtual) return;
   const tva = vaTot(colabAtual), tvt = vtTot(colabAtual);
-  const vr  = parseFloat(el('inp-vr').value)||0;
-  const va  = parseFloat(el('inp-va').value)||0;
-  const vt  = parseFloat(el('inp-vt').value)||0;
-  const ac  = parseFloat(el('inp-ac').value)||0;
+  const vr  = lerValor(el('inp-vr').value);
+  const va  = lerValor(el('inp-va').value);
+  const vt  = lerValor(el('inp-vt').value);
+  const ac  = lerValor(el('inp-ac').value);
   if(vr<0 || va<0){ el('err-va').textContent='Os valores não podem ser negativos.'; return; }
   if(vt<0 || ac<0){ el('err-vt').textContent='Os valores não podem ser negativos.'; return; }
   if(Math.abs(vr+va-tva)>0.05){ el('err-va').textContent='Os valores não somam o total disponível.'; return; }
@@ -1901,15 +1913,11 @@ const CSS_PDF = `
   tfoot td.l{text-align:left;font-family:'Inter',Arial,sans-serif;font-size:10px;letter-spacing:.06em}
   tfoot td.grand{color:#E0B978;font-size:14px}
 
-  tbody td.emp{font-family:'Inter',Arial,sans-serif;font-size:10.5px;color:#52655F}
-  .emp-cards-tit{font-family:'Inter',Arial,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#6E837C;margin:24px 0 8px}
-  .emp-cards{display:flex;gap:12px;flex-wrap:wrap;page-break-inside:avoid}
-  .emp-card{flex:1;min-width:170px;border:1.5px solid #CBDDD7;border-radius:6px;padding:12px 14px;font-family:'Inter',Arial,sans-serif}
-  .emp-card-nome{font-size:13px;font-weight:700;color:#0B3A34}
-  .emp-card-sub{font-size:9.5px;color:#6E837C;margin:2px 0 8px}
-  .emp-card-linha{display:flex;justify-content:space-between;font-size:10.5px;color:#52655F;padding:3px 0}
-  .emp-card-tot{display:flex;justify-content:space-between;align-items:baseline;border-top:1px solid #CBDDD7;margin-top:6px;padding-top:7px;font-size:10px;font-weight:600;color:#0B3A34}
-  .emp-card-tot span:last-child{font-size:15px;font-weight:700}
+  .bloco{margin-bottom:22px;page-break-inside:avoid}
+  .bloco-head{display:flex;justify-content:space-between;align-items:baseline;padding:0 2px 7px;border-bottom:2px solid #CB974F;margin-bottom:0}
+  .bloco-nome{font-family:'Inter',Arial,sans-serif;font-size:15px;font-weight:700;color:#0B3A34}
+  .bloco-info{font-family:'Inter',Arial,sans-serif;font-size:11px;color:#52655F}
+  .bloco-info strong{font-size:13px;color:#0B3A34}
 
   .assin{margin-top:38px;padding-top:9px;border-top:1px solid #CBDDD7;width:300px}
   .assin-nome{font-size:11px;color:#14201D}
@@ -1930,15 +1938,11 @@ function dadosMes() {
   const resp = COLABS.filter(c => RESPOSTAS[c.nome]);
   const pend = COLABS.filter(c => !RESPOSTAS[c.nome]);
   let tVR=0, tVA=0, tVT=0, tAC=0;
-  const empresas = {};
   resp.forEach(c => {
     const r = RESPOSTAS[c.nome];
     tVR+=+r.vr; tVA+=+r.va; tVT+=+r.vt; tAC+=+r.ac;
-    const k = c.empresa || 'Sem empresa';
-    if(!empresas[k]) empresas[k] = {vt:0, ac:0, cols:[]};
-    empresas[k].vt += +r.vt; empresas[k].ac += +r.ac; empresas[k].cols.push(c);
   });
-  return { resp, pend, tVR, tVA, tVT, tAC, empresas };
+  return { resp, pend, tVR, tVA, tVT, tAC };
 }
 
 function cabecalhoPDF(titulo, subtitulo, sigla) {
@@ -2020,40 +2024,56 @@ function gerarPDF(tipo) {
       ${rodapePDF()}</body></html>`;
   }
 
-  if(tipo === 'vtac') {
-    // Empresa como coluna: tabela contínua, ordenada por empresa e nome.
-    // Os totais de cada empresa ficam nos cards abaixo da tabela.
-    const porEmpresa = (a, b) => (a.empresa || '').localeCompare(b.empresa || '', 'pt-BR') || a.nome.localeCompare(b.nome, 'pt-BR');
-    const linhas = [...d.resp].sort(porEmpresa).map(c => {
-      const r = RESPOSTAS[c.nome];
-      return `<tr><td class="l">${esc(c.nome)}</td><td class="l emp">${esc(c.empresa)}</td><td>${num(r.vt)}</td><td>${num(r.ac)}</td><td class="tot">${num(+r.vt + +r.ac)}</td></tr>`;
-    }).join('');
-
-    const cards = Object.keys(d.empresas).sort((a, b) => a.localeCompare(b, 'pt-BR')).map(empresa => {
-      const v = d.empresas[empresa];
-      return `<div class="emp-card">
-        <div class="emp-card-nome">${esc(empresa)}</div>
-        <div class="emp-card-sub">${colabLabel(v.cols.length)}</div>
-        <div class="emp-card-linha"><span>Vale Transporte</span><span>${fmt(v.vt)}</span></div>
-        <div class="emp-card-linha"><span>Auxílio Combustível</span><span>${fmt(v.ac)}</span></div>
-        <div class="emp-card-tot"><span>A recarregar</span><span>${fmt(v.vt + v.ac)}</span></div>
-      </div>`;
-    }).join('');
+  // VT: um bloco por empresa, porque cada empresa tem o próprio site de recarga.
+  if(tipo === 'vt') {
+    const comVT = d.resp.filter(c => +RESPOSTAS[c.nome].vt > 0);
+    if(comVT.length === 0) { alert('Ninguém escolheu Vale Transporte neste mês.'); return; }
+    const grupos = {};
+    comVT.forEach(c => { const k = c.empresa || 'Sem empresa'; (grupos[k] = grupos[k] || []).push(c); });
+    const empresas = Object.keys(grupos).sort((x, y) => x.localeCompare(y, 'pt-BR')).map(nome => {
+      const cols = grupos[nome].sort(porNome);
+      return { nome, cols, total: cols.reduce((t, c) => t + +RESPOSTAS[c.nome].vt, 0) };
+    });
+    const totalVT = empresas.reduce((t, e) => t + e.total, 0);
+    const blocos = empresas.map(e => `
+      <div class="bloco">
+        <div class="bloco-head"><span class="bloco-nome">${esc(e.nome)}</span><span class="bloco-info">${colabLabel(e.cols.length)} · <strong>${fmt(e.total)}</strong></span></div>
+        <table>
+          <thead><tr><th class="l">Colaborador</th><th>Vale Transporte</th></tr></thead>
+          <tbody>${e.cols.map(c => `<tr><td class="l">${esc(c.nome)}</td><td>${num(RESPOSTAS[c.nome].vt)}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>`).join('');
 
     html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
-      <title>Pedido de recarga VT-AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
-      ${cabecalhoPDF('Pedido de recarga — Vale Transporte e Auxílio Combustível', subFornecedor, 'VTAC')}
+      <title>Pedido de recarga VT — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
+      ${cabecalhoPDF('Pedido de recarga — Vale Transporte', `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · ${colabLabel(comVT.length)}`, 'VT')}
       <div class="topo">
-        <div class="topo-cel"><div class="topo-lab">Vale Transporte</div><div class="topo-val">${fmt(d.tVT)}</div></div>
-        <div class="topo-cel"><div class="topo-lab">Auxílio Combustível</div><div class="topo-val">${fmt(d.tAC)}</div></div>
-        <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(d.tVT + d.tAC)}</div></div>
+        ${empresas.map(e => `<div class="topo-cel"><div class="topo-lab">${esc(e.nome)}</div><div class="topo-val">${fmt(e.total)}</div></div>`).join('')}
+        <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(totalVT)}</div></div>
+      </div>
+      ${blocos}
+      ${rodapePDF()}</body></html>`;
+  }
+
+  // AC: lista única; a empresa de transporte não importa para o combustível.
+  if(tipo === 'ac') {
+    const comAC = d.resp.filter(c => +RESPOSTAS[c.nome].ac > 0).sort(porNome);
+    if(comAC.length === 0) { alert('Ninguém escolheu Auxílio Combustível neste mês.'); return; }
+    const totalAC = comAC.reduce((t, c) => t + +RESPOSTAS[c.nome].ac, 0);
+    const linhas = comAC.map(c => `<tr><td class="l">${esc(c.nome)}</td><td>${num(RESPOSTAS[c.nome].ac)}</td></tr>`).join('');
+
+    html = `<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8">${FONTE_PDF}
+      <title>Pedido de recarga AC — ${mesAno}</title><style>${CSS_PDF}</style></head><body>
+      ${cabecalhoPDF('Pedido de recarga — Auxílio Combustível', `Mês de referência: ${mesAno} · ${diasLabel(MES.dias)} · ${colabLabel(comAC.length)}`, 'AC')}
+      <div class="topo">
+        <div class="topo-cel"><div class="topo-lab">Colaboradores</div><div class="topo-val">${comAC.length}</div></div>
+        <div class="topo-cel forte"><div class="topo-lab">Total a recarregar</div><div class="topo-val">${fmt(totalAC)}</div></div>
       </div>
       <table>
-        <thead><tr><th class="l">Colaborador</th><th class="l">Empresa</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
+        <thead><tr><th class="l">Colaborador</th><th>Auxílio Combustível</th></tr></thead>
         <tbody>${linhas}</tbody>
-        <tfoot><tr><td class="l" colspan="2">Total · ${colabLabel(d.resp.length)}</td><td>${num(d.tVT)}</td><td>${num(d.tAC)}</td><td class="grand">${num(d.tVT + d.tAC)}</td></tr></tfoot>
+        <tfoot><tr><td class="l">Total · ${colabLabel(comAC.length)}</td><td class="grand">${num(totalAC)}</td></tr></tfoot>
       </table>
-      ${cards ? `<div class="emp-cards-tit">Total por empresa</div><div class="emp-cards">${cards}</div>` : ''}
       ${rodapePDF()}</body></html>`;
   }
 
