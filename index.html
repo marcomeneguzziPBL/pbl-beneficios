@@ -1919,6 +1919,12 @@ const CSS_PDF = `
   .bloco-info{font-family:'Inter',Arial,sans-serif;font-size:11px;color:#52655F}
   .bloco-info strong{font-size:13px;color:#0B3A34}
 
+  /* resumo interno: 6 colunas; cada colaborador numa linha só */
+  table.resumo thead th{padding:9px 8px}
+  table.resumo tbody td{padding:7px 8px;white-space:nowrap}
+  table.resumo thead th:first-child,table.resumo tbody td:first-child,table.resumo tfoot td:first-child{padding-left:12px}
+  table.resumo tfoot td{padding:11px 8px}
+
   .assin{margin-top:38px;padding-top:9px;border-top:1px solid #CBDDD7;width:300px}
   .assin-nome{font-size:11px;color:#14201D}
   .assin-lab{font-family:'Inter',Arial,sans-serif;font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:#6E837C;margin-top:3px}
@@ -2110,8 +2116,8 @@ function gerarPDF(tipo) {
         <div class="topo-cel forte"><div class="topo-lab">Desembolso previsto</div><div class="topo-val">${fmt(previsto)}</div></div>
       </div>
       ${notaPend}
-      <table>
-        <thead><tr><th class="l">Colaborador</th><th>VR</th><th>VA</th><th>VT</th><th>AC</th><th>Total</th></tr></thead>
+      <table class="resumo">
+        <thead><tr><th class="l">Colaborador</th><th>Vale Refeição</th><th>Vale Alimentação</th><th>Vale Transporte</th><th>Auxílio Combustível</th><th>Total</th></tr></thead>
         <tbody>${linhas}</tbody>
         <tfoot>${rodapeTabela}</tfoot>
       </table>
